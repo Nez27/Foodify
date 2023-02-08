@@ -63,8 +63,6 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
-
-
     private void listWardAndDistrict() {
         wardSpinner = (Spinner) findViewById(R.id.ward);
         districtSpinner = (Spinner) findViewById(R.id.district);

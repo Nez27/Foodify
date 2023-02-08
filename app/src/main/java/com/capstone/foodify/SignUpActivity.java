@@ -66,7 +66,13 @@ public class SignUpActivity extends AppCompatActivity {
         districtSpinner = (Spinner) findViewById(R.id.district);
         wardSpinner = (Spinner) findViewById(R.id.ward);
 
-        getListDistrict();
+        if(districtListData.size() == 0){
+            getListDistrict();
+        } else {
+            setAdapter(districtList, "---Quận", districtSpinner);
+        }
+
+
         getListWard(0);
 
         signIn_textView = (TextView) findViewById(R.id.signIn_textView);

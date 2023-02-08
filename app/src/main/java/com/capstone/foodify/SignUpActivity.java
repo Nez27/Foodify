@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -29,6 +31,7 @@ public class SignUpActivity extends AppCompatActivity {
     final Calendar myCalendar= Calendar.getInstance();
     EditText editText, edt_birthday;
 
+    TextView signIn_textView;
     Spinner wardSpinner, districtSpinner;
 
 
@@ -38,25 +41,25 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
 
         setFontUI();
+        chooseDateOfBirth();
+        listWardAndDistrict();
 
-        //Calendar date of birth
-        editText=(EditText) findViewById(R.id.edt_birthDay);
-        DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int day) {
-                myCalendar.set(Calendar.YEAR, year);
-                myCalendar.set(Calendar.MONTH,month);
-                myCalendar.set(Calendar.DAY_OF_MONTH,day);
-                updateLabel();
-            }
-        };
-        editText.setOnClickListener(new View.OnClickListener() {
+        signIn_textView = (TextView) findViewById(R.id.signIn_textView);
+        signIn_textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new DatePickerDialog(SignUpActivity.this,date,myCalendar.get(Calendar.YEAR),myCalendar.get(Calendar.MONTH),myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                startActivity(new Intent(SignUpActivity.this, SignInActivity.class));
             }
         });
 
+        // enabling action bar app icon and behaving it as toggle button
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+    }
+
+
+
+    private void listWardAndDistrict() {
         wardSpinner = (Spinner) findViewById(R.id.ward);
         districtSpinner = (Spinner) findViewById(R.id.district);
 
@@ -82,7 +85,6 @@ public class SignUpActivity extends AppCompatActivity {
         wardSpinner.setSelection(ward.indexOf("---Phường"));//set selected value in spinner
         districtSpinner.setSelection(district.indexOf("---Quận"));
     }
-
     private static class MySpinnerAdapter extends ArrayAdapter<String> {
         // Initialise custom font, for example:
         Typeface font = Typeface.createFromAsset(getContext().getAssets(),
@@ -110,6 +112,26 @@ public class SignUpActivity extends AppCompatActivity {
             view.setTypeface(font);
             return view;
         }
+    }
+
+    private void chooseDateOfBirth() {
+        //Calendar date of birth
+        editText=(EditText) findViewById(R.id.edt_birthDay);
+        DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH,month);
+                myCalendar.set(Calendar.DAY_OF_MONTH,day);
+                updateLabel();
+            }
+        };
+        editText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new DatePickerDialog(SignUpActivity.this,date,myCalendar.get(Calendar.YEAR),myCalendar.get(Calendar.MONTH),myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
     }
 
     private void updateLabel(){

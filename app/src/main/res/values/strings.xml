@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">UI App</string>
+    <string name="activity_home">Trang chủ</string>
+    <string name="activity_search">Tìm kiếm</string>
+    <string name="activity_basket">Giỏ hàng</string>
+    <string name="activity_favorite">Yêu thích</string>
+    <string name="activity_profile">Thông tin</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="sign_up_text">Đăng ký</string>
+    <string name="already_have_account">Bạn đã có tài khoản?</string>
+    <string name="sign_in_text">Đăng nhập</string>
+    <string name="password_text">Mật khẩu</string>
+    <string name="email_text">EMAIL</string>
+    <string name="phone_text">số điện thoại</string>
+    <string name="repeat_password_text">xác nhận mật khẩu</string>
+    <string name="first_name_text">Họ</string>
+    <string name="last_name_text">Tên</string>
+    <string name="birthday_text">ngày sinh nhật (mm/dd/yyyy)</string>
+    <string name="address_text">địa chỉ</string>
+</resources>

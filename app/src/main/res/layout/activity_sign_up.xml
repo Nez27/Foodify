@@ -188,10 +188,11 @@
 
         <Spinner
             android:id="@+id/district"
-            android:layout_width="190dp"
+            android:layout_width="150dp"
             android:layout_height="match_parent"
             android:textAlignment="viewEnd"
-            android:layout_marginEnd="12dp"
+            android:gravity="end"
+            android:paddingEnd="25dp"
             android:contentDescription="district"
             />
 
@@ -200,6 +201,8 @@
             android:textAlignment="viewEnd"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:gravity="end"
+            android:paddingEnd="25dp"
             android:contentDescription="ward"
             />
 

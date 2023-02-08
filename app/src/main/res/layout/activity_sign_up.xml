@@ -190,12 +190,14 @@
             android:id="@+id/district"
             android:layout_width="190dp"
             android:layout_height="match_parent"
+            android:textAlignment="viewEnd"
             android:layout_marginEnd="12dp"
             android:contentDescription="district"
             />
 
         <Spinner
             android:id="@+id/ward"
+            android:textAlignment="viewEnd"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="ward"

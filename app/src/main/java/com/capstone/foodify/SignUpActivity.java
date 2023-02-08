@@ -9,13 +9,18 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.capstone.foodify.API.ApiService;
+import com.capstone.foodify.DistrictWardResponse.Datas;
+import com.capstone.foodify.DistrictWardResponse.DisctrictWardResponse;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
@@ -25,7 +30,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class SignUpActivity extends AppCompatActivity {
+
+    private static final int PROVINCE_CODE = 48;
+    private static final int LIMIT = -1;
 
     TextInputLayout textInput_email, textInput_password, textInput_phone,
             textInput_address, textInput_repeatPassword, textInput_firstName, textInput_lastName, textInput_birthDay;
@@ -35,6 +47,13 @@ public class SignUpActivity extends AppCompatActivity {
     Spinner wardSpinner, districtSpinner;
     ImageView back_image;
 
+    private static final ArrayList<String> wardList = new ArrayList<>();
+    private static final ArrayList<String> districtList = new ArrayList<>();
+    private static List<Datas> districtListData = new ArrayList<>();
+    private static List<Datas> wardListData = new ArrayList<>();
+
+    String selectedDistrict = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +62,12 @@ public class SignUpActivity extends AppCompatActivity {
 
         setFontUI();
         chooseDateOfBirth();
-        listWardAndDistrict();
+
+        districtSpinner = (Spinner) findViewById(R.id.district);
+        wardSpinner = (Spinner) findViewById(R.id.ward);
+
+        getListDistrict();
+        getListWard(0);
 
         signIn_textView = (TextView) findViewById(R.id.signIn_textView);
         signIn_textView.setOnClickListener(new View.OnClickListener() {
@@ -61,34 +85,99 @@ public class SignUpActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+        districtSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                int districtCode = 0;
+
+                selectedDistrict = districtSpinner.getSelectedItem().toString();
+
+                //Get id district from selected item district;
+                for(Datas dataTemp: districtListData){
+                    if(selectedDistrict.equals(dataTemp.getName_with_type())){
+                        districtCode = Integer.parseInt(dataTemp.getCode());
+                        break;
+                    }
+                }
+                getListWard(districtCode);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        
     }
 
-    private void listWardAndDistrict() {
-        wardSpinner = (Spinner) findViewById(R.id.ward);
-        districtSpinner = (Spinner) findViewById(R.id.district);
+    private void getListDistrict() {
 
-        ArrayList<String> ward = new ArrayList<String>();
-        ArrayList<String> district = new ArrayList<String>();
+        districtList.add("---Quận");
 
-        ward.add("---Phường");
-        ward.add("Hoà Hiệp Bắc");
-        ward.add("Hòa Khánh Bắc");
-        ward.add("Hòa Minh");
-        ward.add("Hòa Hiệp Nam");
-        ward.add("Hòa Khánh Nam");
+        ApiService.apiService.districtResponse(PROVINCE_CODE, LIMIT).enqueue(new Callback<DisctrictWardResponse>() {
+            @Override
+            public void onResponse(Call<DisctrictWardResponse> call, Response<DisctrictWardResponse> response) {
+                DisctrictWardResponse districtResponse = response.body();
+                if(districtResponse != null && districtResponse.getExitcode() == 1){
 
-        district.add("---Quận");
-        district.add("Liên Chiểu");
-        district.add("Ngũ Hành Sơn");
+                    districtListData = districtResponse.getData().getData();
+                    for(Datas tempData: districtListData){
+                        districtList.add(tempData.getName_with_type());
+                    }
+                };
 
-        MySpinnerAdapter adapterWard = new MySpinnerAdapter(getApplicationContext(), android.R.layout.simple_spinner_item, ward);
-        MySpinnerAdapter adapterDistrict = new MySpinnerAdapter(getApplicationContext(), android.R.layout.simple_spinner_item, district);
-        wardSpinner.setAdapter(adapterWard); // this will set list of values to spinner
-        districtSpinner.setAdapter(adapterDistrict); // this will set list of values to spinner
+                setAdapter(districtList, "---Quận", districtSpinner);
+            }
 
-        wardSpinner.setSelection(ward.indexOf("---Phường"));//set selected value in spinner
-        districtSpinner.setSelection(district.indexOf("---Quận"));
+            @Override
+            public void onFailure(Call<DisctrictWardResponse> call, Throwable t) {
+                Toast.makeText(SignUpActivity.this, "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
+
+    private void getListWard(int districtCode) {
+
+        if(wardList.size() > 1)
+            wardList.clear();
+
+        if(wardList.size() == 0)
+            wardList.add("---Phường");
+
+        if(districtCode != 0){
+            ApiService.apiService.wardResponse(districtCode, LIMIT).enqueue(new Callback<DisctrictWardResponse>() {
+                @Override
+                public void onResponse(Call<DisctrictWardResponse> call, Response<DisctrictWardResponse> response) {
+
+                    DisctrictWardResponse wardResponse = response.body();
+                    if(wardResponse != null && wardResponse.getExitcode() == 1){
+
+                        wardListData = wardResponse.getData().getData();
+                        for(Datas tempData: wardListData){
+                            wardList.add(tempData.getName_with_type());
+                        }
+                    };
+
+                    setAdapter(wardList, "---Phường", wardSpinner);
+                }
+
+                @Override
+                public void onFailure(Call<DisctrictWardResponse> call, Throwable t) {
+                    Toast.makeText(SignUpActivity.this, "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau!", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            setAdapter(wardList, "---Phường", wardSpinner);
+        }
+    }
+
+    private void setAdapter(ArrayList<String> data, String defaultItem, Spinner dataSpinner){
+        MySpinnerAdapter adapterWard = new MySpinnerAdapter(getApplicationContext(), android.R.layout.simple_spinner_item, data);
+        dataSpinner.setAdapter(adapterWard); // this will set list of values to spinner
+        dataSpinner.setSelection(data.indexOf(defaultItem));//set selected value in spinner
+    }
+
     private static class MySpinnerAdapter extends ArrayAdapter<String> {
         // Initialise custom font, for example:
         Typeface font = Typeface.createFromAsset(getContext().getAssets(),

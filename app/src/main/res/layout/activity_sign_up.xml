@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SignInActivity">
+    tools:context=".SignUpActivity">
 
     <TextView
         android:id="@+id/textView"
@@ -177,17 +177,18 @@
         >
 
         <Spinner
-            android:id="@+id/ward"
+            android:id="@+id/district"
             android:layout_width="190dp"
             android:layout_height="match_parent"
             android:layout_marginEnd="12dp"
-            android:contentDescription="ward"
+            android:contentDescription="district"
             />
+
         <Spinner
-            android:id="@+id/district"
+            android:id="@+id/ward"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="district"
+            android:contentDescription="ward"
             />
 
     </LinearLayout>

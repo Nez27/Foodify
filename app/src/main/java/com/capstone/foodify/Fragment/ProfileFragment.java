@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.capstone.foodify.R;
-import com.capstone.foodify.SignInActivity;
+import com.capstone.foodify.SignUpActivity;
 
 public class ProfileFragment extends Fragment {
 
@@ -27,7 +27,7 @@ public class ProfileFragment extends Fragment {
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i =new Intent(getActivity(), SignInActivity.class);
+                Intent i =new Intent(getActivity(), SignUpActivity.class);
                 startActivity(i);
                 ((Activity) getActivity()).overridePendingTransition(0,0);
             }

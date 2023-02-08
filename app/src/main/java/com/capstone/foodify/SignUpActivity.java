@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -30,9 +31,9 @@ public class SignUpActivity extends AppCompatActivity {
             textInput_address, textInput_repeatPassword, textInput_firstName, textInput_lastName, textInput_birthDay;
     final Calendar myCalendar= Calendar.getInstance();
     EditText editText, edt_birthday;
-
     TextView signIn_textView;
     Spinner wardSpinner, districtSpinner;
+    ImageView back_image;
 
 
     @Override
@@ -52,9 +53,14 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
-        // enabling action bar app icon and behaving it as toggle button
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        back_image = (ImageView) findViewById(R.id.back_image);
+
+        back_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
     }
 
 

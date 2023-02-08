@@ -23,7 +23,5 @@ public class SplashScreenActivity extends AppCompatActivity {
                 finish();
             }
         }, 3000);
-
-        Objects.requireNonNull(getSupportActionBar()).hide();
     }
 }

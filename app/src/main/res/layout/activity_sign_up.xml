@@ -7,6 +7,16 @@
     android:layout_height="match_parent"
     tools:context=".SignUpActivity">
 
+    <ImageView
+        android:id="@+id/back_image"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/back_button"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="25dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
@@ -18,7 +28,7 @@
         android:textColor="@color/black"
         android:textSize="50sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/back_image" />
 
 
     <com.google.android.material.textfield.TextInputLayout
@@ -248,8 +258,9 @@
         android:text="@string/sign_up_text"
         android:textSize="20sp"
         android:padding="10dp"
-        android:layout_margin="40dp"
-
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="17dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"

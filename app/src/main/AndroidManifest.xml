@@ -14,15 +14,16 @@
         android:theme="@style/Theme.Foodify"
         tools:targetApi="31">
         <activity
+            android:name=".ForgotPasswordActivity"
+            android:exported="false" />
+        <activity
             android:name=".SignInActivity"
             android:exported="false"
-            android:noHistory="true"
-            />
+            android:noHistory="true" />
         <activity
             android:name=".SignUpActivity"
             android:exported="false"
-            android:noHistory="true"
-            />
+            android:noHistory="true" />
         <activity
             android:name=".SplashScreenActivity"
             android:exported="true">

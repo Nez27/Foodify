@@ -34,12 +34,14 @@ public class SignInActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 onBackPressed();
+                finish();
             }
         });
         signUp_textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(SignInActivity.this, SignUpActivity.class));
+                finish();
             }
         });
 

@@ -8,11 +8,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
 
     TextInputLayout textInput_account;
+    MaterialButton send_code_button;
 
     ImageView back_image;
     @Override
@@ -26,7 +28,14 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         back_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(ForgotPasswordActivity.this, SignInActivity.class));
+                onBackPressed();
+            }
+        });
+
+        send_code_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(ForgotPasswordActivity.this, SendEmailActivity.class));
             }
         });
 
@@ -43,6 +52,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
     private void initComponent() {
         back_image = (ImageView) findViewById(R.id.back_image);
+        send_code_button = (MaterialButton) findViewById(R.id.send_code_button);
     }
 
 }

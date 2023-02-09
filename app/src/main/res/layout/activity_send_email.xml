@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SendEmailActivity">
+
+    <ImageView
+        android:id="@+id/close_image"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/close_icon"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="25dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="90dp"
+        android:fontFamily="@font/bebas"
+        android:text="@string/confirm_code"
+        android:textColor="@color/black"
+        android:textSize="50sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/close_image" />
+
+    <TextView
+        android:id="@+id/forgot_Password_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/confirm_code_description"
+        android:fontFamily="@font/opensans"
+        android:textColor="@color/gray"
+        android:textStyle="bold"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:id="@+id/inputCode1"
+            android:layout_width="48dp"
+            android:layout_height="50dp"
+            android:backgroundTint="#CCCCCC"
+            android:gravity="center"
+            android:imeOptions="actionNext"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:hint="*"
+            />
+
+        <EditText
+            android:id="@+id/inputCode2"
+            android:layout_width="48dp"
+            android:layout_height="50dp"
+            android:backgroundTint="#CCCCCC"
+            android:gravity="center"
+            android:imeOptions="actionNext"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:hint="*"
+            />
+
+        <EditText
+            android:id="@+id/inputCode3"
+            android:layout_width="48dp"
+            android:layout_height="50dp"
+            android:backgroundTint="#CCCCCC"
+            android:gravity="center"
+            android:imeOptions="actionNext"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:hint="*"
+            />
+
+        <EditText
+            android:id="@+id/inputCode4"
+            android:layout_width="48dp"
+            android:layout_height="50dp"
+            android:backgroundTint="#CCCCCC"
+            android:gravity="center"
+            android:imeOptions="actionNext"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:hint="*"
+            />
+
+        <EditText
+            android:id="@+id/inputCode5"
+            android:layout_width="48dp"
+            android:layout_height="50dp"
+            android:backgroundTint="#CCCCCC"
+            android:gravity="center"
+            android:imeOptions="actionNext"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:hint="*"
+            />
+
+        <EditText
+            android:id="@+id/inputCode6"
+            android:layout_width="48dp"
+            android:layout_height="50dp"
+            android:backgroundTint="#CCCCCC"
+            android:gravity="center"
+            android:imeOptions="actionNext"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:hint="*"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textview_countdown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:text="00:35"
+        android:fontFamily="@font/opensans"
+        android:textColor="@color/secondary"
+        android:textStyle="bold"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="30dp"
+        app:layout_constraintBottom_toTopOf="@+id/textview1"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textview1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:fontFamily="@font/opensans"
+        android:text="@string/did_not_receive_code"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/textview_resendCode"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textview_resendCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:text="@string/resend_code"
+        android:fontFamily="@font/opensans"
+        android:textColor="@color/primaryColor"
+        android:textStyle="bold"
+        android:layout_margin="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/confirm_code"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/confirm_code"
+        style="@style/DefaultSolid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:fontFamily="@font/bebas"
+        android:padding="10dp"
+        android:text="@string/confirm"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

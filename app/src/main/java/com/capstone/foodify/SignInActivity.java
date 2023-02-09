@@ -27,13 +27,9 @@ public class SignInActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
+        initComponent();
+
         setFontUI();
-
-        signUp_textView = (TextView) findViewById(R.id.sign_up_textView);
-        forgotPassword_textView = (TextView) findViewById(R.id.forgotPassword_textView);
-
-        back_image = (ImageView) findViewById(R.id.back_image);
-
         back_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,12 +50,15 @@ public class SignInActivity extends AppCompatActivity {
             }
         });
     }
-
-    private void setFontUI() {
-        Typeface bebas= Typeface.createFromAsset(getAssets(), "font/bebas.ttf");
-
+    private void initComponent() {
         textInput_account = (TextInputLayout) findViewById(R.id.textInput_account);
         textInput_password = (TextInputLayout) findViewById(R.id.textInput_password);
+        signUp_textView = (TextView) findViewById(R.id.sign_up_textView);
+        forgotPassword_textView = (TextView) findViewById(R.id.forgotPassword_textView);
+        back_image = (ImageView) findViewById(R.id.back_image);
+    }
+    private void setFontUI() {
+        Typeface bebas= Typeface.createFromAsset(getAssets(), "font/bebas.ttf");
 
         textInput_account.setTypeface(bebas);
         textInput_password.setTypeface(bebas);
@@ -67,12 +66,4 @@ public class SignInActivity extends AppCompatActivity {
 
     // this event will enable the back
     // function to the button on press
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            this.finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 }

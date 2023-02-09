@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,7 +41,7 @@ public class SignUpActivity extends AppCompatActivity {
     TextInputLayout textInput_email, textInput_password, textInput_phone,
             textInput_address, textInput_repeatPassword, textInput_firstName, textInput_lastName, textInput_birthDay;
     final Calendar myCalendar= Calendar.getInstance();
-    EditText editText, edt_birthday;
+    EditText edt_birthday;
     TextView signIn_textView;
     Spinner wardSpinner, districtSpinner;
     ImageView back_image;
@@ -60,30 +59,23 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
+        initComponent();
+
         setFontUI();
         chooseDateOfBirth();
-
-        districtSpinner = (Spinner) findViewById(R.id.district);
-        wardSpinner = (Spinner) findViewById(R.id.ward);
 
         if(districtListData.size() == 0){
             getListDistrict();
         } else {
             setAdapter(districtList, "---Quận", districtSpinner);
         }
-
-
         getListWard(0);
-
-        signIn_textView = (TextView) findViewById(R.id.signIn_textView);
         signIn_textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(SignUpActivity.this, SignInActivity.class));
             }
         });
-
-        back_image = (ImageView) findViewById(R.id.back_image);
 
         back_image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,7 +106,27 @@ public class SignUpActivity extends AppCompatActivity {
 
             }
         });
-        
+    }
+
+    public void initComponent() {
+        textInput_email= (TextInputLayout) findViewById(R.id.textInput_email);
+        textInput_password = (TextInputLayout) findViewById(R.id.textInput_password);
+        textInput_phone = (TextInputLayout) findViewById(R.id.textInput_phone);
+        textInput_address = (TextInputLayout) findViewById(R.id.textInput_address);
+        textInput_repeatPassword = (TextInputLayout) findViewById(R.id.textInput_confirmPassword);
+        textInput_firstName = (TextInputLayout) findViewById(R.id.textInput_firstName);
+        textInput_lastName = (TextInputLayout) findViewById(R.id.textInput_lastName);
+        textInput_birthDay = (TextInputLayout) findViewById(R.id.textInput_birthDay);
+
+        edt_birthday = (EditText) findViewById(R.id.edt_birthDay);
+
+        districtSpinner = (Spinner) findViewById(R.id.district);
+        wardSpinner = (Spinner) findViewById(R.id.ward);
+
+        signIn_textView = (TextView) findViewById(R.id.signIn_textView);
+
+        back_image = (ImageView) findViewById(R.id.back_image);
+
     }
 
     private void getListDistrict() {
@@ -215,7 +227,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void chooseDateOfBirth() {
         //Calendar date of birth
-        editText=(EditText) findViewById(R.id.edt_birthDay);
+
         DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
@@ -225,7 +237,7 @@ public class SignUpActivity extends AppCompatActivity {
                 updateLabel();
             }
         };
-        editText.setOnClickListener(new View.OnClickListener() {
+        edt_birthday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new DatePickerDialog(SignUpActivity.this,date,myCalendar.get(Calendar.YEAR),myCalendar.get(Calendar.MONTH),myCalendar.get(Calendar.DAY_OF_MONTH)).show();
@@ -236,23 +248,11 @@ public class SignUpActivity extends AppCompatActivity {
     private void updateLabel(){
         String myFormat="dd/MM/yyyy";
         SimpleDateFormat dateFormat=new SimpleDateFormat(myFormat, Locale.US);
-        editText.setText(dateFormat.format(myCalendar.getTime()));
+        edt_birthday.setText(dateFormat.format(myCalendar.getTime()));
     }
 
     private void setFontUI() {
         Typeface bebas= Typeface.createFromAsset(getAssets(), "font/bebas.ttf");
-
-        //Find view ID
-        textInput_email= (TextInputLayout) findViewById(R.id.textInput_email);
-        textInput_password = (TextInputLayout) findViewById(R.id.textInput_password);
-        textInput_phone = (TextInputLayout) findViewById(R.id.textInput_phone);
-        textInput_address = (TextInputLayout) findViewById(R.id.textInput_address);
-        textInput_repeatPassword = (TextInputLayout) findViewById(R.id.textInput_confirmPassword);
-        textInput_firstName = (TextInputLayout) findViewById(R.id.textInput_firstName);
-        textInput_lastName = (TextInputLayout) findViewById(R.id.textInput_lastName);
-        textInput_birthDay = (TextInputLayout) findViewById(R.id.textInput_birthDay);
-
-        edt_birthday = (EditText) findViewById(R.id.edt_birthDay);
 
         //Set Type face
         textInput_email.setTypeface(bebas);

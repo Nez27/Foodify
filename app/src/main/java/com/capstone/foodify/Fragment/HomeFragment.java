@@ -1,18 +1,11 @@
 package com.capstone.foodify.Fragment;
 
-import static com.capstone.foodify.R.drawable.banner1;
-import static com.capstone.foodify.R.drawable.banner2;
-import static com.capstone.foodify.R.drawable.banner3;
-import static com.capstone.foodify.R.drawable.banner4;
-import static com.capstone.foodify.R.drawable.banner5;
-
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
 
 import com.capstone.foodify.R;
 import com.denzcoskun.imageslider.ImageSlider;

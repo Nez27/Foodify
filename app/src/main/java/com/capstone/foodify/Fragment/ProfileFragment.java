@@ -1,6 +1,5 @@
 package com.capstone.foodify.Fragment;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,8 +9,8 @@ import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
 
-import com.capstone.foodify.R;
 import com.capstone.foodify.Activity.SignUpActivity;
+import com.capstone.foodify.R;
 
 public class ProfileFragment extends Fragment {
 

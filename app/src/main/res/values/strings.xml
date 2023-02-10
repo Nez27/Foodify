@@ -28,4 +28,6 @@
     <string name="resend_code">Gửi lại</string>
     <string name="confirm">Xác nhận</string>
     <string name="new_password">mật khẩu mới</string>
+    <string name="hello_guest">Hello, Guest!</string>
+    <string name="recommend_for_you">Recommend for you</string>
 </resources>

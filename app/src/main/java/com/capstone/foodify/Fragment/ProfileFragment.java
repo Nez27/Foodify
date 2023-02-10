@@ -11,7 +11,7 @@ import android.widget.Button;
 import androidx.fragment.app.Fragment;
 
 import com.capstone.foodify.R;
-import com.capstone.foodify.SignUpActivity;
+import com.capstone.foodify.Activity.SignUpActivity;
 
 public class ProfileFragment extends Fragment {
 
@@ -28,7 +28,6 @@ public class ProfileFragment extends Fragment {
             public void onClick(View view) {
                 Intent i =new Intent(getActivity(), SignUpActivity.class);
                 startActivity(i);
-                ((Activity) getActivity()).overridePendingTransition(0,0);
             }
         });
         return rootView;

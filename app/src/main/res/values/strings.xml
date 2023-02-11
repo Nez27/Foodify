@@ -30,4 +30,6 @@
     <string name="new_password">mật khẩu mới</string>
     <string name="hello_guest">Hello, Guest!</string>
     <string name="recommend_for_you">Recommend for you</string>
+    <string name="restaurant">Restaurant</string>
+    <string name="the_most_popular_food">The most popular food</string>
 </resources>

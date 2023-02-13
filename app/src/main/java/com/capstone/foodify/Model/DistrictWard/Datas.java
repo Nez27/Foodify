@@ -1,4 +1,4 @@
-package com.capstone.foodify.DistrictWardResponse;
+package com.capstone.foodify.Model.DistrictWard;
 
 public class Datas {
     private String _id;

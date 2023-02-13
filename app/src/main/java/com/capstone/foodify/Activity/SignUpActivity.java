@@ -18,9 +18,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.capstone.foodify.API.ApiService;
-import com.capstone.foodify.DistrictWardResponse.Datas;
-import com.capstone.foodify.DistrictWardResponse.DisctrictWardResponse;
+import com.capstone.foodify.API.DistrictWardApi;
+import com.capstone.foodify.Model.DistrictWard.Datas;
+import com.capstone.foodify.Model.DistrictWard.DisctrictWardResponse;
 import com.capstone.foodify.R;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -134,7 +134,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         districtList.add("---Quận");
 
-        ApiService.apiService.districtResponse(PROVINCE_CODE, LIMIT).enqueue(new Callback<DisctrictWardResponse>() {
+        DistrictWardApi.apiService.districtResponse(PROVINCE_CODE, LIMIT).enqueue(new Callback<DisctrictWardResponse>() {
             @Override
             public void onResponse(Call<DisctrictWardResponse> call, Response<DisctrictWardResponse> response) {
                 DisctrictWardResponse districtResponse = response.body();
@@ -165,7 +165,7 @@ public class SignUpActivity extends AppCompatActivity {
             wardList.add("---Phường");
 
         if(districtCode != 0){
-            ApiService.apiService.wardResponse(districtCode, LIMIT).enqueue(new Callback<DisctrictWardResponse>() {
+            DistrictWardApi.apiService.wardResponse(districtCode, LIMIT).enqueue(new Callback<DisctrictWardResponse>() {
                 @Override
                 public void onResponse(Call<DisctrictWardResponse> call, Response<DisctrictWardResponse> response) {
 

@@ -71,32 +71,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             />
 
-        <TextView
-            android:id="@+id/recommend_text"
-            android:text="@string/recommend_for_you"
-            android:layout_marginTop="5dp"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:layout_marginStart="20dp"
-            android:textSize="18sp"
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/slider"
-            app:layout_constraintStart_toStartOf="parent"
-            />
-
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_food"
+            android:id="@+id/recycler_view_menu"
             android:layout_width="0dp"
-            android:layout_height="251dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="20dp"
             android:layout_marginTop="10dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="horizontal"
             tools:listitem="@layout/list_foods"
-            app:layout_constraintTop_toBottomOf="@id/recommend_text"
+            app:layout_constraintTop_toBottomOf="@id/slider"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             />
@@ -111,7 +96,7 @@
             android:textSize="18sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/recycler_view_food"
+            app:layout_constraintTop_toBottomOf="@id/recycler_view_menu"
             app:layout_constraintStart_toStartOf="parent"
             />
 
@@ -127,35 +112,6 @@
             android:contentDescription="List Food"
             tools:listitem="@layout/list_restaurant"
             app:layout_constraintTop_toBottomOf="@id/restaurant_text"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            />
-
-        <TextView
-            android:id="@+id/the_most_popular_food_text"
-            android:text="@string/the_most_popular_food"
-            android:layout_marginTop="5dp"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:layout_marginStart="20dp"
-            android:textSize="18sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/recycler_view_restaurant"
-            app:layout_constraintStart_toStartOf="parent"
-            />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_food_most_popular"
-            android:layout_width="0dp"
-            android:layout_height="251dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginTop="10dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:orientation="horizontal"
-            tools:listitem="@layout/list_foods"
-            app:layout_constraintTop_toBottomOf="@id/the_most_popular_food_text"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             />

@@ -14,6 +14,8 @@ import com.capstone.foodify.API.FoodApi;
 import com.capstone.foodify.Model.Food.Food;
 import com.capstone.foodify.Model.Menu.Menu;
 import com.capstone.foodify.Model.Menu.MenuAdapter;
+import com.capstone.foodify.Model.Shop.Shop;
+import com.capstone.foodify.Model.Shop.ShopAdapter;
 import com.capstone.foodify.R;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
@@ -34,8 +36,9 @@ public class HomeFragment extends Fragment {
 
     private ImageSlider imageSlider;
 
-    private RecyclerView rcvMenu;
+    private RecyclerView rcvMenu, recyclerView_restaurant;
     private MenuAdapter menuAdapter;
+    private ShopAdapter shopAdapter;
 
 
     @Override
@@ -47,9 +50,11 @@ public class HomeFragment extends Fragment {
         imageSlider = (ImageSlider) view.findViewById(R.id.slider);
         rcvMenu = view.findViewById(R.id.recycler_view_menu);
         menuAdapter = new MenuAdapter(getContext());
+        recyclerView_restaurant = view.findViewById(R.id.recycler_view_restaurant);
+        shopAdapter = new ShopAdapter(getContext());
+
 
         getListFood();
-        drinkListFood();
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         rcvMenu.setLayoutManager(linearLayoutManager);
@@ -62,6 +67,17 @@ public class HomeFragment extends Fragment {
         slideModels.add(new SlideModel("https://res.cloudinary.com/dnkmxpujh/image/upload/v1676023778/banner5_b4d1b8.png", null));
 
         imageSlider.setImageList(slideModels, ScaleTypes.FIT);
+
+        //Restaurant
+        List<Shop> shopList = new ArrayList<>();
+        shopList.add(new Shop(R.drawable.burgerking));
+        shopList.add(new Shop(R.drawable.dominopizza));
+        shopList.add(new Shop(R.drawable.mcdonals));
+        shopList.add(new Shop(R.drawable.pizzahut));
+        shopList.add(new Shop(R.drawable.subway));
+
+        shopAdapter.setData(shopList);
+        recyclerView_restaurant.setAdapter(shopAdapter);
 
         // Inflate the layout for this fragment
         return view;
@@ -105,7 +121,6 @@ public class HomeFragment extends Fragment {
                 for(Food tempFood: foodData){
                     drinkFood.add(tempFood);
                 }
-
 
                 menuAdapter.setData(getListMenu());
                 rcvMenu.setAdapter(menuAdapter);

@@ -81,7 +81,7 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="horizontal"
             tools:listitem="@layout/list_foods"
-            app:layout_constraintTop_toBottomOf="@id/slider"
+            app:layout_constraintTop_toBottomOf="@id/recycler_view_restaurant"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             />
@@ -96,7 +96,7 @@
             android:textSize="18sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/recycler_view_menu"
+            app:layout_constraintTop_toBottomOf="@id/slider"
             app:layout_constraintStart_toStartOf="parent"
             />
 

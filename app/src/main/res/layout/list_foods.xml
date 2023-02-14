@@ -33,19 +33,21 @@
             <ImageView
                 android:id="@+id/favourite_icon"
                 android:src="@drawable/baseline_favorite_border_24"
-                android:layout_width="18dp"
-                android:layout_height="20dp"
+                android:background=""
+                android:layout_width="24dp"
+                android:layout_height="26dp"
                 android:layout_marginEnd="5dp"
                 android:layout_marginBottom="2dp"
                 app:layout_constraintEnd_toEndOf="@id/image_view"
                 app:layout_constraintBottom_toBottomOf="@id/image_view"
+                android:contentDescription="@string/favourite_icon"
                 />
 
             <TextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="22dp"
-                android:text="Food Title"
+                android:text="@string/food_title"
                 android:layout_marginStart="6dp"
                 android:textSize="12sp"
                 android:fontFamily="@font/opensans"
@@ -68,7 +70,6 @@
 
                 <TextView
                     android:id="@+id/price"
-                    android:text="$ 5.00"
                     android:textSize="20sp"
                     android:textColor="@color/primaryColor"
                     android:fontFamily="@font/bebas"
@@ -85,6 +86,7 @@
                     android:layout_weight="0.2"
                     android:layout_height="20dp"
                     android:layout_marginEnd="2dp"
+                    android:contentDescription="@string/basket_icon"
                     />
 
             </LinearLayout>

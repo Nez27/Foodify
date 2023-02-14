@@ -32,4 +32,11 @@
     <string name="recommend_for_you">Recommend for you</string>
     <string name="restaurant">Restaurant</string>
     <string name="the_most_popular_food">The most popular food</string>
+    <string name="title">Title</string>
+    <string name="description">description</string>
+    <string name="home">Home</string>
+    <string name="location_icon">Location Icon</string>
+    <string name="food_title">Food Title</string>
+    <string name="basket_icon">Basket Icon</string>
+    <string name="favourite_icon">Favourite Icon</string>
 </resources>

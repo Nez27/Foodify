@@ -1,5 +1,6 @@
 package com.capstone.foodify.Model.Food;
 
+import android.content.Context;
 import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +19,13 @@ import java.util.List;
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder>{
 
     private List<Food> listFood;
+    private Context context;
 
+    public FoodAdapter(Context context){
+        this.context = context;
+    }
+
+    public FoodAdapter() {}
     public void setData(List<Food> list) {
         this.listFood = list;
         notifyDataSetChanged();

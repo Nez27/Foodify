@@ -31,7 +31,7 @@ import retrofit2.Response;
 
 public class HomeFragment extends Fragment {
 
-    private static List<Food> listFood = new ArrayList<>();
+    public static List<Food> listFood = new ArrayList<>();
     private static List<Food> drinkFood = new ArrayList<>();
 
     private ImageSlider imageSlider;

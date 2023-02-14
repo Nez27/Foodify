@@ -30,8 +30,6 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigation();
     }
-
-
     private void initComponent() {
         bottomNavigationView = findViewById(R.id.bottom_nav);
         viewPager2 = findViewById(R.id.viewPager);

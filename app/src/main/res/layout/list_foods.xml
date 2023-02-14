@@ -33,7 +33,6 @@
             <ImageView
                 android:id="@+id/favourite_icon"
                 android:src="@drawable/baseline_favorite_border_24"
-                android:background=""
                 android:layout_width="24dp"
                 android:layout_height="26dp"
                 android:layout_marginEnd="5dp"

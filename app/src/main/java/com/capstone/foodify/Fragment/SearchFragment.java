@@ -72,28 +72,29 @@ public class SearchFragment extends Fragment {
             public void onSearchConfirmed(PersistentSearchView searchView, String query) {
                 // Handle a search confirmation. This is the place where you'd
                 // want to perform a search against your data provider.
-                if(!query.isEmpty())
-                FoodApi.apiService.listFood(query).enqueue(new Callback<List<Food>>() {
-                    @Override
-                    public void onResponse(Call<List<Food>> call, Response<List<Food>> response) {
-                        List<Food> foodData = response.body();
+                if(!query.isEmpty()){
+                    FoodApi.apiService.listFood(query).enqueue(new Callback<List<Food>>() {
+                        @Override
+                        public void onResponse(Call<List<Food>> call, Response<List<Food>> response) {
+                            List<Food> foodData = response.body();
 
-                        if(foodData != null) {
-                            listFoodSearch.clear();
-                            for(Food tempFood: foodData){
-                                listFoodSearch.add(tempFood);
+                            if(foodData != null) {
+                                listFoodSearch.clear();
+                                for(Food tempFood: foodData){
+                                    listFoodSearch.add(tempFood);
+                                }
+                                foodAdapter.setData(listFoodSearch);
+                                recycler_view_search.setAdapter(foodAdapter);
                             }
-                            foodAdapter.setData(listFoodSearch);
-                            recycler_view_search.setAdapter(foodAdapter);
+
                         }
 
-                    }
-
-                    @Override
-                    public void onFailure(Call<List<Food>> call, Throwable t) {
-                        Toast.makeText(getContext(), "Lỗi" + t, Toast.LENGTH_LONG).show();
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<List<Food>> call, Throwable t) {
+                            Toast.makeText(getContext(), "Lỗi" + t, Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
 
                 searchView.collapse();
             }

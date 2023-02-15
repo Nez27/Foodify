@@ -4,10 +4,7 @@ public class Food {
     private String id;
     private String img;
     private String name;
-    private String dsc;
     private String price;
-    private String rate;
-    private String country;
 
     public String getId() {
         return id;
@@ -33,13 +30,6 @@ public class Food {
         this.name = name;
     }
 
-    public String getDsc() {
-        return dsc;
-    }
-
-    public void setDsc(String dsc) {
-        this.dsc = dsc;
-    }
 
     public String getPrice() {
         return price;
@@ -49,21 +39,6 @@ public class Food {
         this.price = price;
     }
 
-    public String getRate() {
-        return rate;
-    }
-
-    public void setRate(String rate) {
-        this.rate = rate;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
 
     @Override
     public String toString() {
@@ -71,10 +46,7 @@ public class Food {
                 "id='" + id + '\'' +
                 ", img='" + img + '\'' +
                 ", name='" + name + '\'' +
-                ", dsc='" + dsc + '\'' +
                 ", price='" + price + '\'' +
-                ", rate='" + rate + '\'' +
-                ", country='" + country + '\'' +
                 '}';
     }
 }

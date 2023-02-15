@@ -10,6 +10,7 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
+import retrofit2.http.Query;
 
 
 public interface FoodApi {
@@ -17,13 +18,16 @@ public interface FoodApi {
     Gson gson = new GsonBuilder().setDateFormat("HH:mm:ss dd-MM-yyyy").create();
 
     FoodApi apiService = new Retrofit.Builder()
-            .baseUrl("https://free-food-menus-api-production.up.railway.app/").addConverterFactory(GsonConverterFactory.create(gson))
+            .baseUrl("https://63eb52abbfdd4299674540d4.mockapi.io/api/v1/").addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(FoodApi.class);
 
-    @GET("best-foods")
+    @GET("randomProduct")
     Call<List<Food>> bestFoodResponse();
 
-    @GET("drinks")
+    @GET("recommend")
     Call<List<Food>> drinksFoodResponse();
+
+    @GET("listFood")
+    Call<List<Food>> listFood(@Query("search") String search);
 }

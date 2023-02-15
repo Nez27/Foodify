@@ -87,7 +87,7 @@ public class HomeFragment extends Fragment {
         List<Menu> listMenu = new ArrayList<>();
 
         listMenu.add(new Menu("Recommend Food", listFood));
-        listMenu.add(new Menu("Drinks", drinkFood));
+        listMenu.add(new Menu("Popular Food", drinkFood));
 
         return listMenu;
     }

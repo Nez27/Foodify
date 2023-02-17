@@ -53,8 +53,13 @@ public class HomeFragment extends Fragment {
         recyclerView_restaurant = view.findViewById(R.id.recycler_view_restaurant);
         shopAdapter = new ShopAdapter(getContext());
 
+        if(listFood.isEmpty() || drinkFood.isEmpty()){
+            getListFood();
+        } else {
+            menuAdapter.setData(getListMenu());
+            rcvMenu.setAdapter(menuAdapter);
+        }
 
-        getListFood();
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         rcvMenu.setLayoutManager(linearLayoutManager);
@@ -98,9 +103,8 @@ public class HomeFragment extends Fragment {
             public void onResponse(Call<List<Food>> call, Response<List<Food>> response) {
                 List<Food> foodData = response.body();
 
-                for(Food tempFood: foodData){
-                    listFood.add(tempFood);
-                }
+                if(foodData != null)
+                    listFood.addAll(foodData);
 
                 drinkListFood();
             }
@@ -118,9 +122,8 @@ public class HomeFragment extends Fragment {
             public void onResponse(Call<List<Food>> call, Response<List<Food>> response) {
                 List<Food> foodData = response.body();
 
-                for(Food tempFood: foodData){
-                    drinkFood.add(tempFood);
-                }
+                if(foodData != null)
+                    drinkFood.addAll(foodData);
 
                 menuAdapter.setData(getListMenu());
                 rcvMenu.setAdapter(menuAdapter);

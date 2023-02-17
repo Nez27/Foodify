@@ -7,6 +7,8 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 
 import com.capstone.foodify.R;
 import com.capstone.foodify.ViewPagerAdapter;
@@ -37,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     private void bottomNavigation() {
         viewPagerAdapter = new ViewPagerAdapter(this);
         viewPager2.setAdapter(viewPagerAdapter);
+
+        viewPager2.setUserInputEnabled(false);
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @SuppressLint("NonConstantResourceId")
             @Override

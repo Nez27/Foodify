@@ -6,6 +6,9 @@ public class Food {
     private String name;
     private String price;
 
+    public Food() {
+    }
+
     public String getId() {
         return id;
     }

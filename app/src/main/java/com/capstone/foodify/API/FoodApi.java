@@ -31,11 +31,14 @@ public interface FoodApi {
     Call<List<Food>> drinksFoodResponse();
 
     @GET("listFood")
-    Call<List<Food>> listFood(@Query("search") String search);
+    Call<List<Food>> listFood(@Query("search") String search, @Query("page") int page, @Query("limit") int limit);
 
     @GET("Category")
     Call<List<Category>> listCategory();
 
     @GET("Category/{id}/food")
     Call<List<Food>> listFoodByCategory(@Path("id") String id);
+
+    @GET("listFood")
+    Call<List<Food>> listFoodByPagination(@Query("page") int page, @Query("limit") int limit);
 }

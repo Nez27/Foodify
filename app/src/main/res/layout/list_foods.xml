@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="100dp"
-    android:layout_height="170dp"
+    android:layout_width="130dp"
+    android:layout_height="221dp"
     android:layout_marginBottom="10dp"
     android:layout_marginEnd="10dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="169dp"
+        android:layout_height="200dp"
         app:cardCornerRadius="10dp"
         >
 
@@ -18,27 +18,14 @@
 
             <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/image_view"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="131dp"
+                android:layout_height="131dp"
                 android:src="@drawable/food"
                 android:scaleType="centerCrop"
                 app:riv_corner_radius="10dip"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                />
-
-            <ImageView
-                android:id="@+id/favourite_icon"
-                android:src="@drawable/baseline_favorite_border_24"
-                android:layout_width="15dp"
-                android:layout_height="17dp"
-                android:layout_marginEnd="5dp"
-                android:layout_marginBottom="2dp"
-                android:background="@drawable/transparent_background"
-                app:layout_constraintEnd_toEndOf="@id/image_view"
-                app:layout_constraintBottom_toBottomOf="@id/image_view"
-                android:contentDescription="@string/favourite_icon"
                 />
 
             <TextView
@@ -70,12 +57,22 @@
                 <TextView
                     android:id="@+id/price"
                     android:textSize="18sp"
+                    android:text="100.000"
                     android:textColor="@color/primaryColor"
                     android:fontFamily="@font/bebas"
                     android:layout_marginStart="6dp"
                     android:layout_width="0dp"
-                    android:layout_weight="0.8"
+                    android:layout_weight="0.55"
                     android:layout_height="match_parent" />
+
+                <TextView
+                    android:text="-59%"
+                    android:textSize="8sp"
+                    android:textColor="@color/red"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2"
+                    />
 
                 <ImageView
                     android:id="@+id/basket_icon"

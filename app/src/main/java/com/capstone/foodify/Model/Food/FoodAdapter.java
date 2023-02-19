@@ -1,6 +1,7 @@
 package com.capstone.foodify.Model.Food;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.capstone.foodify.Activity.FoodDetailActivity;
 import com.capstone.foodify.R;
 import com.squareup.picasso.Picasso;
 
@@ -35,6 +37,15 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
     @Override
     public FoodViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_foods, parent, false);
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(parent.getContext(), FoodDetailActivity.class);
+                parent.getContext().startActivity(intent);
+            }
+        });
+
         return new FoodViewHolder(view);
     }
 

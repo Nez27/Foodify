@@ -53,4 +53,5 @@ dependencies {
     implementation "com.github.kojofosu:Quantitizer:1.6.7"
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation "com.paulrybitskyi.persistentsearchview:persistentsearchview:1.1.4"
+    implementation 'com.github.ome450901:SimpleRatingBar:1.5.1'
 }

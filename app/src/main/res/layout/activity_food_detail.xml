@@ -190,7 +190,7 @@
                     >
 
                     <TextView
-                        android:text="Sub Total"
+                        android:text="Total"
                         android:fontFamily="@font/bebas"
                         android:textColor="@color/black"
                         android:textSize="15sp"
@@ -200,7 +200,7 @@
                         />
 
                     <TextView
-                        android:text="$15.00"
+                        android:text="25.000 VND"
                         android:fontFamily="@font/bebas"
                         android:textColor="@color/primaryColor"
                         android:textSize="30sp"
@@ -217,18 +217,65 @@
                 style="@style/DefaultSolid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="40dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="40dp"
                 android:fontFamily="@font/bebas"
                 android:padding="10dp"
-                android:text="Add to basket"
-                android:textSize="20sp"
+                android:text="Add to basket - 15000 VND"
+                android:textSize="18sp"
                 app:layout_constraintTop_toBottomOf="@id/constraintLayout"
-                app:layout_constraintBottom_toBottomOf="parent"
                 />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#c0c0c0"
+                android:layout_marginTop="5dp"
+                app:layout_constraintTop_toBottomOf="@id/add_to_basket_button"
+                />
+
+            <LinearLayout
+                android:id="@+id/linear_layout_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/add_to_basket_button"
+                app:layout_constraintStart_toStartOf="parent"
+                >
+
+                <Button
+                    android:id="@+id/rating_button"
+                    android:text="Rating"
+                    android:fontFamily="@font/opensans"
+                    android:textAllCaps="false"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:drawableLeft="@drawable/baseline_edit_24"
+
+                    />
+
+                <TextView
+                    android:id="@+id/count_rating_text_view"
+                    android:text="235 rating"
+                    android:layout_marginStart="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    />
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                tools:listitem="@layout/item_review"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/linear_layout_2"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
     </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

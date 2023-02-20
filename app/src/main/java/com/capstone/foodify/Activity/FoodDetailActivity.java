@@ -1,17 +1,24 @@
 package com.capstone.foodify.Activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstone.foodify.API.FoodApi;
 import com.capstone.foodify.Model.Food.Food;
@@ -25,11 +32,10 @@ import com.denzcoskun.imageslider.models.SlideModel;
 import com.mcdev.quantitizerlibrary.AnimationStyle;
 import com.mcdev.quantitizerlibrary.HorizontalQuantitizer;
 import com.mcdev.quantitizerlibrary.QuantitizerListener;
+import com.willy.ratingbar.RotationRatingBar;
 
-import java.lang.reflect.Array;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -53,6 +59,7 @@ public class FoodDetailActivity extends AppCompatActivity {
     private float totalPrice, price;
     private RecyclerView recyclerView_review;
     private ReviewAdapter reviewAdapter;
+    private Button rating_button;
 
 
     @Override
@@ -80,6 +87,7 @@ public class FoodDetailActivity extends AppCompatActivity {
         countRating_txt = findViewById(R.id.count_rating_text_view);
         description_content_txt = findViewById(R.id.content_description_text_view);
         recyclerView_review = findViewById(R.id.recycler_view_review);
+        rating_button = findViewById(R.id.rating_button);
 
         reviewAdapter = new ReviewAdapter(this);
 
@@ -127,6 +135,13 @@ public class FoodDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 onBackPressed();
+            }
+        });
+
+        rating_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openReviewDialog(Gravity.CENTER);
             }
         });
     }
@@ -245,5 +260,44 @@ public class FoodDetailActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void openReviewDialog(int gravity){
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_review);
+
+        Window window = dialog.getWindow();
+        if(window == null)
+            return;
+
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        WindowManager.LayoutParams windowAttributes = window.getAttributes();
+        windowAttributes.gravity = gravity;
+        window.setAttributes(windowAttributes);
+
+        if(Gravity.BOTTOM == gravity){
+            dialog.setCancelable(true);
+        } else {
+            dialog.setCancelable(false);
+        }
+
+        EditText review_content = dialog.findViewById(R.id.edit_text_review);
+        RotationRatingBar ratingBar = dialog.findViewById(R.id.rating_bar);
+        Button confirm = dialog.findViewById(R.id.confirm_button);
+        Button cancel = dialog.findViewById(R.id.cancel_button);
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        //TO DO
+
+        dialog.show();
     }
 }

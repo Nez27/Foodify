@@ -8,4 +8,5 @@
     <color name="secondary">#F99928</color>
     <color name="graylight">#ACA5A5</color>
     <color name="red">#FF0000</color>
+    <color name="primaryDark">#1EAE94</color>
 </resources>

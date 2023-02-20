@@ -2,13 +2,10 @@ package com.capstone.foodify.Fragment;
 
 import static com.capstone.foodify.Fragment.HomeFragment.listFood;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -23,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.capstone.foodify.API.FoodApi;
 import com.capstone.foodify.Model.Category.Category;
 import com.capstone.foodify.Model.Food.Food;
-import com.capstone.foodify.Model.Food.FoodAdapter;
 import com.capstone.foodify.Model.Food.FoodSearchAdapter;
 import com.capstone.foodify.R;
 import com.google.android.material.chip.Chip;
@@ -31,7 +27,6 @@ import com.google.android.material.chip.ChipGroup;
 import com.paulrybitskyi.persistentsearchview.PersistentSearchView;
 import com.paulrybitskyi.persistentsearchview.listeners.OnSearchConfirmedListener;
 import com.paulrybitskyi.persistentsearchview.listeners.OnSearchQueryChangeListener;
-import com.paulrybitskyi.persistentsearchview.utils.VoiceRecognitionDelegate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -219,7 +214,7 @@ public class SearchFragment extends Fragment {
     }
 
     private void getListFoodByPagination(int page){
-        FoodApi.apiService.listFoodByPagination(page, LIMIT).enqueue(new Callback<List<Food>>() {
+        FoodApi.apiService.listFood(page, LIMIT).enqueue(new Callback<List<Food>>() {
             @Override
             public void onResponse(Call<List<Food>> call, Response<List<Food>> response) {
                 loadFoodAdapter(response);

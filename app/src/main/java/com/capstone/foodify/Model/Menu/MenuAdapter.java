@@ -49,7 +49,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false);
         holder.rcvFood.setLayoutManager(linearLayoutManager);
 
-        FoodAdapter foodAdapter = new FoodAdapter();
+        FoodAdapter foodAdapter = new FoodAdapter(context);
         foodAdapter.setData(menu.getFoods());
 
         holder.rcvFood.setAdapter(foodAdapter);

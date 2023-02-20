@@ -53,6 +53,7 @@ public class HomeFragment extends Fragment {
         recyclerView_restaurant = view.findViewById(R.id.recycler_view_restaurant);
         shopAdapter = new ShopAdapter(getContext());
 
+
         if(listFood.isEmpty() || drinkFood.isEmpty()){
             getListFood();
         } else {

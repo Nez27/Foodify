@@ -5,6 +5,18 @@ public class Food {
     private String img;
     private String name;
     private String price;
+    private String discount;
+    private String description;
+
+    private String reviewCount;
+
+    public String getReviewCount() {
+        return reviewCount;
+    }
+
+    public void setReviewCount(String reviewCount) {
+        this.reviewCount = reviewCount;
+    }
 
     public Food() {
     }
@@ -33,7 +45,6 @@ public class Food {
         this.name = name;
     }
 
-
     public String getPrice() {
         return price;
     }
@@ -42,14 +53,19 @@ public class Food {
         this.price = price;
     }
 
+    public String getDiscount() {
+        return discount;
+    }
 
-    @Override
-    public String toString() {
-        return "Food{" +
-                "id='" + id + '\'' +
-                ", img='" + img + '\'' +
-                ", name='" + name + '\'' +
-                ", price='" + price + '\'' +
-                '}';
+    public void setDiscount(String discount) {
+        this.discount = discount;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

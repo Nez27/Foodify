@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -59,7 +60,7 @@ public class SearchFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         //Init Component
-        PersistentSearchView persistentSearchView = view.findViewById(R.id.search_view);
+        SearchView searchView = view.findViewById(R.id.search_view);
         recycler_view_search = view.findViewById(R.id.recycler_view_search);
         list_Category = view.findViewById(R.id.list_category);
         nestedScrollView = view.findViewById(R.id.search_fragment);
@@ -75,7 +76,7 @@ public class SearchFragment extends Fragment {
         recycler_view_search.setAdapter(foodAdapter);
 
         getListFoodByPagination(1);
-        if(nestedScrollView != null){
+        if (nestedScrollView != null) {
             nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
                 @Override
                 public void onScrollChange(@NonNull NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
@@ -86,38 +87,30 @@ public class SearchFragment extends Fragment {
                 }
             });
         }
-
-        persistentSearchView.setLeftButtonDrawable(R.drawable.ic_search);
-        persistentSearchView.setOnSearchConfirmedListener(new OnSearchConfirmedListener() {
-
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public void onSearchConfirmed(PersistentSearchView searchView, String query) {
-                // Handle a search confirmation. This is the place where you'd
-                // want to perform a search against your data provider.
+            public boolean onQueryTextSubmit(String query) {
                 ACTION_CODE = SEARCH_FOOD;
                 CURRENT_PAGE = 1;
                 showProgressBarAndHideEndOfListText();
                 listFoodSearch.clear();
-                if(!query.isEmpty()){
+                if (!query.isEmpty()) {
                     searchQuery = query;
                     getListFoodBySearch(searchQuery, CURRENT_PAGE);
                 }
-
-                searchView.collapse();
+                return true;
             }
 
-        });
-
-        persistentSearchView.setOnSearchQueryChangeListener(new OnSearchQueryChangeListener() {
             @Override
-            public void onSearchQueryChanged(PersistentSearchView searchView, String oldQuery, String newQuery) {
-                if(searchView.isInputQueryEmpty()){
+            public boolean onQueryTextChange(String newText) {
+                if (searchView.getQuery().length() == 0) {
                     CURRENT_PAGE = 1;
                     ACTION_CODE = LIST_FOOD;
                     showProgressBarAndHideEndOfListText();
                     foodAdapter.setData(listFood);
                     foodAdapter.notifyDataSetChanged();
                 }
+                return true;
             }
         });
 

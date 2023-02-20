@@ -12,17 +12,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.paulrybitskyi.persistentsearchview.PersistentSearchView
-            android:id="@+id/search_view"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_view"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="5dp"
+            android:layout_marginBottom="5dp"
+            >
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/search_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:queryBackground="@android:color/transparent"
+                app:queryHint="Search here..."
+                android:background="@color/white"
+                app:iconifiedByDefault="false"
+                />
+
+        </androidx.cardview.widget.CardView>
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/list_category"
-            app:layout_constraintTop_toBottomOf="@+id/search_view"
+            app:layout_constraintTop_toBottomOf="@+id/card_view"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_width="wrap_content"

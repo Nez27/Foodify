@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="170dp"
-    android:layout_marginTop="10dp"
+    android:layout_width="120dp"
+    android:layout_height="221dp"
     android:layout_marginBottom="10dp"
     android:layout_marginEnd="10dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="169dp"
+        android:layout_height="200dp"
         app:cardCornerRadius="10dp"
         >
 
@@ -19,8 +18,8 @@
 
             <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/image_view"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
                 android:src="@drawable/food"
                 android:scaleType="centerCrop"
                 app:riv_corner_radius="10dip"
@@ -29,23 +28,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 />
 
-            <ImageView
-                android:id="@+id/favourite_icon"
-                android:src="@drawable/baseline_favorite_border_24"
-                android:layout_width="15dp"
-                android:layout_height="17dp"
-                android:layout_marginEnd="5dp"
-                android:layout_marginBottom="2dp"
-                android:background="@drawable/transparent_background"
-                app:layout_constraintEnd_toEndOf="@id/image_view"
-                app:layout_constraintBottom_toBottomOf="@id/image_view"
-                android:contentDescription="@string/favourite_icon"
-                />
-
             <TextView
                 android:id="@+id/title"
                 android:layout_width="match_parent"
-                android:layout_height="34dp"
+                android:layout_height="40dp"
                 android:text="@string/food_title"
                 android:layout_marginStart="3dp"
                 android:layout_marginEnd="3dp"
@@ -71,22 +57,38 @@
                 <TextView
                     android:id="@+id/price"
                     android:textSize="18sp"
+                    android:text="1000000000"
                     android:textColor="@color/primaryColor"
                     android:fontFamily="@font/bebas"
-                    android:layout_marginStart="6dp"
-                    android:layout_width="0dp"
-                    android:layout_weight="0.8"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent" />
 
-                <ImageView
-                    android:id="@+id/basket_icon"
-                    android:layout_width="0dp"
+                <TextView
+                    android:text="-59%"
+                    android:textSize="8sp"
+                    android:textColor="@color/red"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginEnd="5dp"
-                    android:layout_weight="0.18"
-                    android:layout_marginTop="3dp"
-                    android:contentDescription="@string/basket_icon"
-                    android:src="@drawable/basket_icon" />
+                    />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_marginTop="2dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    >
+
+                    <ImageView
+                        android:id="@+id/basket_icon"
+                        android:layout_width="20dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginTop="10dp"
+                        android:contentDescription="@string/basket_icon"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:src="@drawable/basket_icon"
+                        />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </LinearLayout>
 

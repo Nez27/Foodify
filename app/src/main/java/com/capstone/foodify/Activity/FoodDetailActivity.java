@@ -1,6 +1,8 @@
 package com.capstone.foodify.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +16,8 @@ import android.widget.Toast;
 import com.capstone.foodify.API.FoodApi;
 import com.capstone.foodify.Model.Food.Food;
 import com.capstone.foodify.Model.Food.ImageFood;
+import com.capstone.foodify.Model.Review.Review;
+import com.capstone.foodify.Model.Review.ReviewAdapter;
 import com.capstone.foodify.R;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
@@ -47,6 +51,8 @@ public class FoodDetailActivity extends AppCompatActivity {
     private LinearLayout linearLayout, linearLayout2, linearLayout3;
     private View line;
     private float totalPrice, price;
+    private RecyclerView recyclerView_review;
+    private ReviewAdapter reviewAdapter;
 
 
     @Override
@@ -73,6 +79,17 @@ public class FoodDetailActivity extends AppCompatActivity {
         total_txt = findViewById(R.id.total_text_view);
         countRating_txt = findViewById(R.id.count_rating_text_view);
         description_content_txt = findViewById(R.id.content_description_text_view);
+        recyclerView_review = findViewById(R.id.recycler_view_review);
+
+        reviewAdapter = new ReviewAdapter(this);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        recyclerView_review.setLayoutManager(linearLayoutManager);
+
+        reviewAdapter.setData(getListReview());
+        recyclerView_review.setAdapter(reviewAdapter);
+
+
         hideUI();
 
         //Customize UI Horizontal Quantitizer
@@ -112,6 +129,18 @@ public class FoodDetailActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+    }
+
+    private List<Review> getListReview(){
+        ArrayList<Review> listReview = new ArrayList<>();
+
+        listReview.add(new Review("User A", 5, "Very Good!"));
+        listReview.add(new Review("User B", 1, "Bad!"));
+        listReview.add(new Review("User C", 4, "Delicious!"));
+        listReview.add(new Review("User D", 3, "OK!"));
+        listReview.add(new Review("User E", 5, "Awesome!"));
+
+        return listReview;
     }
 
     private void hideUI() {
@@ -162,7 +191,7 @@ public class FoodDetailActivity extends AppCompatActivity {
         price_txt.setText(fmt.format(Float.parseFloat(food.getPrice())));
         discount_txt.setText("-" + food.getDiscount() + "%");
         description_content_txt.setText(food.getDescription());
-        countRating_txt.setText(food.getReviewCount());
+        countRating_txt.setText(food.getReviewCount() + " rating");
 
         add_to_basket_button.setText("ADD TO BASKET - " + fmt.format(0));
 

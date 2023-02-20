@@ -13,7 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.capstone.foodify.R;
 import com.squareup.picasso.Picasso;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class FoodSearchAdapter extends RecyclerView.Adapter<FoodSearchAdapter.FoodViewHolder>{
 
@@ -53,7 +55,12 @@ public class FoodSearchAdapter extends RecyclerView.Adapter<FoodSearchAdapter.Fo
             holder.name.setText(foodName);
         }
         Picasso.get().load(food.getImg()).into(holder.image);
-        holder.price.setText(food.getPrice());
+
+
+        Locale locale = new Locale("vi", "VN");
+        NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
+
+        holder.price.setText(fmt.format(Float.parseFloat(food.getPrice())));
     }
 
     @Override

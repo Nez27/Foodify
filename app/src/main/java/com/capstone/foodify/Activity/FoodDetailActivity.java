@@ -157,6 +157,7 @@ public class FoodDetailActivity extends AppCompatActivity {
         line.setVisibility(View.GONE);
         total_txt.setVisibility(View.GONE);
         description_content_txt.setVisibility(View.GONE);
+        recyclerView_review.setVisibility(View.GONE);
 
         progressBar.setVisibility(View.VISIBLE);
     }
@@ -175,7 +176,7 @@ public class FoodDetailActivity extends AppCompatActivity {
         line.setVisibility(View.VISIBLE);
         total_txt.setVisibility(View.VISIBLE);
         description_content_txt.setVisibility(View.VISIBLE);
-
+        recyclerView_review.setVisibility(View.VISIBLE);
 
         progressBar.setVisibility(View.GONE);
     }

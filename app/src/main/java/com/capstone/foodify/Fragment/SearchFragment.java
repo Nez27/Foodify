@@ -25,9 +25,6 @@ import com.capstone.foodify.Model.Food.FoodSearchAdapter;
 import com.capstone.foodify.R;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.paulrybitskyi.persistentsearchview.PersistentSearchView;
-import com.paulrybitskyi.persistentsearchview.listeners.OnSearchConfirmedListener;
-import com.paulrybitskyi.persistentsearchview.listeners.OnSearchQueryChangeListener;
 
 import java.util.ArrayList;
 import java.util.List;

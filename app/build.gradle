@@ -6,6 +6,10 @@ android {
     namespace 'com.capstone.foodify'
     compileSdk 33
 
+    lintOptions {
+        baseline file("lint-baseline.xml")
+    }
+
     defaultConfig {
         applicationId "com.capstone.foodify"
         minSdk 24

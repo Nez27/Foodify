@@ -18,9 +18,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.capstone.foodify.API.DistrictWardApi;
-import com.capstone.foodify.Model.DistrictWard.Datas;
-import com.capstone.foodify.Model.DistrictWard.DisctrictWardResponse;
+import com.capstone.foodify.API.FoodApi;
+import com.capstone.foodify.Model.DistrictWard.DistrictWardResponse;
 import com.capstone.foodify.R;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -36,9 +35,6 @@ import retrofit2.Response;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    private static final int PROVINCE_CODE = 48;
-    private static final int LIMIT = -1;
-
     TextInputLayout textInput_email, textInput_password, textInput_phone,
             textInput_address, textInput_repeatPassword, textInput_firstName, textInput_lastName, textInput_birthDay;
     final Calendar myCalendar= Calendar.getInstance();
@@ -49,8 +45,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     private static final ArrayList<String> wardList = new ArrayList<>();
     private static final ArrayList<String> districtList = new ArrayList<>();
-    private static List<Datas> districtListData = new ArrayList<>();
-    private static List<Datas> wardListData = new ArrayList<>();
 
     String selectedDistrict = "";
 
@@ -65,7 +59,7 @@ public class SignUpActivity extends AppCompatActivity {
         setFontUI();
         chooseDateOfBirth();
 
-        if(districtListData.size() == 0){
+        if(districtList.size() == 0){
             getListDistrict();
         } else {
             setAdapter(districtList, "---Quận", districtSpinner);
@@ -88,18 +82,7 @@ public class SignUpActivity extends AppCompatActivity {
         districtSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                int districtCode = 0;
-
-                selectedDistrict = districtSpinner.getSelectedItem().toString();
-
-                //Get id district from selected item district;
-                for(Datas dataTemp: districtListData){
-                    if(selectedDistrict.equals(dataTemp.getName_with_type())){
-                        districtCode = Integer.parseInt(dataTemp.getCode());
-                        break;
-                    }
-                }
-                getListWard(districtCode);
+                getListWard(i);
             }
 
             @Override
@@ -134,23 +117,21 @@ public class SignUpActivity extends AppCompatActivity {
 
         districtList.add("---Quận");
 
-        DistrictWardApi.apiService.districtResponse(PROVINCE_CODE, LIMIT).enqueue(new Callback<DisctrictWardResponse>() {
+        FoodApi.apiService.districtResponse().enqueue(new Callback<List<DistrictWardResponse>>() {
             @Override
-            public void onResponse(Call<DisctrictWardResponse> call, Response<DisctrictWardResponse> response) {
-                DisctrictWardResponse districtResponse = response.body();
-                if(districtResponse != null && districtResponse.getExitcode() == 1){
-
-                    districtListData = districtResponse.getData().getData();
-                    for(Datas tempData: districtListData){
-                        districtList.add(tempData.getName_with_type());
+            public void onResponse(Call<List<DistrictWardResponse>> call, Response<List<DistrictWardResponse>> response) {
+                List<DistrictWardResponse> districtResponse = response.body();
+                if(districtResponse != null){
+                    for(DistrictWardResponse tempDistrict: districtResponse){
+                        districtList.add(tempDistrict.getName());
                     }
-                };
+                }
 
                 setAdapter(districtList, "---Quận", districtSpinner);
             }
 
             @Override
-            public void onFailure(Call<DisctrictWardResponse> call, Throwable t) {
+            public void onFailure(Call<List<DistrictWardResponse>> call, Throwable t) {
                 Toast.makeText(SignUpActivity.this, "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau!", Toast.LENGTH_SHORT).show();
             }
         });
@@ -164,25 +145,31 @@ public class SignUpActivity extends AppCompatActivity {
         if(wardList.size() == 0)
             wardList.add("---Phường");
 
+        wardSpinner.setEnabled(false);
+
         if(districtCode != 0){
-            DistrictWardApi.apiService.wardResponse(districtCode, LIMIT).enqueue(new Callback<DisctrictWardResponse>() {
+            FoodApi.apiService.wardResponse(districtCode).enqueue(new Callback<List<DistrictWardResponse>>() {
                 @Override
-                public void onResponse(Call<DisctrictWardResponse> call, Response<DisctrictWardResponse> response) {
+                public void onResponse(Call<List<DistrictWardResponse>> call, Response<List<DistrictWardResponse>> response) {
+                    List<DistrictWardResponse> wardData = response.body();
 
-                    DisctrictWardResponse wardResponse = response.body();
-                    if(wardResponse != null && wardResponse.getExitcode() == 1){
-
-                        wardListData = wardResponse.getData().getData();
-                        for(Datas tempData: wardListData){
-                            wardList.add(tempData.getName_with_type());
+                    if(wardData != null){
+                        for(DistrictWardResponse tempWard: wardData){
+                            wardList.add(tempWard.getName());
                         }
-                    };
+                    }
+
+                    if(wardList.size() <= 1){
+                        wardSpinner.setEnabled(false);
+                    } else {
+                        wardSpinner.setEnabled(true);
+                    }
 
                     setAdapter(wardList, "---Phường", wardSpinner);
                 }
 
                 @Override
-                public void onFailure(Call<DisctrictWardResponse> call, Throwable t) {
+                public void onFailure(Call<List<DistrictWardResponse>> call, Throwable t) {
                     Toast.makeText(SignUpActivity.this, "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau!", Toast.LENGTH_SHORT).show();
                 }
             });

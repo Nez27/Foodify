@@ -1,6 +1,7 @@
 package com.capstone.foodify.API;
 
 import com.capstone.foodify.Model.Category.Category;
+import com.capstone.foodify.Model.DistrictWard.DistrictWardResponse;
 import com.capstone.foodify.Model.Food.Food;
 import com.capstone.foodify.Model.Food.ImageFood;
 import com.google.gson.Gson;
@@ -48,4 +49,10 @@ public interface FoodApi {
 
     @GET("detail/{id}/image")
     Call<List<ImageFood>> getImageFoodById(@Path("id") String id);
+
+    @GET("district/{districtId}/ward")
+    Call<List<DistrictWardResponse>> wardResponse(@Path("districtId") int district_id);
+
+    @GET("district")
+    Call<List<DistrictWardResponse>> districtResponse();
 }

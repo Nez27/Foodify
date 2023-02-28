@@ -188,22 +188,24 @@
 
         <Spinner
             android:id="@+id/district"
-            android:layout_width="150dp"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:textAlignment="viewEnd"
             android:gravity="end"
             android:paddingEnd="25dp"
             android:contentDescription="district"
+            android:layout_weight="0.4"
             />
 
         <Spinner
             android:id="@+id/ward"
             android:textAlignment="viewEnd"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:gravity="end"
             android:paddingEnd="25dp"
             android:contentDescription="ward"
+            android:layout_weight="0.6"
             />
 
     </LinearLayout>

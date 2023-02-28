@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        >
+
+        <androidx.cardview.widget.CardView
+            android:layout_margin="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:cardMaxElevation="10dp"
+            app:cardPreventCornerOverlap="true"
+            app:cardElevation="3dp"
+            app:cardCornerRadius="10dp"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                >
+
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/image_view"
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
+                    android:src="@drawable/food"
+                    android:scaleType="centerCrop"
+                    app:riv_corner_radius="10dip"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    >
+
+                    <TextView
+                        android:id="@+id/text_view_1"
+                        android:text="Food Name"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/opensans"
+                        android:layout_width="wrap_content"
+                        android:layout_height="47dp"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginTop="5dp"
+                        app:layout_constraintStart_toEndOf="@id/image_view"
+                        app:layout_constraintTop_toTopOf="parent"
+                        />
+
+                    <TextView
+                        android:id="@+id/text_view_2"
+                        android:text="Shop Name"
+                        android:textSize="16sp"
+                        android:textColor="@color/secondary"
+                        android:fontFamily="@font/opensans"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginTop="2dp"
+                        app:layout_constraintStart_toEndOf="@id/image_view"
+                        app:layout_constraintTop_toBottomOf="@id/text_view_1"
+                        />
+
+                    <TextView
+                        android:id="@+id/text_price"
+                        android:text="$5.00"
+                        android:textSize="25sp"
+                        android:textColor="@color/primaryColor"
+                        android:fontFamily="@font/bebas"
+                        android:layout_width="220dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginTop="2dp"
+                        app:layout_constraintStart_toEndOf="@id/image_view"
+                        app:layout_constraintTop_toBottomOf="@id/text_view_2"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.1"
+                    >
+
+                    <ImageView
+                        android:id="@+id/basket_icon"
+                        android:layout_width="20dp"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/basket_icon"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:src="@drawable/basket_icon"
+                        />
+
+                </LinearLayout>
+
+
+
+
+            </LinearLayout>
+
+
+        </androidx.cardview.widget.CardView>
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

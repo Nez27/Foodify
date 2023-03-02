@@ -15,6 +15,12 @@
         android:theme="@style/Theme.Foodify"
         tools:targetApi="31">
         <activity
+            android:name=".Activity.ChangePasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.AccountAndProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activity.FoodDetailActivity"
             android:exported="false" />
         <activity
@@ -38,8 +44,8 @@
             android:noHistory="true" />
         <activity
             android:name=".Activity.MainActivity"
-            android:theme="@style/Theme.Foodify.SplashScreen"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.Foodify.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

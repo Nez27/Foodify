@@ -36,7 +36,8 @@ import retrofit2.Response;
 public class SignUpActivity extends AppCompatActivity {
 
     TextInputLayout textInput_email, textInput_password, textInput_phone,
-            textInput_address, textInput_repeatPassword, textInput_firstName, textInput_lastName, textInput_birthDay;
+            textInput_address, textInput_repeatPassword, textInput_firstName, textInput_lastName, textInput_birthDay,
+            textInput_username;
     final Calendar myCalendar= Calendar.getInstance();
     EditText edt_birthday;
     TextView signIn_textView;
@@ -101,6 +102,7 @@ public class SignUpActivity extends AppCompatActivity {
         textInput_firstName = (TextInputLayout) findViewById(R.id.textInput_firstName);
         textInput_lastName = (TextInputLayout) findViewById(R.id.textInput_lastName);
         textInput_birthDay = (TextInputLayout) findViewById(R.id.textInput_birthDay);
+        textInput_username = (TextInputLayout) findViewById(R.id.textInput_username);
 
         edt_birthday = (EditText) findViewById(R.id.edt_birthDay);
 
@@ -251,6 +253,7 @@ public class SignUpActivity extends AppCompatActivity {
         textInput_firstName.setTypeface(bebas);
         textInput_lastName.setTypeface(bebas);
         textInput_birthDay.setTypeface(bebas);
+        textInput_username.setTypeface(bebas);
 
         edt_birthday.setTypeface(bebas);
     }

@@ -41,4 +41,9 @@
     <string name="favourite_icon">Favourite Icon</string>
     <string name="text_description">Non odit iusto delectus maxime sit placeat voluptatum dolorem. Dolores quos rerum iusto.
         Beatae totam ab veritatis aliquid tenetur qui ut. Quia ut dolorum enim et. .</string>
+    <string name="username">Tên người dùng</string>
+    <string name="updated">Cập nhật</string>
+    <string name="old_password">Mật khẩu cũ</string>
+    <string name="change_password">Đổi mật khẩu</string>
+    <string name="account_and_profile">Thông tin tài khoản</string>
 </resources>

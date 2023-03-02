@@ -8,6 +8,7 @@ public class Food {
     private String discount;
     private String description;
 
+    private String shopName;
     private String reviewCount;
 
     public String getReviewCount() {
@@ -19,6 +20,14 @@ public class Food {
     }
 
     public Food() {
+    }
+
+    public Food(String id, String img, String name, String price, String shopName) {
+        this.id = id;
+        this.img = img;
+        this.name = name;
+        this.price = price;
+        this.shopName = shopName;
     }
 
     public String getId() {
@@ -67,5 +76,12 @@ public class Food {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
     }
 }

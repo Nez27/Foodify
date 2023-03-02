@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Fragment.FavouriteFragment">
+    tools:context=".Fragment.FavouriteFragment"
+    android:id="@+id/list_favorite_food_view"
+    >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -26,7 +28,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_favorite_food"
-            tools:listitem="@layout/item_food_horizontal"
+            tools:listitem="@layout/item_food_favorite"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"

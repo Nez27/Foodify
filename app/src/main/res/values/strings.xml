@@ -46,4 +46,5 @@
     <string name="old_password">Mật khẩu cũ</string>
     <string name="change_password">Đổi mật khẩu</string>
     <string name="account_and_profile">Thông tin tài khoản</string>
+    <string name="delete">Delete</string>
 </resources>

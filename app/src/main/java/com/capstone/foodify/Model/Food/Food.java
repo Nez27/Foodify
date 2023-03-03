@@ -1,6 +1,6 @@
 package com.capstone.foodify.Model.Food;
 
-public class Food {
+public class Food implements Comparable<Food>{
     private String id;
     private String img;
     private String name;
@@ -83,5 +83,14 @@ public class Food {
 
     public void setShopName(String shopName) {
         this.shopName = shopName;
+    }
+
+
+    @Override
+    public int compareTo(Food food) {
+        if(getName().isEmpty() || food.getName().isEmpty()){
+            return 0;
+        }
+        return getName().compareTo(food.getName());
     }
 }

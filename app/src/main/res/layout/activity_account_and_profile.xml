@@ -63,7 +63,7 @@
         android:hint="@string/phone_text"
         app:boxBackgroundColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/textInput_username"
+        app:layout_constraintBottom_toTopOf="@id/textInput_fullName"
         app:startIconDrawable="@drawable/baseline_phone_24"
         app:startIconTint="@color/primaryColor">
 
@@ -78,78 +78,28 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInput_username"
+        android:id="@+id/textInput_fullName"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
-        android:hint="@string/username"
+        android:hint="@string/full_name"
         app:boxBackgroundColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/linearLayout_fullName"
-        app:startIconDrawable="@drawable/baseline_abc_24"
+        app:layout_constraintBottom_toTopOf="@id/textInput_birthDay"
+        app:startIconDrawable="@drawable/baseline_phone_24"
         app:startIconTint="@color/primaryColor">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edt_username"
+            android:id="@+id/edt_fullName"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inputType="text"
+            android:inputType="phone"
             android:enabled="false"
             />
 
     </com.google.android.material.textfield.TextInputLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout_fullName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/textInput_birthDay"
-        >
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInput_firstName"
-            android:layout_width="150dp"
-            android:layout_height="60dp"
-            android:layout_marginEnd="20dp"
-            android:hint="@string/first_name_text"
-            app:boxBackgroundColor="@color/white"
-            app:startIconDrawable="@drawable/baseline_abc_24"
-            app:startIconTint="@color/primaryColor">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edt_first_name"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:inputType="textPassword" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInput_lastName"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:hint="@string/last_name_text"
-            app:boxBackgroundColor="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInput_phone">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edt_last_name"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:inputType="textPassword" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-    </LinearLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInput_birthDay"

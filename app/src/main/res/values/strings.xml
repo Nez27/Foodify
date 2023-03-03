@@ -47,4 +47,5 @@
     <string name="change_password">Đổi mật khẩu</string>
     <string name="account_and_profile">Thông tin tài khoản</string>
     <string name="delete">Delete</string>
+    <string name="full_name">Họ và tên</string>
 </resources>

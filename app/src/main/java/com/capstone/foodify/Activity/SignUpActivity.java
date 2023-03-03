@@ -36,8 +36,7 @@ import retrofit2.Response;
 public class SignUpActivity extends AppCompatActivity {
 
     TextInputLayout textInput_email, textInput_password, textInput_phone,
-            textInput_address, textInput_repeatPassword, textInput_firstName, textInput_lastName, textInput_birthDay,
-            textInput_username;
+            textInput_address, textInput_repeatPassword, textInput_fullName, textInput_birthDay;
     final Calendar myCalendar= Calendar.getInstance();
     EditText edt_birthday;
     TextView signIn_textView;
@@ -99,10 +98,8 @@ public class SignUpActivity extends AppCompatActivity {
         textInput_phone = (TextInputLayout) findViewById(R.id.textInput_phone);
         textInput_address = (TextInputLayout) findViewById(R.id.textInput_address);
         textInput_repeatPassword = (TextInputLayout) findViewById(R.id.textInput_confirmPassword);
-        textInput_firstName = (TextInputLayout) findViewById(R.id.textInput_firstName);
-        textInput_lastName = (TextInputLayout) findViewById(R.id.textInput_lastName);
+        textInput_fullName = (TextInputLayout) findViewById(R.id.textInput_fullName);
         textInput_birthDay = (TextInputLayout) findViewById(R.id.textInput_birthDay);
-        textInput_username = (TextInputLayout) findViewById(R.id.textInput_username);
 
         edt_birthday = (EditText) findViewById(R.id.edt_birthDay);
 
@@ -217,7 +214,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void chooseDateOfBirth() {
         //Calendar date of birth
-
         DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
@@ -250,10 +246,8 @@ public class SignUpActivity extends AppCompatActivity {
         textInput_phone.setTypeface(bebas);
         textInput_address.setTypeface(bebas);
         textInput_repeatPassword.setTypeface(bebas);
-        textInput_firstName.setTypeface(bebas);
-        textInput_lastName.setTypeface(bebas);
+        textInput_fullName.setTypeface(bebas);
         textInput_birthDay.setTypeface(bebas);
-        textInput_username.setTypeface(bebas);
 
         edt_birthday.setTypeface(bebas);
     }

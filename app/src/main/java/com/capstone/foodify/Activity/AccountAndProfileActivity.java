@@ -2,6 +2,7 @@ package com.capstone.foodify.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -21,7 +22,7 @@ import java.util.Locale;
 
 public class AccountAndProfileActivity extends AppCompatActivity {
 
-    TextInputLayout textInput_email, textInput_phone, textInput_firstName, textInput_lastName, textInput_birthDay, textInput_username;
+    TextInputLayout textInput_email, textInput_phone, textInput_fullName, textInput_birthDay;
 
     EditText edt_birthday;
     final Calendar myCalendar= Calendar.getInstance();
@@ -58,10 +59,8 @@ public class AccountAndProfileActivity extends AppCompatActivity {
     private void initComponent() {
         textInput_email= (TextInputLayout) findViewById(R.id.textInput_email);
         textInput_phone = (TextInputLayout) findViewById(R.id.textInput_phone);
-        textInput_firstName = (TextInputLayout) findViewById(R.id.textInput_firstName);
-        textInput_lastName = (TextInputLayout) findViewById(R.id.textInput_lastName);
+        textInput_fullName = (TextInputLayout) findViewById(R.id.textInput_fullName);
         textInput_birthDay = (TextInputLayout) findViewById(R.id.textInput_birthDay);
-        textInput_username = (TextInputLayout) findViewById(R.id.textInput_username);
         change_password = (LinearLayout) findViewById(R.id.change_password);
 
         back_image = (ImageView) findViewById(R.id.back_image);
@@ -75,10 +74,8 @@ public class AccountAndProfileActivity extends AppCompatActivity {
         //Set Type face
         textInput_email.setTypeface(bebas);
         textInput_phone.setTypeface(bebas);
-        textInput_firstName.setTypeface(bebas);
-        textInput_lastName.setTypeface(bebas);
+        textInput_fullName.setTypeface(bebas);
         textInput_birthDay.setTypeface(bebas);
-        textInput_username.setTypeface(bebas);
 
         edt_birthday.setTypeface(bebas);
     }
@@ -98,7 +95,7 @@ public class AccountAndProfileActivity extends AppCompatActivity {
         edt_birthday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new DatePickerDialog(AccountAndProfileActivity.this,date,myCalendar.get(Calendar.YEAR),myCalendar.get(Calendar.MONTH),myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                new DatePickerDialog(AccountAndProfileActivity.this, date, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
     }

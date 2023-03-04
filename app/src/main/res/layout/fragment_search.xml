@@ -69,7 +69,7 @@
             android:id="@+id/end_of_list_text"
             android:text="End of list"
             android:fontFamily="@font/opensans"
-            android:textColor="@color/graylight"
+            android:textColor="@color/grayLight"
             android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/progress_bar"
             app:layout_constraintStart_toStartOf="parent"

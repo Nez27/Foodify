@@ -1,4 +1,4 @@
-package com.capstone.foodify;
+package com.capstone.foodify.Model.Basket;
 
 import android.graphics.Canvas;
 import android.view.View;
@@ -8,13 +8,13 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.capstone.foodify.Model.Food.FoodFavoriteAdapter;
+import com.capstone.foodify.ItemTouchHelperListener;
 
-public class RecyclerViewItemTouchHelper extends ItemTouchHelper.SimpleCallback{
+public class RecyclerViewItemTouchHelperBasketFood extends ItemTouchHelper.SimpleCallback{
 
     private ItemTouchHelperListener listener;
 
-    public RecyclerViewItemTouchHelper(int dragDirs, int swipeDirs, ItemTouchHelperListener listener) {
+    public RecyclerViewItemTouchHelperBasketFood(int dragDirs, int swipeDirs, ItemTouchHelperListener listener) {
         super(dragDirs, swipeDirs);
         this.listener = listener;
     }
@@ -33,7 +33,7 @@ public class RecyclerViewItemTouchHelper extends ItemTouchHelper.SimpleCallback{
     @Override
     public void onSelectedChanged(@Nullable RecyclerView.ViewHolder viewHolder, int actionState) {
         if(viewHolder != null){
-            View foreGroundView = ((FoodFavoriteAdapter.FoodFavoriteViewHolder) viewHolder).layoutForeGround;
+            View foreGroundView = ((BasketAdapter.BasketViewHolder) viewHolder).layoutForeGround;
             getDefaultUIUtil().onSelected(foreGroundView);
         }
 
@@ -42,19 +42,19 @@ public class RecyclerViewItemTouchHelper extends ItemTouchHelper.SimpleCallback{
     @Override
     public void onChildDrawOver(@NonNull Canvas c, @NonNull RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         assert viewHolder != null;
-        View foreGroundView = ((FoodFavoriteAdapter.FoodFavoriteViewHolder) viewHolder).layoutForeGround;
+        View foreGroundView = ((BasketAdapter.BasketViewHolder) viewHolder).layoutForeGround;
         getDefaultUIUtil().onDrawOver(c, recyclerView, foreGroundView, dX, dY, actionState, isCurrentlyActive);
     }
 
     @Override
     public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-        View foreGroundView = ((FoodFavoriteAdapter.FoodFavoriteViewHolder) viewHolder).layoutForeGround;
+        View foreGroundView = ((BasketAdapter.BasketViewHolder) viewHolder).layoutForeGround;
         getDefaultUIUtil().onDraw(c, recyclerView, foreGroundView, dX, dY, actionState, isCurrentlyActive);
     }
 
     @Override
     public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-        View foreGroundView = ((FoodFavoriteAdapter.FoodFavoriteViewHolder) viewHolder).layoutForeGround;
+        View foreGroundView = ((BasketAdapter.BasketViewHolder) viewHolder).layoutForeGround;
         getDefaultUIUtil().clearView(foreGroundView);
     }
 }

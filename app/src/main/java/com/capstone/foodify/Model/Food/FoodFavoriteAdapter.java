@@ -105,26 +105,14 @@ public class FoodFavoriteAdapter extends  RecyclerView.Adapter<FoodFavoriteAdapt
 
         FoodApi.apiService.addFoodToFavorite(food).enqueue(new Callback<Food>() {
             @Override
-            public void onResponse(Call<Food> call, Response<Food> response) {
+            public void onResponse(@NonNull Call<Food> call, @NonNull Response<Food> response) {
                 Toast.makeText(context, "Add successful!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onFailure(Call<Food> call, Throwable t) {
+            public void onFailure(@NonNull Call<Food> call, @NonNull Throwable t) {
                 Toast.makeText(context, "Error: " + t, Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private String convertFromStringToJson(Food foodDelete) throws JSONException {
-
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id", foodDelete.getId());
-        jsonObject.put("name", foodDelete.getName());
-        jsonObject.put("img", foodDelete.getImg());
-        jsonObject.put("price", foodDelete.getPrice());
-        jsonObject.put("shopName", foodDelete.getShopName());
-
-        return jsonObject.toString();
     }
 }

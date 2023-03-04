@@ -71,10 +71,10 @@ public class FoodSearchAdapter extends RecyclerView.Adapter<FoodSearchAdapter.Fo
         return 0;
     }
 
-    public class FoodViewHolder extends RecyclerView.ViewHolder{
+    public static class FoodViewHolder extends RecyclerView.ViewHolder{
 
-        private ImageView image;
-        private TextView name, price;
+        private final ImageView image;
+        private final TextView price, name;
 
         public FoodViewHolder(@NonNull View itemView) {
             super(itemView);

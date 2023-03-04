@@ -272,7 +272,7 @@
 
             <Button
                 android:id="@+id/sign_up_button"
-                android:backgroundTint="@color/graylight"
+                android:backgroundTint="@color/grayLight"
                 android:text="Sign Up"
                 android:textSize="18sp"
                 android:fontFamily="@font/bebas"
@@ -300,7 +300,7 @@
             android:text="Foodify V1.0.0"
             android:textSize="18sp"
             android:fontFamily="@font/opensans"
-            android:textColor="@color/graylight"
+            android:textColor="@color/grayLight"
             android:layout_marginTop="30dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -314,7 +314,7 @@
             android:text="Foodify Coperation"
             android:textSize="18sp"
             android:fontFamily="@font/opensans"
-            android:textColor="@color/graylight"
+            android:textColor="@color/grayLight"
             android:layout_marginTop="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

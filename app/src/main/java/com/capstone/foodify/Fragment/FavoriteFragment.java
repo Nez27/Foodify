@@ -21,21 +21,18 @@ import com.capstone.foodify.ItemTouchHelperListener;
 import com.capstone.foodify.Model.Food.Food;
 import com.capstone.foodify.Model.Food.FoodFavoriteAdapter;
 import com.capstone.foodify.R;
-import com.capstone.foodify.RecyclerViewItemTouchHelper;
+import com.capstone.foodify.Model.Food.RecyclerViewItemTouchHelperFavoriteFood;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FavouriteFragment extends Fragment implements ItemTouchHelperListener {
+public class FavoriteFragment extends Fragment implements ItemTouchHelperListener {
 
     private RecyclerView recyclerView_favorite_food;
     private FoodFavoriteAdapter adapter;
@@ -59,11 +56,10 @@ public class FavouriteFragment extends Fragment implements ItemTouchHelperListen
         recyclerView_favorite_food.setLayoutManager(linearLayoutManager);
         adapter = new FoodFavoriteAdapter();
 
-
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
         recyclerView_favorite_food.addItemDecoration(itemDecoration);
 
-        ItemTouchHelper.SimpleCallback simpleCallback = new RecyclerViewItemTouchHelper(0, ItemTouchHelper.LEFT, this);
+        ItemTouchHelper.SimpleCallback simpleCallback = new RecyclerViewItemTouchHelperFavoriteFood(0, ItemTouchHelper.LEFT, this);
         new ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView_favorite_food);
         return rootView;
     }

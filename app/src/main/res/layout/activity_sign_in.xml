@@ -95,7 +95,7 @@
         android:layout_marginEnd="20dp"
         android:fontFamily="@font/opensans"
         android:text="@string/forgot_password"
-        android:textColor="@color/graylight"
+        android:textColor="@color/grayLight"
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"

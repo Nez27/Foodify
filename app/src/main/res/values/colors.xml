@@ -6,7 +6,9 @@
     <color name="primaryColor">#ff8084</color>
     <color name="gray">#A3A3A3</color>
     <color name="secondary">#F99928</color>
-    <color name="graylight">#ACA5A5</color>
+    <color name="grayLight">#ACA5A5</color>
     <color name="red">#FF0000</color>
     <color name="primaryDark">#1EAE94</color>
+    <color name="green">#A9d440</color>
+    <color name="darkGreen">#004d40</color>
 </resources>

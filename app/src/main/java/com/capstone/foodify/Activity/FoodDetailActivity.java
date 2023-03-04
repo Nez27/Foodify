@@ -1,6 +1,8 @@
 package com.capstone.foodify.Activity;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -21,6 +23,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstone.foodify.API.FoodApi;
+import com.capstone.foodify.Common;
+import com.capstone.foodify.Model.Basket.Basket;
 import com.capstone.foodify.Model.Food.Food;
 import com.capstone.foodify.Model.Food.ImageFood;
 import com.capstone.foodify.Model.Review.Review;
@@ -50,7 +54,7 @@ public class FoodDetailActivity extends AppCompatActivity {
     private ImageView back_image, favourite_icon;
     private String foodId = "";
     private Food food;
-    private static List<String> imageFood = new ArrayList<>();
+    private static final List<String> imageFood = new ArrayList<>();
     private TextView foodName_txt, shopName_txt, discount_txt, description_txt, price_txt, total_txt, countRating_txt, description_content_txt;
     private ProgressBar progressBar;
     private Button add_to_basket_button;
@@ -114,6 +118,7 @@ public class FoodDetailActivity extends AppCompatActivity {
             public void onDecrease() {
             }
 
+            @SuppressLint("SetTextI18n")
             @Override
             public void onValueChanged(int i) {
                 Locale locale = new Locale("vi", "VN");
@@ -131,6 +136,7 @@ public class FoodDetailActivity extends AppCompatActivity {
 
         getImageFoodById(foodId);
 
+        //Turn previous action when click
         back_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -138,10 +144,22 @@ public class FoodDetailActivity extends AppCompatActivity {
             }
         });
 
+        //Open dialog review
         rating_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openReviewDialog(Gravity.CENTER);
+            }
+        });
+
+        //Add food to basket
+        add_to_basket_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Common.LIST_BASKET_FOOD.add(new Basket(food.getId(), imageFood.get(0), food.getName(), food.getPrice(), food.getShopName(),
+                        String.valueOf(horizontalQuantitizer.getValue())));
+                Toast.makeText(FoodDetailActivity.this, "Thêm vào giỏ hàng thành công!", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(FoodDetailActivity.this, MainActivity.class));
             }
         });
     }

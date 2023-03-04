@@ -48,4 +48,6 @@
     <string name="account_and_profile">Thông tin tài khoản</string>
     <string name="delete">Delete</string>
     <string name="full_name">Họ và tên</string>
+    <string name="basket">basket</string>
+    <string name="food_name">Food Name</string>
 </resources>

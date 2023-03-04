@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.capstone.foodify.Fragment.BasketFragment;
-import com.capstone.foodify.Fragment.FavouriteFragment;
+import com.capstone.foodify.Fragment.FavoriteFragment;
 import com.capstone.foodify.Fragment.HomeFragment;
 import com.capstone.foodify.Fragment.ProfileFragment;
 import com.capstone.foodify.Fragment.SearchFragment;
@@ -23,7 +23,7 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
         switch(position) {
             case 1: return new SearchFragment();
             case 2: return new BasketFragment();
-            case 3: return new FavouriteFragment();
+            case 3: return new FavoriteFragment();
             case 4: return new ProfileFragment();
             default: return new HomeFragment();
         }

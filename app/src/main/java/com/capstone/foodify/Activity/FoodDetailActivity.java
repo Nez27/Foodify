@@ -155,15 +155,43 @@ public class FoodDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(horizontalQuantitizer.getValue() > 0){
-                    Common.LIST_BASKET_FOOD.add(new Basket(food.getId(), imageFood.get(0), food.getName(), food.getPrice(), "Shop Name",
-                            String.valueOf(horizontalQuantitizer.getValue()), "0"));
-                    Toast.makeText(FoodDetailActivity.this, "Thêm vào giỏ hàng thành công!", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(FoodDetailActivity.this, MainActivity.class));
+                    Basket foodInBasket = getFoodExistInBasket(food.getId());
+                    if(foodInBasket == null){
+                        //If item is not exist in basket
+                        Common.LIST_BASKET_FOOD.add(new Basket(food.getId(), imageFood.get(0), food.getName(), food.getPrice(), "Shop Name",
+                                String.valueOf(horizontalQuantitizer.getValue()), "0"));
+                        Toast.makeText(FoodDetailActivity.this, "Thêm vào giỏ hàng thành công!", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(FoodDetailActivity.this, MainActivity.class));
+                    } else {
+                        //If item is exist in basket
+
+                        for(int i = 0; i < Common.LIST_BASKET_FOOD.size(); i++){
+                            String foodId = Common.LIST_BASKET_FOOD.get(i).getId();
+                            //Find foodId exist
+                            if(foodId.equals(food.getId())){
+                                //Get quantity food from basket
+                                String quantity = Common.LIST_BASKET_FOOD.get(i).getQuantity();
+
+                                //Change quantity food from basket
+                                int quantityInt = Integer.parseInt(quantity) + horizontalQuantitizer.getValue();
+                                Common.LIST_BASKET_FOOD.get(i).setQuantity(String.valueOf(quantityInt));
+                                break;
+                            }
+                        }
+
+                        Toast.makeText(FoodDetailActivity.this, "Thêm vào giỏ hàng thành công!", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(FoodDetailActivity.this, MainActivity.class));
+                    }
+
                 } else {
                     Toast.makeText(FoodDetailActivity.this, "Bạn chưa chọn số lượng đồ ăn cần đặt!", Toast.LENGTH_SHORT).show();   
                 }
             }
         });
+    }
+
+    private Basket getFoodExistInBasket(String foodId){
+        return Common.LIST_BASKET_FOOD.stream().filter(food -> foodId.equals(food.getId())).findFirst().orElse(null);
     }
 
     private List<Review> getListReview(){

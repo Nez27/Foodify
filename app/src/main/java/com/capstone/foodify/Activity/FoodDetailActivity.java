@@ -154,10 +154,14 @@ public class FoodDetailActivity extends AppCompatActivity {
         add_to_basket_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Common.LIST_BASKET_FOOD.add(new Basket(food.getId(), imageFood.get(0), food.getName(), food.getPrice(), "Shop Name",
-                        String.valueOf(horizontalQuantitizer.getValue()), "0"));
-                Toast.makeText(FoodDetailActivity.this, "Thêm vào giỏ hàng thành công!", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(FoodDetailActivity.this, MainActivity.class));
+                if(horizontalQuantitizer.getValue() > 0){
+                    Common.LIST_BASKET_FOOD.add(new Basket(food.getId(), imageFood.get(0), food.getName(), food.getPrice(), "Shop Name",
+                            String.valueOf(horizontalQuantitizer.getValue()), "0"));
+                    Toast.makeText(FoodDetailActivity.this, "Thêm vào giỏ hàng thành công!", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(FoodDetailActivity.this, MainActivity.class));
+                } else {
+                    Toast.makeText(FoodDetailActivity.this, "Bạn chưa chọn số lượng đồ ăn cần đặt!", Toast.LENGTH_SHORT).show();   
+                }
             }
         });
     }

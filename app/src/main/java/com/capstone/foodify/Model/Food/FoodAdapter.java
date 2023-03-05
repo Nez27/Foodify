@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstone.foodify.Activity.FoodDetailActivity;
+import com.capstone.foodify.Common;
 import com.capstone.foodify.R;
 import com.squareup.picasso.Picasso;
 
@@ -49,9 +50,6 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
             return;
         }
 
-        Locale locale = new Locale("vi", "VN");
-        NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
-
         String foodName = food.getName();
         if(foodName.length() >= 30){
             StringBuilder stringBuilder = new StringBuilder(food.getName());
@@ -61,7 +59,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
             holder.name.setText(foodName);
         }
         Picasso.get().load(food.getImg()).into(holder.image);
-        holder.price.setText(fmt.format(Float.parseFloat(food.getPrice())));
+        holder.price.setText(Common.changeCurrencyUnit(Float.parseFloat(food.getPrice())));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

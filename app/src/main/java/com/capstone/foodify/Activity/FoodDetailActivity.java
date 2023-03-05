@@ -121,12 +121,10 @@ public class FoodDetailActivity extends AppCompatActivity {
             @SuppressLint("SetTextI18n")
             @Override
             public void onValueChanged(int i) {
-                Locale locale = new Locale("vi", "VN");
-                NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
 
                 if(totalPrice >= 0)
                     totalPrice = price * i;
-                add_to_basket_button.setText("Add to basket - " + fmt.format(totalPrice));
+                add_to_basket_button.setText("Add to basket - " + Common.changeCurrencyUnit(totalPrice));
             }
         });
 
@@ -156,8 +154,8 @@ public class FoodDetailActivity extends AppCompatActivity {
         add_to_basket_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Common.LIST_BASKET_FOOD.add(new Basket(food.getId(), imageFood.get(0), food.getName(), food.getPrice(), food.getShopName(),
-                        String.valueOf(horizontalQuantitizer.getValue())));
+                Common.LIST_BASKET_FOOD.add(new Basket(food.getId(), imageFood.get(0), food.getName(), food.getPrice(), "Shop Name",
+                        String.valueOf(horizontalQuantitizer.getValue()), "0"));
                 Toast.makeText(FoodDetailActivity.this, "Thêm vào giỏ hàng thành công!", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(FoodDetailActivity.this, MainActivity.class));
             }
@@ -215,19 +213,16 @@ public class FoodDetailActivity extends AppCompatActivity {
     }
 
     private void initData(){
-        Locale locale = new Locale("vi", "VN");
-        NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
-
         price = Float.parseFloat(food.getPrice());
 
         foodName_txt.setText(food.getName());
         shopName_txt.setText("Shop Name");
-        price_txt.setText(fmt.format(Float.parseFloat(food.getPrice())));
+        price_txt.setText(Common.changeCurrencyUnit(Float.parseFloat(food.getPrice())));
         discount_txt.setText("-" + food.getDiscount() + "%");
         description_content_txt.setText(food.getDescription());
         countRating_txt.setText(food.getReviewCount() + " rating");
 
-        add_to_basket_button.setText("ADD TO BASKET - " + fmt.format(0));
+        add_to_basket_button.setText("ADD TO BASKET - " + Common.changeCurrencyUnit(0));
 
         List<SlideModel> slideModels = new ArrayList<>();
         if(imageFood != null){

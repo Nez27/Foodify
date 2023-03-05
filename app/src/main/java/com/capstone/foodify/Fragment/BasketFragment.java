@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -31,6 +32,7 @@ public class BasketFragment extends Fragment implements ItemTouchHelperListener 
     private List<Basket> listBasketFood = new ArrayList<>();
     private RelativeLayout listBasketFoodView;
 
+    public TextView total;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -40,7 +42,11 @@ public class BasketFragment extends Fragment implements ItemTouchHelperListener 
         //Init Component
         recyclerView_basket_food = view.findViewById(R.id.recycler_view_basket_food);
         listBasketFoodView = view.findViewById(R.id.list_basket_food_view);
-        adapter = new BasketAdapter();
+        adapter = new BasketAdapter(this);
+        total = view.findViewById(R.id.total_text_view);
+
+        //Init data
+        total.setText(Common.changeCurrencyUnit(0));
 
         //Get list food in basket
         getListBasketFood();
@@ -59,6 +65,7 @@ public class BasketFragment extends Fragment implements ItemTouchHelperListener 
     }
 
     private void getListBasketFood(){
+        //Get list food from basket
         listBasketFood = Common.LIST_BASKET_FOOD;
         adapter.setData(listBasketFood);
         recyclerView_basket_food.setAdapter(adapter);

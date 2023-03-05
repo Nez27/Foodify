@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.capstone.foodify.Common;
 import com.capstone.foodify.R;
 import com.squareup.picasso.Picasso;
 
@@ -57,10 +58,7 @@ public class FoodSearchAdapter extends RecyclerView.Adapter<FoodSearchAdapter.Fo
         Picasso.get().load(food.getImg()).into(holder.image);
 
 
-        Locale locale = new Locale("vi", "VN");
-        NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
-
-        holder.price.setText(fmt.format(Float.parseFloat(food.getPrice())));
+        holder.price.setText(Common.changeCurrencyUnit(Float.parseFloat(food.getPrice())));
     }
 
     @Override

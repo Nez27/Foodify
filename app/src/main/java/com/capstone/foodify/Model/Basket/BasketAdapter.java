@@ -8,24 +8,28 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.capstone.foodify.API.FoodApi;
-import com.capstone.foodify.Model.Food.Food;
+import com.capstone.foodify.Common;
+import com.capstone.foodify.Fragment.BasketFragment;
 import com.capstone.foodify.R;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.squareup.picasso.Picasso;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketViewHolder> {
 
-        public List<Basket> listBasketFood;
+    public List<Basket> listBasketFood;
 
-    public BasketAdapter() {
+    private final BasketFragment basketFragment;
+
+    public BasketAdapter(BasketFragment basketFragment) {
+        this.basketFragment = basketFragment;
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -51,17 +55,32 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketView
         //Init data
         holder.foodName.setText(foodBasket.getName());
         holder.shopName.setText(foodBasket.getShopName());
-        holder.price.setText(foodBasket.getPrice());
+        holder.price.setText(Common.changeCurrencyUnit(Float.parseFloat(foodBasket.getPrice())));
         Picasso.get().load(foodBasket.getImg()).into(holder.imageView);
         holder.quantity.setNumber(foodBasket.getQuantity());
+
+        //Calculate total price
+        calculateTotalPrice();
 
         //Update quantity food when change quantity number
         holder.quantity.setOnValueChangeListener(new ElegantNumberButton.OnValueChangeListener() {
             @Override
             public void onValueChange(ElegantNumberButton view, int oldValue, int newValue) {
                 foodBasket.setQuantity(String.valueOf(newValue));
+
+                //Update total price
+                calculateTotalPrice();
             }
         });
+    }
+
+    private void calculateTotalPrice() {
+        float total = 0;
+
+        for(Basket foodTemp: listBasketFood){
+            total += (Float.parseFloat(foodTemp.getPrice())) * (Float.parseFloat(foodTemp.getQuantity())) * (100 - Long.parseLong(foodTemp.getDiscount()))/100;
+        }
+        basketFragment.total.setText(Common.changeCurrencyUnit(total));
     }
 
     @Override
@@ -73,7 +92,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketView
 
     public static class BasketViewHolder extends RecyclerView.ViewHolder{
 
-        TextView foodName, shopName, price;
+        TextView foodName, shopName, price, total;
         public LinearLayout layoutForeGround;
         ImageView imageView;
         ElegantNumberButton quantity;
@@ -87,6 +106,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketView
             price = itemView.findViewById(R.id.price_text_view);
             imageView = itemView.findViewById(R.id.image_view);
             quantity = itemView.findViewById(R.id.quantity);
+            total = itemView.findViewById(R.id.total_text_view);
 
             layoutForeGround = itemView.findViewById(R.id.layout_foreground);
         }
@@ -95,10 +115,14 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketView
     public void removeItem(int index, Context context){
         listBasketFood.remove(index);
         notifyItemRemoved(index);
+
+        calculateTotalPrice();
     }
 
     public void undoItem(Basket food, int index, Context context){
         listBasketFood.add(index, food);
         notifyItemInserted(index);
+
+        calculateTotalPrice();
     }
 }

@@ -70,6 +70,11 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketView
 
                 //Update total price
                 calculateTotalPrice();
+
+                //Auto delete food when quantity is 0
+                if(newValue == 0){
+                    listBasketFood.remove(holder.getAdapterPosition());
+                }
             }
         });
     }

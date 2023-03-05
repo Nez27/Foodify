@@ -122,12 +122,35 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketView
         notifyItemRemoved(index);
 
         calculateTotalPrice();
-    }
 
+        //Show notification empty basket
+        if(listBasketFood.size() == 0){
+            hideRecyclerViewAndShowNotificationEmpty();
+        } else {
+            showRecycleViewAndHideNotificationEmpty();
+        }
+    }
     public void undoItem(Basket food, int index, Context context){
         listBasketFood.add(index, food);
         notifyItemInserted(index);
 
         calculateTotalPrice();
+
+        ////Show notification empty basket
+        if(listBasketFood.size() == 0){
+            hideRecyclerViewAndShowNotificationEmpty();
+        } else {
+            showRecycleViewAndHideNotificationEmpty();
+        }
+    }
+
+    private void showRecycleViewAndHideNotificationEmpty(){
+        basketFragment.recyclerView_basket_food.setVisibility(View.VISIBLE);
+        basketFragment.empty_layout.setVisibility(View.GONE);
+    }
+
+    private void hideRecyclerViewAndShowNotificationEmpty(){
+        basketFragment.recyclerView_basket_food.setVisibility(View.GONE);
+        basketFragment.empty_layout.setVisibility(View.VISIBLE);
     }
 }

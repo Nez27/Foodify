@@ -8,21 +8,66 @@
     android:id="@+id/list_basket_food_view"
     >
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_basket_food"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        tools:listitem="@layout/item_food_basket"
+        android:visibility="gone"
+        />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/empty_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
         >
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_basket_food"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/image_view"
+            android:src="@drawable/cart_empty"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:listitem="@layout/item_food_basket"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/text_view_header"
+            android:text="Quên chưa đặt món rồi nè bạn ơi!"
+            android:fontFamily="@font/opensans"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@id/image_view"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/text_view_description"
+            android:textAlignment="center"
+            android:text="Bạn sẽ nhìn thấy các món ăn tại đây sau khi bỏ những món ăn bạn muốn vào giỏ hàng."
+            android:fontFamily="@font/opensans"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/gray"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginStart="40dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/text_view_header"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -30,9 +75,6 @@
         app:cardBackgroundColor="@color/green"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        app:layout_constraintTop_toBottomOf="@id/linearLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         >
 
         <RelativeLayout

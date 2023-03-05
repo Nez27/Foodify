@@ -7,7 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -27,10 +29,12 @@ import java.util.List;
 
 public class BasketFragment extends Fragment implements ItemTouchHelperListener {
 
-    private RecyclerView recyclerView_basket_food;
+    public RecyclerView recyclerView_basket_food;
     private BasketAdapter adapter;
     private List<Basket> listBasketFood = new ArrayList<>();
     private RelativeLayout listBasketFoodView;
+
+    public ConstraintLayout empty_layout;
 
     public TextView total;
     @Override
@@ -44,12 +48,22 @@ public class BasketFragment extends Fragment implements ItemTouchHelperListener 
         listBasketFoodView = view.findViewById(R.id.list_basket_food_view);
         adapter = new BasketAdapter(this);
         total = view.findViewById(R.id.total_text_view);
+        empty_layout = view.findViewById(R.id.empty_layout);
 
         //Init data
         total.setText(Common.changeCurrencyUnit(0));
 
         //Get list food in basket
         getListBasketFood();
+
+        //Check list basket is null or not!
+        if(Common.LIST_BASKET_FOOD.size() > 0){
+            showRecycleViewAndHideNotificationEmpty();
+        } else {
+            hideRecyclerViewAndShowNotificationEmpty();
+        }
+
+        Toast.makeText(getContext(), "List Basket: " + Common.LIST_BASKET_FOOD.size(), Toast.LENGTH_SHORT).show();
 
         //Set layout recyclerview
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -64,18 +78,21 @@ public class BasketFragment extends Fragment implements ItemTouchHelperListener 
         return view;
     }
 
+    private void showRecycleViewAndHideNotificationEmpty(){
+        recyclerView_basket_food.setVisibility(View.VISIBLE);
+        empty_layout.setVisibility(View.GONE);
+    }
+
+    private void hideRecyclerViewAndShowNotificationEmpty(){
+        recyclerView_basket_food.setVisibility(View.GONE);
+        empty_layout.setVisibility(View.VISIBLE);
+    }
     private void getListBasketFood(){
         //Get list food from basket
         listBasketFood = Common.LIST_BASKET_FOOD;
         adapter.setData(listBasketFood);
         recyclerView_basket_food.setAdapter(adapter);
     }
-    @Override
-    public void onResume() {
-        super.onResume();
-        System.out.println("On Resume Fragment");
-    }
-
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder) {
         if(viewHolder instanceof BasketAdapter.BasketViewHolder){

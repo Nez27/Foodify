@@ -37,6 +37,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
         textInput_password.setTypeface(bebas);
         textInput_confirmPassword.setTypeface(bebas);
+        //1587.57
     }
 
     private void initComponent() {

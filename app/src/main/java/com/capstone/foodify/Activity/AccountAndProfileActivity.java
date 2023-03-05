@@ -57,6 +57,8 @@ public class AccountAndProfileActivity extends AppCompatActivity {
     }
 
     private void initComponent() {
+        //Init Component
+
         textInput_email= (TextInputLayout) findViewById(R.id.textInput_email);
         textInput_phone = (TextInputLayout) findViewById(R.id.textInput_phone);
         textInput_fullName = (TextInputLayout) findViewById(R.id.textInput_fullName);

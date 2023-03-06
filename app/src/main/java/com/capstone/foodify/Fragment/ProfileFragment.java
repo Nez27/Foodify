@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import androidx.fragment.app.Fragment;
 
 import com.capstone.foodify.Activity.AccountAndProfileActivity;
+import com.capstone.foodify.Activity.AddressManagerActivity;
 import com.capstone.foodify.Activity.SignUpActivity;
 import com.capstone.foodify.R;
 
@@ -18,7 +19,7 @@ public class ProfileFragment extends Fragment {
 
     Button btnSignUp;
 
-    LinearLayout account_and_profile;
+    LinearLayout account_and_profile, manage_address;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -26,6 +27,8 @@ public class ProfileFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
         btnSignUp = (Button) rootView.findViewById(R.id.sign_up_button);
         account_and_profile = (LinearLayout) rootView.findViewById(R.id.account_and_profile);
+        manage_address = (LinearLayout) rootView.findViewById(R.id.manage_address);
+
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -37,6 +40,13 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getActivity(), AccountAndProfileActivity.class));
+            }
+        });
+
+        manage_address.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), AddressManagerActivity.class));
             }
         });
         return rootView;

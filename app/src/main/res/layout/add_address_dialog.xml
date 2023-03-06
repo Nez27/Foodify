@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/bg_white_corner_16"
+    >
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInput_address"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_margin="10dp"
+        android:hint="Địa chỉ"
+        app:boxBackgroundColor="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:startIconDrawable="@drawable/baseline_home_24"
+        app:startIconTint="@color/primaryColor">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_address"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="text" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout_district_ward"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInput_address"
+        android:orientation="horizontal"
+        >
+
+        <Spinner
+            android:id="@+id/district"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:textAlignment="viewEnd"
+            android:gravity="end"
+            android:paddingEnd="25dp"
+            android:contentDescription="district"
+            android:layout_weight="0.4"
+            />
+
+        <Spinner
+            android:id="@+id/ward"
+            android:textAlignment="viewEnd"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="end"
+            android:paddingEnd="25dp"
+            android:contentDescription="ward"
+            android:layout_weight="0.6"
+            />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

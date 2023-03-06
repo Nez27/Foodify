@@ -63,8 +63,6 @@ public class BasketFragment extends Fragment implements ItemTouchHelperListener 
             hideRecyclerViewAndShowNotificationEmpty();
         }
 
-        Toast.makeText(getContext(), "List Basket: " + Common.LIST_BASKET_FOOD.size(), Toast.LENGTH_SHORT).show();
-
         //Set layout recyclerview
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView_basket_food.setLayoutManager(linearLayoutManager);

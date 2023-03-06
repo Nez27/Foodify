@@ -60,4 +60,5 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.github.ome450901:SimpleRatingBar:1.5.1'
     implementation 'com.cepheuen.elegant-number-button:lib:1.0.2'
+    implementation 'com.github.slavce14:SJ-Dialog:1.5'
 }

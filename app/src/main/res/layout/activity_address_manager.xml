@@ -10,6 +10,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <ImageView
+            android:id="@+id/back_image"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/back_button"
+            android:background="@drawable/circle_button"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="25dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/textView"
             android:text="quản lý địa chỉ"
@@ -20,7 +31,7 @@
             android:layout_marginStart="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/back_image"
             app:layout_constraintStart_toStartOf="parent"
             />
 

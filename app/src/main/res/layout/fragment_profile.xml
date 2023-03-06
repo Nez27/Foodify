@@ -156,17 +156,16 @@
                 />
 
             <TextView
-                android:text="Order"
-                android:textSize="18sp"
-                android:fontFamily="@font/opensans"
-                android:textColor="@color/black"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="12dp"
-                tools:ignore="HardcodedText"
                 android:layout_weight="1"
-                />
+                android:fontFamily="@font/opensans"
+                android:text="Order"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                tools:ignore="HardcodedText" />
 
             <ImageView
                 android:layout_width="20dp"

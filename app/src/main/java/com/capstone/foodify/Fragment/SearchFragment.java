@@ -90,7 +90,6 @@ public class SearchFragment extends Fragment {
                 ACTION_CODE = SEARCH_FOOD;
                 CURRENT_PAGE = 1;
                 showProgressBarAndHideEndOfListText();
-                listFoodSearch.clear();
                 if (!query.isEmpty()) {
                     searchQuery = query;
                     getListFoodBySearch(searchQuery, CURRENT_PAGE);
@@ -106,6 +105,7 @@ public class SearchFragment extends Fragment {
                     showProgressBarAndHideEndOfListText();
                     foodAdapter.setData(listFood);
                     foodAdapter.notifyDataSetChanged();
+                    hideProgressBarAndShowEndOfListText();
                 }
                 return true;
             }
@@ -141,11 +141,14 @@ public class SearchFragment extends Fragment {
     private void loadFoodAdapter(Response<List<Food>> response) {
         List<Food> foodData = response.body();
 
-        if(foodData != null) {
-            listFoodSearch.addAll(foodData);
-            foodAdapter.setData(listFoodSearch);
-            foodAdapter.notifyDataSetChanged();
-        }
+        listFoodSearch.clear();
+
+        listFoodSearch.addAll(foodData);
+        foodAdapter.setData(listFoodSearch);
+        foodAdapter.notifyDataSetChanged();
+        hideProgressBarAndShowEndOfListText();
+
+        Toast.makeText(getContext(), "List food search: " + foodData.size(), Toast.LENGTH_SHORT).show();
     }
 
     private void getListCategory() {
@@ -192,7 +195,6 @@ public class SearchFragment extends Fragment {
         FoodApi.apiService.listFoodByCategory(id).enqueue(new Callback<List<Food>>() {
             @Override
             public void onResponse(Call<List<Food>> call, Response<List<Food>> response) {
-                listFoodSearch.clear();
                 loadFoodAdapter(response);
             }
 

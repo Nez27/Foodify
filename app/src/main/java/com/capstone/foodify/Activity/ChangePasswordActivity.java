@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.capstone.foodify.Common;
 import com.capstone.foodify.R;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -42,10 +43,8 @@ public class ChangePasswordActivity extends AppCompatActivity {
     }
 
     private void setFontUI() {
-        Typeface bebas= Typeface.createFromAsset(getAssets(), "font/bebas.ttf");
-
-        textInput_password.setTypeface(bebas);
-        textInput_old_password.setTypeface(bebas);
-        textInput_password_confirm.setTypeface(bebas);
+        textInput_password.setTypeface(Common.setFontBebas(getAssets()));
+        textInput_old_password.setTypeface(Common.setFontBebas(getAssets()));
+        textInput_password_confirm.setTypeface(Common.setFontBebas(getAssets()));
     }
 }

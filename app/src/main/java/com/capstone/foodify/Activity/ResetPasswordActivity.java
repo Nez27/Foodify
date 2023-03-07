@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.capstone.foodify.Common;
 import com.capstone.foodify.R;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -33,11 +34,8 @@ public class ResetPasswordActivity extends AppCompatActivity {
     }
 
     private void setFontUI() {
-        Typeface bebas= Typeface.createFromAsset(getAssets(), "font/bebas.ttf");
-
-        textInput_password.setTypeface(bebas);
-        textInput_confirmPassword.setTypeface(bebas);
-        //1587.57
+        textInput_password.setTypeface(Common.setFontBebas(getAssets()));
+        textInput_confirmPassword.setTypeface(Common.setFontBebas(getAssets()));
     }
 
     private void initComponent() {

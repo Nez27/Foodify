@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.capstone.foodify.Common;
 import com.capstone.foodify.R;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -56,10 +57,8 @@ public class SignInActivity extends AppCompatActivity {
         back_image = (ImageView) findViewById(R.id.back_image);
     }
     private void setFontUI() {
-        Typeface bebas= Typeface.createFromAsset(getAssets(), "font/bebas.ttf");
-
-        textInput_account.setTypeface(bebas);
-        textInput_password.setTypeface(bebas);
+        textInput_account.setTypeface(Common.setFontBebas(getAssets()));
+        textInput_password.setTypeface(Common.setFontBebas(getAssets()));
     }
 
     // this event will enable the back

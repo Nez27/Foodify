@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.capstone.foodify.API.FoodApi;
+import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.Address.Address;
 import com.capstone.foodify.Model.Address.AddressAdapter;
 import com.capstone.foodify.Model.DistrictWard.DistrictWardResponse;
@@ -93,7 +94,6 @@ public class AddressManagerActivity extends AppCompatActivity {
 
     private void showAddAddressDialog(){
         View view = LayoutInflater.from(this).inflate(R.layout.add_address_dialog,null);
-        Typeface bebas= Typeface.createFromAsset(getAssets(), "font/opensans.ttf");
 
         //Init component
         TextInputLayout textInputLayout = view.findViewById(R.id.textInput_address);
@@ -101,7 +101,7 @@ public class AddressManagerActivity extends AppCompatActivity {
         districtSpinner = view.findViewById(R.id.district);
 
         //Set font
-        textInputLayout.setTypeface(bebas);
+        textInputLayout.setTypeface(Common.setFontOpenSans(getAssets()));
 
         //Load district and ward
         if(districtList.size() == 0){

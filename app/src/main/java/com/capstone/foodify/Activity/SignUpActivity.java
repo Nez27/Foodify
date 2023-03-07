@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.capstone.foodify.API.FoodApi;
+import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.DistrictWard.DistrictWardResponse;
 import com.capstone.foodify.R;
 import com.google.android.material.textfield.TextInputLayout;
@@ -238,17 +239,14 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void setFontUI() {
-        Typeface bebas= Typeface.createFromAsset(getAssets(), "font/bebas.ttf");
+        textInput_email.setTypeface(Common.setFontBebas(getAssets()));
+        textInput_password.setTypeface(Common.setFontBebas(getAssets()));
+        textInput_phone.setTypeface(Common.setFontBebas(getAssets()));
+        textInput_address.setTypeface(Common.setFontBebas(getAssets()));
+        textInput_repeatPassword.setTypeface(Common.setFontBebas(getAssets()));
+        textInput_fullName.setTypeface(Common.setFontBebas(getAssets()));
+        textInput_birthDay.setTypeface(Common.setFontBebas(getAssets()));
 
-        //Set Type face
-        textInput_email.setTypeface(bebas);
-        textInput_password.setTypeface(bebas);
-        textInput_phone.setTypeface(bebas);
-        textInput_address.setTypeface(bebas);
-        textInput_repeatPassword.setTypeface(bebas);
-        textInput_fullName.setTypeface(bebas);
-        textInput_birthDay.setTypeface(bebas);
-
-        edt_birthday.setTypeface(bebas);
+        edt_birthday.setTypeface(Common.setFontBebas(getAssets()));
     }
 }

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.capstone.foodify.Common;
 import com.capstone.foodify.R;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
@@ -44,11 +45,8 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     }
 
     private void setFontUI() {
-        Typeface bebas= Typeface.createFromAsset(getAssets(), "font/bebas.ttf");
-
         textInput_account = (TextInputLayout) findViewById(R.id.textInput_account);
-
-        textInput_account.setTypeface(bebas);
+        textInput_account.setTypeface(Common.setFontBebas(getAssets()));
     }
 
     private void initComponent() {

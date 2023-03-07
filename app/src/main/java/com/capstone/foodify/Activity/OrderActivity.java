@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.capstone.foodify.Fragment.Order.ViewPagerAdapter;
 import com.capstone.foodify.R;
@@ -14,14 +16,18 @@ public class OrderActivity extends AppCompatActivity {
     TabLayout tabLayout;
     ViewPager2 viewPager2;
     ViewPagerAdapter viewPagerAdapter;
+    ImageView back_image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
 
+        //Init Component
         tabLayout = findViewById(R.id.tab_layout);
         viewPager2 = findViewById(R.id.view_pager);
+        back_image = findViewById(R.id.back_image);
+
         viewPagerAdapter = new ViewPagerAdapter(this);
         viewPager2.setAdapter(viewPagerAdapter);
 
@@ -47,6 +53,13 @@ public class OrderActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 tabLayout.getTabAt(position).select();
+            }
+        });
+
+        back_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
             }
         });
     }

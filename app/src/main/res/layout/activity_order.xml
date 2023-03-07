@@ -6,16 +6,52 @@
     android:layout_height="match_parent"
     tools:context=".Activity.OrderActivity">
 
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        >
+
+        <ImageView
+            android:id="@+id/back_image"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/back_button"
+            android:layout_marginEnd="20dp"
+            android:layout_gravity="center_vertical"
+            />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/bebas"
+            android:text="Đơn hàng"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            />
+    </LinearLayout>
+
     <com.google.android.material.tabs.TabLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tab_layout"
         style="@style/MyCustomTabLayout"
+        android:layout_below="@id/header"
         app:tabIndicatorColor="@color/primaryColor"
         >
 
         <com.google.android.material.tabs.TabItem
-            android:text="Đang xử lý"
+            android:text="Xử lý"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+        <com.google.android.material.tabs.TabItem
+            android:text="Thực hiện"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             />
@@ -25,7 +61,7 @@
             android:layout_height="wrap_content"
             />
         <com.google.android.material.tabs.TabItem
-            android:text="Giao thành công"
+            android:text="Đã giao"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             />

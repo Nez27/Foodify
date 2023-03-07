@@ -16,16 +16,18 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch(position){
             case 1:
-                return new ShipOrderFragment();
+                return new PreparingFragment();
             case 2:
+                return new ShipOrderFragment();
+            case 3:
                 return new CompleteOrderFragment();
             default:
-                return new ProgressOderFragment();
+                return new ProcessOderFragment();
         }
     }
 
     @Override
     public int getItemCount() {
-        return 3;
+        return 4;
     }
 }

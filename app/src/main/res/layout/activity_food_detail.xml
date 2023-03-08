@@ -249,6 +249,8 @@
                 <Button
                     android:id="@+id/rating_button"
                     android:text="Rating"
+                    android:backgroundTint="@color/yellow"
+                    android:textColor="@color/black"
                     android:fontFamily="@font/opensans"
                     android:textAllCaps="false"
                     android:layout_width="wrap_content"

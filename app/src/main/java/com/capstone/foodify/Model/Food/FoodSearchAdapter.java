@@ -14,9 +14,7 @@ import com.capstone.foodify.Common;
 import com.capstone.foodify.R;
 import com.squareup.picasso.Picasso;
 
-import java.text.NumberFormat;
 import java.util.List;
-import java.util.Locale;
 
 public class FoodSearchAdapter extends RecyclerView.Adapter<FoodSearchAdapter.FoodViewHolder>{
 
@@ -36,7 +34,7 @@ public class FoodSearchAdapter extends RecyclerView.Adapter<FoodSearchAdapter.Fo
     @NonNull
     @Override
     public FoodViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_foods_search, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_food_search, parent, false);
         return new FoodViewHolder(view);
     }
 

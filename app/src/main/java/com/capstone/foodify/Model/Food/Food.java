@@ -9,6 +9,7 @@ public class Food implements Comparable<Food>{
     private String description;
     private String shopName;
     private String reviewCount;
+    private String quantity_sold;
     public Food() {
     }
     public Food(String id, String img, String name, String price, String shopName) {
@@ -17,6 +18,12 @@ public class Food implements Comparable<Food>{
         this.name = name;
         this.price = price;
         this.shopName = shopName;
+    }
+
+    public Food(String img, String name, String price) {
+        this.img = img;
+        this.name = name;
+        this.price = price;
     }
 
     public String getId() {
@@ -66,6 +73,14 @@ public class Food implements Comparable<Food>{
     }
     public void setReviewCount(String reviewCount) {
         this.reviewCount = reviewCount;
+    }
+
+    public String getQuantity_sold() {
+        return quantity_sold;
+    }
+
+    public void setQuantity_sold(String quantity_sold) {
+        this.quantity_sold = quantity_sold;
     }
 
     @Override

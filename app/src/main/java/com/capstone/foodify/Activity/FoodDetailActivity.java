@@ -188,6 +188,14 @@ public class FoodDetailActivity extends AppCompatActivity {
                 }
             }
         });
+
+        //Move to shop detail screen when onClick
+        shopName_txt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(FoodDetailActivity.this, ShopDetailActivity.class));
+            }
+        });
     }
 
     private Basket getFoodExistInBasket(String foodId){

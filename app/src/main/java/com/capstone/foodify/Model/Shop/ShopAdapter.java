@@ -1,15 +1,16 @@
 package com.capstone.foodify.Model.Shop;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.capstone.foodify.Activity.ShopDetailActivity;
 import com.capstone.foodify.R;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ShopViewHolder
     @NonNull
     @Override
     public ShopViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_restaurant, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_shop, parent, false);
         return new ShopViewHolder(view);
     }
 
@@ -44,6 +45,12 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ShopViewHolder
             return;
 
         holder.imgView.setImageResource(shop.getResourceId());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                context.startActivity(new Intent(context, ShopDetailActivity.class));
+            }
+        });
     }
 
     @Override

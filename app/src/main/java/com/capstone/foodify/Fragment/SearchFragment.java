@@ -147,8 +147,6 @@ public class SearchFragment extends Fragment {
         foodAdapter.setData(listFoodSearch);
         foodAdapter.notifyDataSetChanged();
         hideProgressBarAndShowEndOfListText();
-
-        Toast.makeText(getContext(), "List food search: " + foodData.size(), Toast.LENGTH_SHORT).show();
     }
 
     private void getListCategory() {

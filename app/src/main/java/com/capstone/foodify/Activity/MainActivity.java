@@ -3,6 +3,7 @@ package com.capstone.foodify.Activity;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.splashscreen.SplashScreen;
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.capstone.foodify.Common;
 import com.capstone.foodify.R;
 import com.capstone.foodify.ViewPagerAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;

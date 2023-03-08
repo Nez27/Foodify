@@ -1,17 +1,16 @@
 package com.capstone.foodify.Activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.capstone.foodify.Common;
 import com.capstone.foodify.R;
@@ -28,6 +27,7 @@ public class AccountAndProfileActivity extends AppCompatActivity {
     EditText edt_birthday;
     final Calendar myCalendar= Calendar.getInstance();
     LinearLayout change_password;
+    Button update_button;
 
     ImageView back_image;
 
@@ -54,7 +54,6 @@ public class AccountAndProfileActivity extends AppCompatActivity {
             }
         });
 
-
     }
 
     private void initComponent() {
@@ -65,6 +64,8 @@ public class AccountAndProfileActivity extends AppCompatActivity {
         textInput_fullName = (TextInputLayout) findViewById(R.id.textInput_fullName);
         textInput_birthDay = (TextInputLayout) findViewById(R.id.textInput_birthDay);
         change_password = (LinearLayout) findViewById(R.id.change_password);
+
+        update_button = (Button) findViewById(R.id.updated_button);
 
         back_image = (ImageView) findViewById(R.id.back_image);
 

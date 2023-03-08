@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstone.foodify.API.FoodApi;
+import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.Category.Category;
 import com.capstone.foodify.Model.Food.Food;
 import com.capstone.foodify.Model.Food.FoodSearchAdapter;
@@ -183,7 +184,14 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<Category>> call, Throwable t) {
-                Toast.makeText(getContext(), "Error: " + t , Toast.LENGTH_SHORT).show();
+                //Check internet connection
+                if(Common.checkInternetConnection(getContext())){
+                    //Has internet connection
+                    Toast.makeText(getContext(), "Error: " + t, Toast.LENGTH_SHORT).show();
+                } else {
+                    //No internet, show notification
+                    Common.showErrorInternetConnectionNotification(getActivity());
+                }
             }
         });
     }
@@ -198,7 +206,14 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<Food>> call, Throwable t) {
-                Toast.makeText(getContext(), "Error: " + t, Toast.LENGTH_SHORT).show();
+                //Check internet connection
+                if(Common.checkInternetConnection(getContext())){
+                    //Has internet connection
+                    Toast.makeText(getContext(), "Error: " + t, Toast.LENGTH_SHORT).show();
+                } else {
+                    //No internet, show notification
+                    Common.showErrorInternetConnectionNotification(getActivity());
+                }
             }
         });
     }
@@ -212,7 +227,14 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<Food>> call, Throwable t) {
-
+                //Check internet connection
+                if(Common.checkInternetConnection(getContext())){
+                    //Has internet connection
+                    Toast.makeText(getContext(), "Error: " + t, Toast.LENGTH_SHORT).show();
+                } else {
+                    //No internet, show notification
+                    Common.showErrorInternetConnectionNotification(getActivity());
+                }
             }
         });
     }

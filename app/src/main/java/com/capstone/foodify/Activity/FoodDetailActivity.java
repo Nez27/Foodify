@@ -37,6 +37,8 @@ import com.denzcoskun.imageslider.models.SlideModel;
 import com.mcdev.quantitizerlibrary.AnimationStyle;
 import com.mcdev.quantitizerlibrary.HorizontalQuantitizer;
 import com.mcdev.quantitizerlibrary.QuantitizerListener;
+import com.saadahmedsoft.popupdialog.PopupDialog;
+import com.saadahmedsoft.popupdialog.Styles;
 import com.willy.ratingbar.RotationRatingBar;
 
 import java.text.NumberFormat;
@@ -58,13 +60,12 @@ public class FoodDetailActivity extends AppCompatActivity {
     private static final List<String> imageFood = new ArrayList<>();
     private TextView foodName_txt, shopName_txt, discount_txt, price_txt, total_txt, countRating_txt, description_content_txt;
     private ConstraintLayout content_view;
-    private ProgressBar progressBar;
     private Button add_to_basket_button;
-    private View line;
     private float totalPrice, price;
     private RecyclerView recyclerView_review;
     private ReviewAdapter reviewAdapter;
     private Button rating_button;
+    private PopupDialog popupDialog;
 
 
     @Override
@@ -80,16 +81,16 @@ public class FoodDetailActivity extends AppCompatActivity {
         shopName_txt = findViewById(R.id.shop_name_text_view);
         discount_txt = findViewById(R.id.discount);
         price_txt = findViewById(R.id.price);
-        progressBar = findViewById(R.id.progress_bar);
         add_to_basket_button = findViewById(R.id.add_to_basket_button);
         favourite_icon = findViewById(R.id.favorite_icon);
-        line = findViewById(R.id.line);
         total_txt = findViewById(R.id.total_text_view);
         countRating_txt = findViewById(R.id.count_rating_text_view);
         description_content_txt = findViewById(R.id.content_description_text_view);
         recyclerView_review = findViewById(R.id.recycler_view_review);
         rating_button = findViewById(R.id.rating_button);
         content_view = findViewById(R.id.content_view);
+
+        popupDialog = PopupDialog.getInstance(this);
 
         reviewAdapter = new ReviewAdapter(this);
 
@@ -215,13 +216,14 @@ public class FoodDetailActivity extends AppCompatActivity {
     private void hideUI() {
         content_view.setVisibility(View.GONE);
 
-        progressBar.setVisibility(View.VISIBLE);
+        popupDialog.setStyle(Styles.PROGRESS).setProgressDialogTint(getResources().getColor(R.color.primaryColor, null))
+                .setCancelable(false).showDialog();
     }
 
     private void showUI() {
         content_view.setVisibility(View.VISIBLE);
 
-        progressBar.setVisibility(View.GONE);
+        popupDialog.dismissDialog();
     }
 
     private void initData(){

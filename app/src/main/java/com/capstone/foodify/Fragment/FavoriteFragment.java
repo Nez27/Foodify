@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.capstone.foodify.API.FoodApi;
+import com.capstone.foodify.Common;
 import com.capstone.foodify.ItemTouchHelperListener;
 import com.capstone.foodify.Model.Food.Food;
 import com.capstone.foodify.Model.Food.FoodFavoriteAdapter;
@@ -81,7 +82,14 @@ public class FavoriteFragment extends Fragment implements ItemTouchHelperListene
 
             @Override
             public void onFailure(Call<List<Food>> call, Throwable t) {
-                Toast.makeText(getContext(), "Error: " + t, Toast.LENGTH_SHORT).show();
+                //Check internet connection
+                if(Common.checkInternetConnection(getContext())){
+                    //Has internet connection
+                    Toast.makeText(getContext(), "Error: " + t, Toast.LENGTH_SHORT).show();
+                } else {
+                    //No internet, show notification
+                    Common.showErrorInternetConnectionNotification(getActivity());
+                }
             }
         });
     }

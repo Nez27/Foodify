@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -55,10 +56,10 @@ public class FoodDetailActivity extends AppCompatActivity {
     private String foodId = "";
     private Food food;
     private static final List<String> imageFood = new ArrayList<>();
-    private TextView foodName_txt, shopName_txt, discount_txt, description_txt, price_txt, total_txt, countRating_txt, description_content_txt;
+    private TextView foodName_txt, shopName_txt, discount_txt, price_txt, total_txt, countRating_txt, description_content_txt;
+    private ConstraintLayout content_view;
     private ProgressBar progressBar;
     private Button add_to_basket_button;
-    private LinearLayout linearLayout, linearLayout2, linearLayout3;
     private View line;
     private float totalPrice, price;
     private RecyclerView recyclerView_review;
@@ -78,13 +79,9 @@ public class FoodDetailActivity extends AppCompatActivity {
         foodName_txt = findViewById(R.id.food_name_text_view);
         shopName_txt = findViewById(R.id.shop_name_text_view);
         discount_txt = findViewById(R.id.discount);
-        description_txt = findViewById(R.id.description_text_view);
         price_txt = findViewById(R.id.price);
         progressBar = findViewById(R.id.progress_bar);
         add_to_basket_button = findViewById(R.id.add_to_basket_button);
-        linearLayout = findViewById(R.id.linear_layout_1);
-        linearLayout2 = findViewById(R.id.linear_layout_2);
-        linearLayout3 = findViewById(R.id.linear_layout_3);
         favourite_icon = findViewById(R.id.favorite_icon);
         line = findViewById(R.id.line);
         total_txt = findViewById(R.id.total_text_view);
@@ -92,6 +89,7 @@ public class FoodDetailActivity extends AppCompatActivity {
         description_content_txt = findViewById(R.id.content_description_text_view);
         recyclerView_review = findViewById(R.id.recycler_view_review);
         rating_button = findViewById(R.id.rating_button);
+        content_view = findViewById(R.id.content_view);
 
         reviewAdapter = new ReviewAdapter(this);
 
@@ -215,39 +213,13 @@ public class FoodDetailActivity extends AppCompatActivity {
     }
 
     private void hideUI() {
-        horizontalQuantitizer.setVisibility(View.GONE);
-        imageSlider.setVisibility(View.GONE);
-        back_image.setVisibility(View.GONE);
-        shopName_txt.setVisibility(View.GONE);
-        description_txt.setVisibility(View.GONE);
-        price_txt.setVisibility(View.GONE);
-        add_to_basket_button.setVisibility(View.GONE);
-        linearLayout.setVisibility(View.GONE);
-        linearLayout2.setVisibility(View.GONE);
-        linearLayout3.setVisibility(View.GONE);
-        line.setVisibility(View.GONE);
-        total_txt.setVisibility(View.GONE);
-        description_content_txt.setVisibility(View.GONE);
-        recyclerView_review.setVisibility(View.GONE);
+        content_view.setVisibility(View.GONE);
 
         progressBar.setVisibility(View.VISIBLE);
     }
 
     private void showUI() {
-        horizontalQuantitizer.setVisibility(View.VISIBLE);
-        imageSlider.setVisibility(View.VISIBLE);
-        back_image.setVisibility(View.VISIBLE);
-        shopName_txt.setVisibility(View.VISIBLE);
-        description_txt.setVisibility(View.VISIBLE);
-        price_txt.setVisibility(View.VISIBLE);
-        add_to_basket_button.setVisibility(View.VISIBLE);
-        linearLayout.setVisibility(View.VISIBLE);
-        linearLayout2.setVisibility(View.VISIBLE);
-        linearLayout3.setVisibility(View.VISIBLE);
-        line.setVisibility(View.VISIBLE);
-        total_txt.setVisibility(View.VISIBLE);
-        description_content_txt.setVisibility(View.VISIBLE);
-        recyclerView_review.setVisibility(View.VISIBLE);
+        content_view.setVisibility(View.VISIBLE);
 
         progressBar.setVisibility(View.GONE);
     }

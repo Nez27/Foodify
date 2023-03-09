@@ -15,7 +15,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstone.foodify.API.FoodApi;
@@ -68,8 +70,12 @@ public class SearchFragment extends Fragment {
 
         getListCategory();
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
-        recycler_view_search.setLayoutManager(gridLayoutManager);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        recycler_view_search.setLayoutManager(linearLayoutManager);
+
+        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
+        recycler_view_search.addItemDecoration(itemDecoration);
+
         recycler_view_search.setNestedScrollingEnabled(false);
         recycler_view_search.setAdapter(foodAdapter);
 
@@ -90,6 +96,7 @@ public class SearchFragment extends Fragment {
             public boolean onQueryTextSubmit(String query) {
                 ACTION_CODE = SEARCH_FOOD;
                 CURRENT_PAGE = 1;
+                listFoodSearch.clear();
                 showProgressBarAndHideEndOfListText();
                 if (!query.isEmpty()) {
                     searchQuery = query;
@@ -101,6 +108,8 @@ public class SearchFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (searchView.getQuery().length() == 0) {
+                    listFoodSearch.clear();
+
                     CURRENT_PAGE = 1;
                     ACTION_CODE = LIST_FOOD;
                     showProgressBarAndHideEndOfListText();
@@ -141,8 +150,6 @@ public class SearchFragment extends Fragment {
 
     private void loadFoodAdapter(Response<List<Food>> response) {
         List<Food> foodData = response.body();
-
-        listFoodSearch.clear();
 
         listFoodSearch.addAll(foodData);
         foodAdapter.setData(listFoodSearch);

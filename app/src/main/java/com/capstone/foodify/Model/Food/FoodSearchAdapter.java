@@ -76,8 +76,8 @@ public class FoodSearchAdapter extends RecyclerView.Adapter<FoodSearchAdapter.Fo
             super(itemView);
 
             image = itemView.findViewById(R.id.image_view);
-            name = itemView.findViewById(R.id.title);
-            price = itemView.findViewById(R.id.price);
+            name = itemView.findViewById(R.id.food_name_text_view);
+            price = itemView.findViewById(R.id.price_text_view);
 
         }
     }

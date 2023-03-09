@@ -120,12 +120,14 @@ public class HomeFragment extends Fragment {
             @Override
             public void onFailure(Call<List<Food>> call, Throwable t) {
                 //Check internet connection
-                if(Common.checkInternetConnection(getContext())){
-                    //Has internet connection
-                    Toast.makeText(getContext(), "Error: " + t, Toast.LENGTH_SHORT).show();
-                } else {
-                    //No internet, show notification
-                    Common.showErrorInternetConnectionNotification(getActivity());
+                if(getContext() != null){
+                    if(Common.checkInternetConnection(getContext())){
+                        //Has internet connection
+                        Toast.makeText(getContext(), "Error: " + t, Toast.LENGTH_SHORT).show();
+                    } else {
+                        //No internet, show notification
+                        Common.showErrorInternetConnectionNotification(getActivity());
+                    }
                 }
             }
         });

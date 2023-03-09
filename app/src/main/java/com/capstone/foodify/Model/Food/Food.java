@@ -1,86 +1,112 @@
 package com.capstone.foodify.Model.Food;
 
+import com.capstone.foodify.Model.Category.Category;
+import com.capstone.foodify.Model.Image;
+import com.capstone.foodify.Model.Shop.Shop;
+
+import java.util.List;
+
 public class Food implements Comparable<Food>{
     private String id;
-    private String img;
     private String name;
-    private String price;
-    private String discount;
     private String description;
-    private String shopName;
+    private boolean isEnabled;
+    private float discountPercent;
+    private float cost;
+    private float averageRating;
     private String reviewCount;
-    private String quantity_sold;
+    private Shop shop;
+    private List<Category> categories;
+    private List<Image> images;
     public Food() {
-    }
-    public Food(String id, String img, String name, String price, String shopName) {
-        this.id = id;
-        this.img = img;
-        this.name = name;
-        this.price = price;
-        this.shopName = shopName;
-    }
-
-    public Food(String img, String name, String price) {
-        this.img = img;
-        this.name = name;
-        this.price = price;
     }
 
     public String getId() {
         return id;
     }
+
     public void setId(String id) {
         this.id = id;
     }
-    public String getImg() {
-        return img;
-    }
-    public void setImg(String img) {
-        this.img = img;
-    }
+
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
-    public String getPrice() {
-        return price;
-    }
-    public void setPrice(String price) {
-        this.price = price;
-    }
-    public String getDiscount() {
-        return discount;
-    }
-    public void setDiscount(String discount) {
-        this.discount = discount;
-    }
+
     public String getDescription() {
         return description;
     }
+
     public void setDescription(String description) {
         this.description = description;
     }
-    public String getShopName() {
-        return shopName;
+
+    public boolean isEnabled() {
+        return isEnabled;
     }
-    public void setShopName(String shopName) {
-        this.shopName = shopName;
+
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
     }
+
+    public float getDiscountPercent() {
+        return discountPercent;
+    }
+
+    public void setDiscountPercent(float discountPercent) {
+        this.discountPercent = discountPercent;
+    }
+
+    public float getCost() {
+        return cost;
+    }
+
+    public void setCost(float cost) {
+        this.cost = cost;
+    }
+
+    public float getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(float averageRating) {
+        this.averageRating = averageRating;
+    }
+
     public String getReviewCount() {
         return reviewCount;
     }
+
     public void setReviewCount(String reviewCount) {
         this.reviewCount = reviewCount;
     }
 
-    public String getQuantity_sold() {
-        return quantity_sold;
+    public Shop getShop() {
+        return shop;
     }
 
-    public void setQuantity_sold(String quantity_sold) {
-        this.quantity_sold = quantity_sold;
+    public void setShop(Shop shop) {
+        this.shop = shop;
+    }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
+    }
+
+    public List<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(List<Image> images) {
+        this.images = images;
     }
 
     @Override

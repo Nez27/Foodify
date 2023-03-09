@@ -3,7 +3,8 @@ package com.capstone.foodify.API;
 import com.capstone.foodify.Model.Category.Category;
 import com.capstone.foodify.Model.DistrictWard.DistrictWardResponse;
 import com.capstone.foodify.Model.Food.Food;
-import com.capstone.foodify.Model.Food.ImageFood;
+import com.capstone.foodify.Model.Response.Foods;
+import com.capstone.foodify.Model.Response.Shops;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -25,18 +26,21 @@ public interface FoodApi {
     Gson gson = new GsonBuilder().setDateFormat("HH:mm:ss dd-MM-yyyy").create();
 
     FoodApi apiService = new Retrofit.Builder()
-            .baseUrl("https://63eb52abbfdd4299674540d4.mockapi.io/api/v1/").addConverterFactory(GsonConverterFactory.create(gson))
+            .baseUrl("http://10.0.2.2:8080/api/").addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(FoodApi.class);
 
-    @GET("randomProduct")
-    Call<List<Food>> bestFoodResponse();
+    @GET("products?pageNo=0&pageSize=10&sortBy=id&sortDir=asc")
+    Call<Foods> recommendFood();
 
-    @GET("recommend")
-    Call<List<Food>> drinksFoodResponse();
+    @GET("products?pageNo=0&pageSize=10&sortBy=createdTime&sortDir=desc")
+    Call<Foods> recentFood();
 
-    @GET("listFood")
-    Call<List<Food>> listFood(@Query("search") String search, @Query("page") int page, @Query("limit") int limit);
+    @GET("shops?pageNo=0&pageSize=10&sortBy=id&sortDir=asc")
+    Call<Shops> allShops();
+
+    @GET("products/search/")
+    Call<List<Food>> listFood(@Path("search") String search, @Query("pageNo") int pageNo, @Query("pageSize") int pageSize, @Query("sortBy") String sortBy, @Query("sortDir") String sortDir);
 
     @GET("listFood")
     Call<List<Food>> listFood(@Query("page") int page, @Query("limit") int limit);
@@ -50,8 +54,8 @@ public interface FoodApi {
     @GET("detail/{id}")
     Call<Food> detailFood(@Path("id") String id);
 
-    @GET("detail/{id}/image")
-    Call<List<ImageFood>> getImageFoodById(@Path("id") String id);
+//    @GET("detail/{id}/image")
+//    Call<List<ImageFood>> getImageFoodById(@Path("id") String id);
 
     @GET("district/{districtId}/ward")
     Call<List<DistrictWardResponse>> wardResponse(@Path("districtId") int district_id);

@@ -50,10 +50,10 @@ public class FoodFavoriteAdapter extends  RecyclerView.Adapter<FoodFavoriteAdapt
         if(food == null)
             return;
 
-        holder.foodName.setText(food.getName());
-        holder.shopName.setText(food.getShopName());
-        holder.price.setText(food.getPrice());
-        Picasso.get().load(food.getImg()).into(holder.imageView);
+//        holder.foodName.setText(food.getName());
+//        holder.shopName.setText(food.getShopName());
+//        holder.price.setText(food.getPrice());
+//        Picasso.get().load(food.getImg()).into(holder.imageView);
     }
 
     @Override

@@ -13,8 +13,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +25,6 @@ import com.capstone.foodify.API.FoodApi;
 import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.Basket.Basket;
 import com.capstone.foodify.Model.Food.Food;
-import com.capstone.foodify.Model.Food.ImageFood;
 import com.capstone.foodify.Model.Review.Review;
 import com.capstone.foodify.Model.Review.ReviewAdapter;
 import com.capstone.foodify.R;
@@ -41,10 +38,8 @@ import com.saadahmedsoft.popupdialog.PopupDialog;
 import com.saadahmedsoft.popupdialog.Styles;
 import com.willy.ratingbar.RotationRatingBar;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -153,38 +148,38 @@ public class FoodDetailActivity extends AppCompatActivity {
         add_to_basket_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(horizontalQuantitizer.getValue() > 0){
-                    Basket foodInBasket = getFoodExistInBasket(food.getId());
-                    if(foodInBasket == null){
-                        //If item is not exist in basket
-                        Common.LIST_BASKET_FOOD.add(new Basket(food.getId(), imageFood.get(0), food.getName(), food.getPrice(), "Shop Name",
-                                String.valueOf(horizontalQuantitizer.getValue()), "0"));
-                        Toast.makeText(FoodDetailActivity.this, "Thêm vào giỏ hàng thành công!", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(FoodDetailActivity.this, MainActivity.class));
-                    } else {
-                        //If item is exist in basket
-
-                        for(int i = 0; i < Common.LIST_BASKET_FOOD.size(); i++){
-                            String foodId = Common.LIST_BASKET_FOOD.get(i).getId();
-                            //Find foodId exist
-                            if(foodId.equals(food.getId())){
-                                //Get quantity food from basket
-                                String quantity = Common.LIST_BASKET_FOOD.get(i).getQuantity();
-
-                                //Change quantity food from basket
-                                int quantityInt = Integer.parseInt(quantity) + horizontalQuantitizer.getValue();
-                                Common.LIST_BASKET_FOOD.get(i).setQuantity(String.valueOf(quantityInt));
-                                break;
-                            }
-                        }
-
-                        Toast.makeText(FoodDetailActivity.this, "Thêm vào giỏ hàng thành công!", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(FoodDetailActivity.this, MainActivity.class));
-                    }
-
-                } else {
-                    Toast.makeText(FoodDetailActivity.this, "Bạn chưa chọn số lượng đồ ăn cần đặt!", Toast.LENGTH_SHORT).show();   
-                }
+//                if(horizontalQuantitizer.getValue() > 0){
+//                    Basket foodInBasket = getFoodExistInBasket(food.getId());
+//                    if(foodInBasket == null){
+//                        //If item is not exist in basket
+//                        Common.LIST_BASKET_FOOD.add(new Basket(food.getId(), imageFood.get(0), food.getName(), food.getPrice(), "Shop Name",
+//                                String.valueOf(horizontalQuantitizer.getValue()), "0"));
+//                        Toast.makeText(FoodDetailActivity.this, "Thêm vào giỏ hàng thành công!", Toast.LENGTH_SHORT).show();
+//                        startActivity(new Intent(FoodDetailActivity.this, MainActivity.class));
+//                    } else {
+//                        //If item is exist in basket
+//
+//                        for(int i = 0; i < Common.LIST_BASKET_FOOD.size(); i++){
+//                            String foodId = Common.LIST_BASKET_FOOD.get(i).getId();
+//                            //Find foodId exist
+//                            if(foodId.equals(food.getId())){
+//                                //Get quantity food from basket
+//                                String quantity = Common.LIST_BASKET_FOOD.get(i).getQuantity();
+//
+//                                //Change quantity food from basket
+//                                int quantityInt = Integer.parseInt(quantity) + horizontalQuantitizer.getValue();
+//                                Common.LIST_BASKET_FOOD.get(i).setQuantity(String.valueOf(quantityInt));
+//                                break;
+//                            }
+//                        }
+//
+//                        Toast.makeText(FoodDetailActivity.this, "Thêm vào giỏ hàng thành công!", Toast.LENGTH_SHORT).show();
+//                        startActivity(new Intent(FoodDetailActivity.this, MainActivity.class));
+//                    }
+//
+//                } else {
+//                    Toast.makeText(FoodDetailActivity.this, "Bạn chưa chọn số lượng đồ ăn cần đặt!", Toast.LENGTH_SHORT).show();
+//                }
             }
         });
 
@@ -227,23 +222,23 @@ public class FoodDetailActivity extends AppCompatActivity {
     }
 
     private void initData(){
-        price = Float.parseFloat(food.getPrice());
-
-        foodName_txt.setText(food.getName());
-        shopName_txt.setText("Shop Name");
-        price_txt.setText(Common.changeCurrencyUnit(Float.parseFloat(food.getPrice())));
-        discount_txt.setText("-" + food.getDiscount() + "%");
-        description_content_txt.setText(food.getDescription());
-        countRating_txt.setText(food.getReviewCount() + " rating");
-
-        add_to_basket_button.setText("ADD TO BASKET - " + Common.changeCurrencyUnit(0));
-
-        List<SlideModel> slideModels = new ArrayList<>();
-        if(imageFood != null){
-            for(String imageUrl: imageFood)
-                slideModels.add(new SlideModel(imageUrl, null));
-        }
-        imageSlider.setImageList(slideModels, ScaleTypes.FIT);
+//        price = Float.parseFloat(food.getPrice());
+//
+//        foodName_txt.setText(food.getName());
+//        shopName_txt.setText("Shop Name");
+//        price_txt.setText(Common.changeCurrencyUnit(Float.parseFloat(food.getPrice())));
+//        discount_txt.setText("-" + food.getDiscount() + "%");
+//        description_content_txt.setText(food.getDescription());
+//        countRating_txt.setText(food.getReviewCount() + " rating");
+//
+//        add_to_basket_button.setText("ADD TO BASKET - " + Common.changeCurrencyUnit(0));
+//
+//        List<SlideModel> slideModels = new ArrayList<>();
+//        if(imageFood != null){
+//            for(String imageUrl: imageFood)
+//                slideModels.add(new SlideModel(imageUrl, null));
+//        }
+//        imageSlider.setImageList(slideModels, ScaleTypes.FIT);
 
     }
 
@@ -267,25 +262,25 @@ public class FoodDetailActivity extends AppCompatActivity {
     }
 
     private void getImageFoodById(String foodId) {
-        FoodApi.apiService.getImageFoodById(foodId).enqueue(new Callback<List<ImageFood>>() {
-            @Override
-            public void onResponse(Call<List<ImageFood>> call, Response<List<ImageFood>> response) {
-                List<ImageFood> imageFoodData = response.body();
-                if (imageFoodData != null){
-                    imageFood.clear();
-                    for(ImageFood imageFoodTemp: imageFoodData){
-                        imageFood.add(imageFoodTemp.getImageUrl());
-                    }
-                }
-
-                getFoodById(foodId);
-            }
-
-            @Override
-            public void onFailure(Call<List<ImageFood>> call, Throwable t) {
-                Toast.makeText(FoodDetailActivity.this, "Lỗi Image" + t, Toast.LENGTH_SHORT).show();
-            }
-        });
+//        FoodApi.apiService.getImageFoodById(foodId).enqueue(new Callback<List<ImageFood>>() {
+//            @Override
+//            public void onResponse(Call<List<ImageFood>> call, Response<List<ImageFood>> response) {
+//                List<ImageFood> imageFoodData = response.body();
+//                if (imageFoodData != null){
+//                    imageFood.clear();
+//                    for(ImageFood imageFoodTemp: imageFoodData){
+//                        imageFood.add(imageFoodTemp.getImageUrl());
+//                    }
+//                }
+//
+//                getFoodById(foodId);
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<ImageFood>> call, Throwable t) {
+//                Toast.makeText(FoodDetailActivity.this, "Lỗi Image" + t, Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
     }
 

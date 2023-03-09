@@ -135,7 +135,7 @@ public class SearchFragment extends Fragment {
     }
 
     private void getListFoodBySearch(String query, int page) {
-        FoodApi.apiService.listFood(query, page, LIMIT).enqueue(new Callback<List<Food>>() {
+        FoodApi.apiService.listFood(query, page, LIMIT, "id", "asc").enqueue(new Callback<List<Food>>() {
             @Override
             public void onResponse(Call<List<Food>> call, Response<List<Food>> response) {
                 loadFoodAdapter(response);

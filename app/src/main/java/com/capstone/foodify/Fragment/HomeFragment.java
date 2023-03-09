@@ -17,6 +17,8 @@ import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.Food.Food;
 import com.capstone.foodify.Model.Menu.Menu;
 import com.capstone.foodify.Model.Menu.MenuAdapter;
+import com.capstone.foodify.Model.Response.Foods;
+import com.capstone.foodify.Model.Response.Shops;
 import com.capstone.foodify.Model.Shop.Shop;
 import com.capstone.foodify.Model.Shop.ShopAdapter;
 import com.capstone.foodify.R;
@@ -39,7 +41,9 @@ import retrofit2.Response;
 public class HomeFragment extends Fragment {
 
     public static List<Food> listFood = new ArrayList<>();
-    private static List<Food> drinkFood = new ArrayList<>();
+    private static List<Food> recentFood = new ArrayList<>();
+
+    private static List<Shop> shopList = new ArrayList<>();
 
     private ImageSlider imageSlider;
 
@@ -61,7 +65,7 @@ public class HomeFragment extends Fragment {
         shopAdapter = new ShopAdapter(getContext());
 
 
-        if(listFood.isEmpty() || drinkFood.isEmpty()){
+        if(listFood.isEmpty() || recentFood.isEmpty()){
             getListFood();
         } else {
             menuAdapter.setData(getListMenu());
@@ -81,16 +85,8 @@ public class HomeFragment extends Fragment {
 
         imageSlider.setImageList(slideModels, ScaleTypes.FIT);
 
-        //Restaurant
-        List<Shop> shopList = new ArrayList<>();
-        shopList.add(new Shop(R.drawable.burgerking));
-        shopList.add(new Shop(R.drawable.dominopizza));
-        shopList.add(new Shop(R.drawable.mcdonals));
-        shopList.add(new Shop(R.drawable.pizzahut));
-        shopList.add(new Shop(R.drawable.subway));
-
-        shopAdapter.setData(shopList);
-        recyclerView_restaurant.setAdapter(shopAdapter);
+        //Get list shop
+        getListShop();
 
         // Inflate the layout for this fragment
         return view;
@@ -100,54 +96,88 @@ public class HomeFragment extends Fragment {
         List<Menu> listMenu = new ArrayList<>();
 
         listMenu.add(new Menu("Recommend Food", listFood));
-        listMenu.add(new Menu("Popular Food", drinkFood));
+        listMenu.add(new Menu("Popular Food", recentFood));
 
         return listMenu;
     }
 
     private void getListFood() {
-        FoodApi.apiService.bestFoodResponse().enqueue(new Callback<List<Food>>() {
+        FoodApi.apiService.recommendFood().enqueue(new Callback<Foods>() {
             @Override
-            public void onResponse(Call<List<Food>> call, Response<List<Food>> response) {
-                List<Food> foodData = response.body();
+            public void onResponse(Call<Foods> call, Response<Foods> response) {
+                Foods foodResponse = response.body();
 
-                if(foodData != null)
-                    listFood.addAll(foodData);
+                //Check null data
+                if(foodResponse == null)
+                    return;
 
-                drinkListFood();
+                listFood = foodResponse.getProducts();
+
+
+                recentFood();
             }
 
             @Override
-            public void onFailure(Call<List<Food>> call, Throwable t) {
+            public void onFailure(Call<Foods> call, Throwable t) {
                 //Check internet connection
-                if(getContext() != null){
-                    if(Common.checkInternetConnection(getContext())){
-                        //Has internet connection
-                        Toast.makeText(getContext(), "Error: " + t, Toast.LENGTH_SHORT).show();
-                    } else {
-                        //No internet, show notification
-                        Common.showErrorInternetConnectionNotification(getActivity());
-                    }
+                if(Common.checkInternetConnection(getContext())){
+                    //Has internet connection
+                    Toast.makeText(getContext(), "Error: " + t, Toast.LENGTH_SHORT).show();
+                } else {
+                    //No internet, show notification
+                    Common.showErrorInternetConnectionNotification(getActivity());
                 }
             }
         });
     }
 
-    private void drinkListFood() {
-        FoodApi.apiService.drinksFoodResponse().enqueue(new Callback<List<Food>>() {
+    private void recentFood() {
+        FoodApi.apiService.recentFood().enqueue(new Callback<Foods>() {
             @Override
-            public void onResponse(Call<List<Food>> call, Response<List<Food>> response) {
-                List<Food> foodData = response.body();
+            public void onResponse(Call<Foods> call, Response<Foods> response) {
+                Foods foodResponse = response.body();
 
-                if(foodData != null)
-                    drinkFood.addAll(foodData);
+                //Check null data
+                if(foodResponse == null)
+                    return;
+
+                recentFood = foodResponse.getProducts();
 
                 menuAdapter.setData(getListMenu());
                 rcvMenu.setAdapter(menuAdapter);
             }
 
             @Override
-            public void onFailure(Call<List<Food>> call, Throwable t) {
+            public void onFailure(Call<Foods> call, Throwable t) {
+                //Check internet connection
+                if(Common.checkInternetConnection(getContext())){
+                    //Has internet connection
+                    Toast.makeText(getContext(), "Error: " + t, Toast.LENGTH_SHORT).show();
+                } else {
+                    //No internet, show notification
+                    Common.showErrorInternetConnectionNotification(getActivity());
+                }
+            }
+        });
+    }
+
+    private void getListShop(){
+        FoodApi.apiService.allShops().enqueue(new Callback<Shops>() {
+            @Override
+            public void onResponse(Call<Shops> call, Response<Shops> response) {
+                Shops shopData = response.body();
+
+                if(shopData == null)
+                    return;
+
+                shopList = shopData.getShops();
+
+                shopAdapter.setData(shopList);
+                recyclerView_restaurant.setAdapter(shopAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<Shops> call, Throwable t) {
                 //Check internet connection
                 if(Common.checkInternetConnection(getContext())){
                     //Has internet connection

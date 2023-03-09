@@ -40,10 +40,10 @@ public class FoodShopAdapter extends RecyclerView.Adapter<FoodShopAdapter.FoodSh
         if(food == null)
             return;
 
-        Picasso.get().load(food.getImg()).into(holder.imageView);
-        holder.foodName.setText(food.getName());
-        holder.quantitySoldOut.setText("1.2k đã bán");
-        holder.price.setText(food.getPrice());
+//        Picasso.get().load(food.getImg()).into(holder.imageView);
+//        holder.foodName.setText(food.getName());
+//        holder.quantitySoldOut.setText("1.2k đã bán");
+//        holder.price.setText(food.getPrice());
     }
 
     @Override

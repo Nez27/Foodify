@@ -40,9 +40,9 @@ public class ShopDetailActivity extends AppCompatActivity {
         //Init temp data
         Picasso.get().load("https://firebasestorage.googleapis.com/v0/b/foodify-55954.appspot.com/o/Free%20Food%20Advertising%20Banner%20Template.jpg?alt=media&token=8b836fd7-f18f-46c6-a14f-27680e51a1d5").into(imageShop);
 
-        for(int i = 1; i <= 10; i++){
-            listFood.add(new Food("https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80", "Food " + i, "50.000đ"));
-        }
+//        for(int i = 1; i <= 10; i++){
+//            listFood.add(new Food("https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80", "Food " + i, "50.000đ"));
+//        }
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recycler_view_food_shop.setLayoutManager(linearLayoutManager);

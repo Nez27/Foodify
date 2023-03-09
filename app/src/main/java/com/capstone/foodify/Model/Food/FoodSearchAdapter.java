@@ -53,10 +53,10 @@ public class FoodSearchAdapter extends RecyclerView.Adapter<FoodSearchAdapter.Fo
         } else {
             holder.name.setText(foodName);
         }
-        Picasso.get().load(food.getImg()).into(holder.image);
-
-
-        holder.price.setText(Common.changeCurrencyUnit(Float.parseFloat(food.getPrice())));
+//        Picasso.get().load(food.getImg()).into(holder.image);
+//
+//
+//        holder.price.setText(Common.changeCurrencyUnit(Float.parseFloat(food.getPrice())));
     }
 
     @Override

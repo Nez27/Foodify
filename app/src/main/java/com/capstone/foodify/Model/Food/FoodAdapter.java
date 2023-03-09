@@ -55,8 +55,24 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         } else {
             holder.name.setText(foodName);
         }
-        Picasso.get().load(food.getImg()).into(holder.image);
-        holder.price.setText(Common.changeCurrencyUnit(Float.parseFloat(food.getPrice())));
+        Picasso.get().load(food.getImages().get(0).getImageUrl()).into(holder.image);
+
+        //Check value discountPercent
+        float cost = 0;
+        if(food.getDiscountPercent() > 0){
+
+            //Calculate final cost when apply discountPercent
+            cost = food.getCost() - (food.getCost() * food.getDiscountPercent()/100);
+
+            //Show discountPercent value on screen
+            holder.discount.setVisibility(View.VISIBLE);
+            holder.discount.setText("-" + food.getDiscountPercent()+ "%");
+        } else {
+            cost = food.getCost();
+        }
+
+        holder.price.setText(Common.changeCurrencyUnit(cost));
+
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,7 +96,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
     public class FoodViewHolder extends RecyclerView.ViewHolder{
 
         private ImageView image;
-        private TextView name, price;
+        private TextView name, price, discount;
 
         public FoodViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -88,7 +104,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
             image = itemView.findViewById(R.id.image_view);
             name = itemView.findViewById(R.id.title);
             price = itemView.findViewById(R.id.price);
-
+            discount = itemView.findViewById(R.id.discount);
         }
     }
 }

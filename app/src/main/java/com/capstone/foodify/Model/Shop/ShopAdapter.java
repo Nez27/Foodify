@@ -6,12 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstone.foodify.Activity.ShopDetailActivity;
 import com.capstone.foodify.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -44,7 +46,10 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ShopViewHolder
         if(shop == null)
             return;
 
-        holder.imgView.setImageResource(shop.getResourceId());
+        //Init data
+        Picasso.get().load(shop.getImageUrl()).into(holder.imageView);
+        holder.shopName.setText("Shop Name");
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,12 +67,14 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ShopViewHolder
 
     public class ShopViewHolder extends RecyclerView.ViewHolder{
 
-        private ImageView imgView;
+        private ImageView imageView;
+        private TextView shopName;
 
         public ShopViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            imgView = itemView.findViewById(R.id.shopImage);
+            imageView = itemView.findViewById(R.id.imageView);
+            shopName = itemView.findViewById(R.id.shopName);
         }
     }
 }

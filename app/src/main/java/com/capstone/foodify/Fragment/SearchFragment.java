@@ -212,12 +212,22 @@ public class SearchFragment extends Fragment {
                                     statusCategoryChecked.remove(Integer.valueOf(tempCategory.getId()));
                                 }
 
-                                ACTION_CODE = LIST_FOOD_BY_CATEGORY;
+
                                 listFoodSearch.clear();
                                 CURRENT_PAGE = 0;
                                 showProgressBarAndHideEndOfListText();
-                                getListFoodByCategory(CURRENT_PAGE);
-                                Toast.makeText(getContext(), "Category check: " + statusCategoryChecked, Toast.LENGTH_SHORT).show();
+
+                                //Check category list null or not
+                                if(statusCategoryChecked.size() == 0){
+
+                                    //If null, return list food
+                                    ACTION_CODE = LIST_FOOD;
+                                    getListFood(0);
+                                } else {
+                                    //If have category check, return list food by category
+                                    ACTION_CODE = LIST_FOOD_BY_CATEGORY;
+                                    getListFoodByCategory(CURRENT_PAGE);
+                                }
                             }
                         });
 

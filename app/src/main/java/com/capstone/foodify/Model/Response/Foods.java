@@ -24,4 +24,12 @@ public class Foods {
     public void setPage(Page page) {
         this.page = page;
     }
+
+    @Override
+    public String toString() {
+        return "Foods{" +
+                "products=" + products +
+                ", page=" + page +
+                '}';
+    }
 }

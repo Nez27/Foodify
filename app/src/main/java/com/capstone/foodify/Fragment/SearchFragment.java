@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,10 +26,12 @@ import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.Category.Category;
 import com.capstone.foodify.Model.Food.Food;
 import com.capstone.foodify.Model.Food.FoodSearchAdapter;
+import com.capstone.foodify.Model.Response.Foods;
 import com.capstone.foodify.R;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
+import java.nio.file.LinkOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,13 +41,15 @@ import retrofit2.Response;
 
 public class SearchFragment extends Fragment {
 
-    private static int CURRENT_PAGE = 1;
-    private static final int LIMIT = 18;
-    private static int TOTAL_PAGE = 5;
+    private static int CURRENT_PAGE = 0;
+    private static final int LIMIT = 8;
+    private static int TOTAL_PAGE = 0;
     private static int ACTION_CODE = -1;
     private static final int LIST_FOOD = -1;
     private static final int SEARCH_FOOD = 0;
+    private static final int LIST_FOOD_BY_CATEGORY = 2;
     private String searchQuery = "";
+    private LinearLayout searchNotFound;
     private RecyclerView recycler_view_search;
     private NestedScrollView nestedScrollView;
     private TextView end_of_list_text_view;
@@ -52,7 +57,7 @@ public class SearchFragment extends Fragment {
     private ProgressBar progressBar;
     private static final List<Food> listFoodSearch = new ArrayList<>();
     private ChipGroup list_Category;
-    private final List<String> statusCategoryChecked = new ArrayList<>();
+    private final List<Integer> statusCategoryChecked = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,6 +72,7 @@ public class SearchFragment extends Fragment {
         foodAdapter = new FoodSearchAdapter(getContext());
         progressBar = view.findViewById(R.id.progress_bar);
         end_of_list_text_view = view.findViewById(R.id.end_of_list_text);
+        searchNotFound = view.findViewById(R.id.search_not_found);
 
         getListCategory();
 
@@ -76,10 +82,11 @@ public class SearchFragment extends Fragment {
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
         recycler_view_search.addItemDecoration(itemDecoration);
 
+        //Fix for lagging when scrolling
         recycler_view_search.setNestedScrollingEnabled(false);
         recycler_view_search.setAdapter(foodAdapter);
 
-        getListFoodByPagination(1);
+        getListFood(0);
         if (nestedScrollView != null) {
             nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
                 @Override
@@ -94,8 +101,13 @@ public class SearchFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+
+                //Hide UI search not found
+                searchNotFound.setVisibility(View.GONE);
+
+                //Set action code
                 ACTION_CODE = SEARCH_FOOD;
-                CURRENT_PAGE = 1;
+                CURRENT_PAGE = 0;
                 listFoodSearch.clear();
                 showProgressBarAndHideEndOfListText();
                 if (!query.isEmpty()) {
@@ -110,12 +122,14 @@ public class SearchFragment extends Fragment {
                 if (searchView.getQuery().length() == 0) {
                     listFoodSearch.clear();
 
-                    CURRENT_PAGE = 1;
+                    CURRENT_PAGE = 0;
                     ACTION_CODE = LIST_FOOD;
                     showProgressBarAndHideEndOfListText();
-                    foodAdapter.setData(listFood);
-                    foodAdapter.notifyDataSetChanged();
-                    hideProgressBarAndShowEndOfListText();
+
+                    //Hide UI search not found
+                    searchNotFound.setVisibility(View.GONE);
+
+                    getListFood(0);
                 }
                 return true;
             }
@@ -134,27 +148,44 @@ public class SearchFragment extends Fragment {
         end_of_list_text_view.setVisibility(View.VISIBLE);
     }
 
+
     private void getListFoodBySearch(String query, int page) {
-        FoodApi.apiService.listFood(query, page, LIMIT, "id", "asc").enqueue(new Callback<List<Food>>() {
+        FoodApi.apiService.searchFoodByName(query, page, LIMIT, "id", "asc").enqueue(new Callback<Foods>() {
             @Override
-            public void onResponse(Call<List<Food>> call, Response<List<Food>> response) {
+            public void onResponse(Call<Foods> call, Response<Foods> response) {
+                //Init total page and total elements value
+                TOTAL_PAGE = response.body().getPage().getTotalPages();
+
                 loadFoodAdapter(response);
+
             }
 
             @Override
-            public void onFailure(Call<List<Food>> call, Throwable t) {
-                Toast.makeText(getContext(), "Lỗi" + t, Toast.LENGTH_LONG).show();
+            public void onFailure(Call<Foods> call, Throwable t) {
+
             }
         });
     }
 
-    private void loadFoodAdapter(Response<List<Food>> response) {
-        List<Food> foodData = response.body();
+    private void loadFoodAdapter(Response<Foods> response) {
+        Foods foodData = response.body();
 
-        listFoodSearch.addAll(foodData);
+        List<Food> tempFood = foodData.getProducts();
+
+        listFoodSearch.addAll(tempFood);
         foodAdapter.setData(listFoodSearch);
         foodAdapter.notifyDataSetChanged();
-        hideProgressBarAndShowEndOfListText();
+
+        //If list data don't have pagination
+        if(TOTAL_PAGE == 1)
+            hideProgressBarAndShowEndOfListText();
+
+        //If search not found
+        if(listFoodSearch.size() == 0){
+            searchNotFound.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+        }
+
     }
 
     private void getListCategory() {
@@ -174,12 +205,19 @@ public class SearchFragment extends Fragment {
                         chip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                             @Override
                             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                                loadFoodByCategory(tempCategory.getId());
+                                //Add category to list category have checked
                                 if(b) {
-                                    statusCategoryChecked.add(tempCategory.getId());
+                                    statusCategoryChecked.add(Integer.parseInt(tempCategory.getId()));
                                 } else {
-                                    statusCategoryChecked.remove(tempCategory.getId());
+                                    statusCategoryChecked.remove(Integer.valueOf(tempCategory.getId()));
                                 }
+
+                                ACTION_CODE = LIST_FOOD_BY_CATEGORY;
+                                listFoodSearch.clear();
+                                CURRENT_PAGE = 0;
+                                showProgressBarAndHideEndOfListText();
+                                getListFoodByCategory(CURRENT_PAGE);
+                                Toast.makeText(getContext(), "Category check: " + statusCategoryChecked, Toast.LENGTH_SHORT).show();
                             }
                         });
 
@@ -203,16 +241,17 @@ public class SearchFragment extends Fragment {
         });
     }
 
-    private void loadFoodByCategory(String id) {
-
-        FoodApi.apiService.listFoodByCategory(id).enqueue(new Callback<List<Food>>() {
+    private void getListFoodByCategory(int page) {
+        FoodApi.apiService.listFoodByCategory(statusCategoryChecked, page, LIMIT, "id", "asc").enqueue(new Callback<Foods>() {
             @Override
-            public void onResponse(Call<List<Food>> call, Response<List<Food>> response) {
+            public void onResponse(Call<Foods> call, Response<Foods> response) {
+                //Init total page and total elements value
+                TOTAL_PAGE = response.body().getPage().getTotalPages();
                 loadFoodAdapter(response);
             }
 
             @Override
-            public void onFailure(Call<List<Food>> call, Throwable t) {
+            public void onFailure(Call<Foods> call, Throwable t) {
                 //Check internet connection
                 if(Common.checkInternetConnection(getContext())){
                     //Has internet connection
@@ -225,15 +264,16 @@ public class SearchFragment extends Fragment {
         });
     }
 
-    private void getListFoodByPagination(int page){
-        FoodApi.apiService.listFood(page, LIMIT).enqueue(new Callback<List<Food>>() {
+    private void getListFood(int page){
+        FoodApi.apiService.listFood(page, LIMIT, "id", "asc").enqueue(new Callback<Foods>() {
             @Override
-            public void onResponse(Call<List<Food>> call, Response<List<Food>> response) {
+            public void onResponse(Call<Foods> call, Response<Foods> response) {
+                TOTAL_PAGE = response.body().getPage().getTotalPages();
                 loadFoodAdapter(response);
             }
 
             @Override
-            public void onFailure(Call<List<Food>> call, Throwable t) {
+            public void onFailure(Call<Foods> call, Throwable t) {
                 //Check internet connection
                 if(Common.checkInternetConnection(getContext())){
                     //Has internet connection
@@ -249,16 +289,24 @@ public class SearchFragment extends Fragment {
     private void dataLoadMore() {
         switch (ACTION_CODE){
             case LIST_FOOD:{
-                if(CURRENT_PAGE < TOTAL_PAGE){
-                    getListFoodByPagination(++CURRENT_PAGE);
+                if(CURRENT_PAGE < TOTAL_PAGE - 1){
+                    getListFood(++CURRENT_PAGE);
                 } else {
                     hideProgressBarAndShowEndOfListText();
                 }
                 break;
             }
             case SEARCH_FOOD:{
-                if(CURRENT_PAGE < TOTAL_PAGE){
+                if(CURRENT_PAGE < TOTAL_PAGE - 1){
                     getListFoodBySearch(searchQuery, ++CURRENT_PAGE);
+                } else {
+                    hideProgressBarAndShowEndOfListText();
+                }
+                break;
+            }
+            case LIST_FOOD_BY_CATEGORY:{
+                if(CURRENT_PAGE < TOTAL_PAGE - 1){
+                    getListFoodByCategory(++CURRENT_PAGE);
                 } else {
                     hideProgressBarAndShowEndOfListText();
                 }

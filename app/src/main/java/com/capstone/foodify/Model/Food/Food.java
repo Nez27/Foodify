@@ -116,4 +116,21 @@ public class Food implements Comparable<Food>{
         }
         return getName().compareTo(food.getName());
     }
+
+    @Override
+    public String toString() {
+        return "Food{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", isEnabled=" + isEnabled +
+                ", discountPercent=" + discountPercent +
+                ", cost=" + cost +
+                ", averageRating=" + averageRating +
+                ", reviewCount='" + reviewCount + '\'' +
+                ", shop=" + shop +
+                ", categories=" + categories +
+                ", images=" + images +
+                '}';
+    }
 }

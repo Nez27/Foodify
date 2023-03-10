@@ -9,8 +9,10 @@
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/search_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        >
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_view"
@@ -46,13 +48,44 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_search"
-            tools:listitem="@layout/item_food"
+            tools:listitem="@layout/item_food_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/list_category"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             />
+
+
+        <LinearLayout
+            android:id="@+id/search_not_found"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/list_category"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:orientation="vertical"
+            android:visibility="gone"
+            >
+
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/dish"
+                android:layout_marginTop="100dp"
+                android:layout_gravity="center_horizontal"
+                />
+
+            <TextView
+                android:text="Không có kết quả cần tìm. Vui lòng tìm thử với từ khoá khác."
+                android:fontFamily="@font/opensans"
+                android:textColor="@color/gray"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                />
+        </LinearLayout>
 
         <ProgressBar
             android:id="@+id/progress_bar"
@@ -75,7 +108,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

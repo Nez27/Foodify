@@ -47,7 +47,7 @@
             <TextView
                 android:id="@+id/shop_name_text_view"
                 android:text="Shop Name"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:textColor="@color/secondary"
                 android:fontFamily="@font/opensans"
                 android:layout_width="wrap_content"
@@ -76,6 +76,7 @@
                     />
 
                 <TextView
+                    android:id="@+id/discount"
                     android:text="-59%"
                     android:textSize="8sp"
                     android:textColor="@color/red"

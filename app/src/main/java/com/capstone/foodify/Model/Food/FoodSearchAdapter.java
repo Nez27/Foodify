@@ -18,6 +18,7 @@ import java.util.List;
 
 public class FoodSearchAdapter extends RecyclerView.Adapter<FoodSearchAdapter.FoodViewHolder>{
 
+    public static final int LENGTH_CHARACTER = 40;
     private List<Food> listFood;
     private Context context;
 
@@ -45,18 +46,38 @@ public class FoodSearchAdapter extends RecyclerView.Adapter<FoodSearchAdapter.Fo
             return;
         }
 
+        //Init data
         String foodName = food.getName();
-        if(foodName.length() >= 19){
+        if(foodName.length() >= LENGTH_CHARACTER){
             StringBuilder stringBuilder = new StringBuilder(food.getName());
-            stringBuilder.replace(19, food.getName().length(), "..." );
+            stringBuilder.replace(LENGTH_CHARACTER, food.getName().length(), "..." );
             holder.name.setText(stringBuilder);
         } else {
             holder.name.setText(foodName);
         }
-//        Picasso.get().load(food.getImg()).into(holder.image);
-//
-//
-//        holder.price.setText(Common.changeCurrencyUnit(Float.parseFloat(food.getPrice())));
+
+        //When food does not have image
+        if(food.getImages().size() == 0){
+            holder.image.setImageResource(R.drawable.default_image_food);
+        } else {
+            Picasso.get().load(food.getImages().get(0).getImageUrl()).into(holder.image);
+        }
+
+        //Check value discountPercent
+        float cost = 0;
+        if(food.getDiscountPercent() > 0){
+
+            //Calculate final cost when apply discountPercent
+            cost = food.getCost() - (food.getCost() * food.getDiscountPercent()/100);
+
+            //Show discountPercent value on screen
+            holder.discount.setVisibility(View.VISIBLE);
+            holder.discount.setText("-" + food.getDiscountPercent()+ "%");
+        } else {
+            cost = food.getCost();
+        }
+
+        holder.price.setText(Common.changeCurrencyUnit(cost));
     }
 
     @Override
@@ -70,7 +91,7 @@ public class FoodSearchAdapter extends RecyclerView.Adapter<FoodSearchAdapter.Fo
     public static class FoodViewHolder extends RecyclerView.ViewHolder{
 
         private final ImageView image;
-        private final TextView price, name;
+        private final TextView price, name, discount;
 
         public FoodViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -78,7 +99,7 @@ public class FoodSearchAdapter extends RecyclerView.Adapter<FoodSearchAdapter.Fo
             image = itemView.findViewById(R.id.image_view);
             name = itemView.findViewById(R.id.food_name_text_view);
             price = itemView.findViewById(R.id.price_text_view);
-
+            discount = itemView.findViewById(R.id.discount);
         }
     }
 }

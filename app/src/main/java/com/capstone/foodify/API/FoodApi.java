@@ -26,7 +26,7 @@ public interface FoodApi {
     Gson gson = new GsonBuilder().setDateFormat("HH:mm:ss dd-MM-yyyy").create();
 
     FoodApi apiService = new Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8080/api/").addConverterFactory(GsonConverterFactory.create(gson))
+            .baseUrl("http://192.168.1.183:8080/api/").addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(FoodApi.class);
 
@@ -39,17 +39,17 @@ public interface FoodApi {
     @GET("shops?pageNo=0&pageSize=10&sortBy=id&sortDir=asc")
     Call<Shops> allShops();
 
-    @GET("products/search/")
-    Call<List<Food>> listFood(@Path("search") String search, @Query("pageNo") int pageNo, @Query("pageSize") int pageSize, @Query("sortBy") String sortBy, @Query("sortDir") String sortDir);
+    @GET("products/search/{name}")
+    Call<Foods> searchFoodByName(@Path("name") String name, @Query("pageNo") int pageNo, @Query("pageSize") int pageSize, @Query("sortBy") String sortBy, @Query("sortDir") String sortDir);
 
-    @GET("listFood")
-    Call<List<Food>> listFood(@Query("page") int page, @Query("limit") int limit);
+    @GET("products")
+    Call<Foods> listFood(@Query("pageNo") int pageNo, @Query("pageSize") int pageSize, @Query("sortBy") String sortBy, @Query("sortDir") String sortDir);
 
-    @GET("Category")
+    @GET("categories")
     Call<List<Category>> listCategory();
 
-    @GET("Category/{id}/food")
-    Call<List<Food>> listFoodByCategory(@Path("id") String id);
+    @GET("products/categories")
+    Call<Foods> listFoodByCategory(@Query("id") List<Integer> id, @Query("pageNo") int pageNo, @Query("pageSize") int pageSize, @Query("sortBy") String sortBy, @Query("sortDir") String sortDir);
 
     @GET("detail/{id}")
     Call<Food> detailFood(@Path("id") String id);

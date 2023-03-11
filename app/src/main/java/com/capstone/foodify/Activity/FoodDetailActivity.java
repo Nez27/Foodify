@@ -266,7 +266,7 @@ public class FoodDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Food> call, Throwable t) {
-                Toast.makeText(FoodDetailActivity.this, "Lỗi Food" + t, Toast.LENGTH_SHORT).show();
+                Common.showNotificationError(t, getBaseContext(), FoodDetailActivity.this);
             }
         });
     }

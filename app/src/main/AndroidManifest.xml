@@ -37,7 +37,9 @@
             android:exported="false" />
         <activity
             android:name=".Activity.FoodDetailActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:noHistory="true"
+            />
         <activity
             android:name=".Activity.ResetPasswordActivity"
             android:exported="false"

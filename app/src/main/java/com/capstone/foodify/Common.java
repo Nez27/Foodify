@@ -9,6 +9,7 @@ import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -63,11 +64,21 @@ public class Common {
                 .setOnClickListener(new OnDialogClickListener() {
                     @Override
                     public void onClick(@NonNull AestheticDialog.Builder builder) {
-                        activity.finish();
+                        activity.finishAffinity();
                         System.exit(0);
                     }
                 })
                 .show();
+    }
+
+    public static void showNotificationError(Throwable t, Context context, Activity activity) {
+        if(checkInternetConnection(context)){
+            //Has internet connection
+            Toast.makeText(context, "Error: " + t, Toast.LENGTH_SHORT).show();
+        } else {
+            //No internet, show notification
+            showErrorInternetConnectionNotification(activity);
+        }
     }
 
     public static Basket getFoodExistInBasket(String foodId) {

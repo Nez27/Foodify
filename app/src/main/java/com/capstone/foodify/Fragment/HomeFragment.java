@@ -113,13 +113,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onFailure(Call<Foods> call, Throwable t) {
                 //Check internet connection
-                if(Common.checkInternetConnection(getContext())){
-                    //Has internet connection
-                    Toast.makeText(getContext(), "Error: " + t, Toast.LENGTH_SHORT).show();
-                } else {
-                    //No internet, show notification
-                    Common.showErrorInternetConnectionNotification(getActivity());
-                }
+                Common.showNotificationError(t, getContext(), getActivity());
             }
         });
     }
@@ -143,13 +137,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onFailure(Call<Foods> call, Throwable t) {
                 //Check internet connection
-                if(Common.checkInternetConnection(getContext())){
-                    //Has internet connection
-                    Toast.makeText(getContext(), "Error: " + t, Toast.LENGTH_SHORT).show();
-                } else {
-                    //No internet, show notification
-                    Common.showErrorInternetConnectionNotification(getActivity());
-                }
+                Common.showNotificationError(t,getContext(), getActivity());
             }
         });
     }
@@ -172,13 +160,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onFailure(Call<Shops> call, Throwable t) {
                 //Check internet connection
-                if(Common.checkInternetConnection(getContext())){
-                    //Has internet connection
-                    Toast.makeText(getContext(), "Error: " + t, Toast.LENGTH_SHORT).show();
-                } else {
-                    //No internet, show notification
-                    Common.showErrorInternetConnectionNotification(getActivity());
-                }
+                Common.showNotificationError(t, getContext(), getActivity());
             }
         });
     }

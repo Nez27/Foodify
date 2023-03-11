@@ -5,6 +5,7 @@ import com.capstone.foodify.Model.DistrictWard.DistrictWardResponse;
 import com.capstone.foodify.Model.Food.Food;
 import com.capstone.foodify.Model.Response.Foods;
 import com.capstone.foodify.Model.Response.Shops;
+import com.capstone.foodify.Model.Shop.Shop;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -54,8 +55,11 @@ public interface FoodApi {
     @GET("products/{id}")
     Call<Food> detailFood(@Path("id") String id);
 
-//    @GET("detail/{id}/image")
-//    Call<List<ImageFood>> getImageFoodById(@Path("id") String id);
+    @GET("shops/{id}")
+    Call<Shop> detailShop(@Path("id") int id);
+
+    @GET("products/shops/{id}")
+    Call<Foods> listFoodByShopId(@Path("id") int id, @Query("pageNo") int pageNo, @Query("pageSize") int pageSize, @Query("sortBy") String sortBy, @Query("sortDir") String sortDir);
 
     @GET("district/{districtId}/ward")
     Call<List<DistrictWardResponse>> wardResponse(@Path("districtId") int district_id);

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.capstone.foodify.Activity.FoodDetailActivity;
 import com.capstone.foodify.Activity.ShopDetailActivity;
 import com.capstone.foodify.Model.Shop.Shop;
 import com.capstone.foodify.R;
@@ -49,12 +50,21 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ShopViewHolder
 
         //Init data
         Picasso.get().load(shop.getImageUrl()).into(holder.imageView);
-        holder.shopName.setText("Shop Name");
+        holder.shopName.setText(shop.getName());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 context.startActivity(new Intent(context, ShopDetailActivity.class));
+            }
+        });
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ShopDetailActivity.class);
+                intent.putExtra("ShopId", shop.getId());
+                context.startActivity(intent);
             }
         });
     }

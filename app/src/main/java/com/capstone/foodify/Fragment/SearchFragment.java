@@ -39,7 +39,7 @@ public class SearchFragment extends Fragment {
 
     private static int CURRENT_PAGE = 0;
     private static final int LIMIT = 8;
-    private static int TOTAL_PAGE = 0;
+    private static boolean LAST_PAGE;
     private static int ACTION_CODE = -1;
     private static final int LIST_FOOD = -1;
     private static final int SEARCH_FOOD = 0;
@@ -150,7 +150,7 @@ public class SearchFragment extends Fragment {
             @Override
             public void onResponse(Call<Foods> call, Response<Foods> response) {
                 //Init total page and total elements value
-                TOTAL_PAGE = response.body().getPage().getTotalPages();
+                LAST_PAGE = response.body().getPage().isLast();
 
                 loadFoodAdapter(response);
 
@@ -158,7 +158,8 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Foods> call, Throwable t) {
-
+                //Check internet connection
+                Common.showNotificationError(t, getContext(), getActivity());
             }
         });
     }
@@ -173,7 +174,7 @@ public class SearchFragment extends Fragment {
         foodAdapter.notifyDataSetChanged();
 
         //If list data don't have pagination
-        if(TOTAL_PAGE == 1)
+        if(LAST_PAGE)
             hideProgressBarAndShowEndOfListText();
 
         //If search not found
@@ -236,13 +237,7 @@ public class SearchFragment extends Fragment {
             @Override
             public void onFailure(Call<List<Category>> call, Throwable t) {
                 //Check internet connection
-                if(Common.checkInternetConnection(getContext())){
-                    //Has internet connection
-                    Toast.makeText(getContext(), "Error: " + t, Toast.LENGTH_SHORT).show();
-                } else {
-                    //No internet, show notification
-                    Common.showErrorInternetConnectionNotification(getActivity());
-                }
+                Common.showNotificationError(t, getContext(), getActivity());
             }
         });
     }
@@ -252,20 +247,15 @@ public class SearchFragment extends Fragment {
             @Override
             public void onResponse(Call<Foods> call, Response<Foods> response) {
                 //Init total page and total elements value
-                TOTAL_PAGE = response.body().getPage().getTotalPages();
+                LAST_PAGE = response.body().getPage().isLast();
                 loadFoodAdapter(response);
             }
 
             @Override
             public void onFailure(Call<Foods> call, Throwable t) {
                 //Check internet connection
-                if(Common.checkInternetConnection(getContext())){
-                    //Has internet connection
-                    Toast.makeText(getContext(), "Error: " + t, Toast.LENGTH_SHORT).show();
-                } else {
-                    //No internet, show notification
-                    Common.showErrorInternetConnectionNotification(getActivity());
-                }
+                //Check internet connection
+                Common.showNotificationError(t, getContext(), getActivity());
             }
         });
     }
@@ -274,20 +264,14 @@ public class SearchFragment extends Fragment {
         FoodApi.apiService.listFood(page, LIMIT, "id", "asc").enqueue(new Callback<Foods>() {
             @Override
             public void onResponse(Call<Foods> call, Response<Foods> response) {
-                TOTAL_PAGE = response.body().getPage().getTotalPages();
+                LAST_PAGE = response.body().getPage().isLast();
                 loadFoodAdapter(response);
             }
 
             @Override
             public void onFailure(Call<Foods> call, Throwable t) {
                 //Check internet connection
-                if(Common.checkInternetConnection(getContext())){
-                    //Has internet connection
-                    Toast.makeText(getContext(), "Error: " + t, Toast.LENGTH_SHORT).show();
-                } else {
-                    //No internet, show notification
-                    Common.showErrorInternetConnectionNotification(getActivity());
-                }
+                Common.showNotificationError(t, getContext(), getActivity());
             }
         });
     }
@@ -295,7 +279,7 @@ public class SearchFragment extends Fragment {
     private void dataLoadMore() {
         switch (ACTION_CODE){
             case LIST_FOOD:{
-                if(CURRENT_PAGE < TOTAL_PAGE - 1){
+                if(!LAST_PAGE){
                     getListFood(++CURRENT_PAGE);
                 } else {
                     hideProgressBarAndShowEndOfListText();
@@ -303,7 +287,7 @@ public class SearchFragment extends Fragment {
                 break;
             }
             case SEARCH_FOOD:{
-                if(CURRENT_PAGE < TOTAL_PAGE - 1){
+                if(!LAST_PAGE){
                     getListFoodBySearch(searchQuery, ++CURRENT_PAGE);
                 } else {
                     hideProgressBarAndShowEndOfListText();
@@ -311,7 +295,7 @@ public class SearchFragment extends Fragment {
                 break;
             }
             case LIST_FOOD_BY_CATEGORY:{
-                if(CURRENT_PAGE < TOTAL_PAGE - 1){
+                if(!LAST_PAGE){
                     getListFoodByCategory(++CURRENT_PAGE);
                 } else {
                     hideProgressBarAndShowEndOfListText();

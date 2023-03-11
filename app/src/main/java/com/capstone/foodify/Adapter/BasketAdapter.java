@@ -55,8 +55,14 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketView
         holder.foodName.setText(foodBasket.getName());
         holder.shopName.setText(foodBasket.getShopName());
         holder.price.setText(Common.changeCurrencyUnit(foodBasket.getCost()));
-        Picasso.get().load(foodBasket.getImg()).into(holder.imageView);
         holder.quantity.setNumber(foodBasket.getQuantity());
+
+        //Check food image is null or not null
+        if(foodBasket.getImg() == null){
+            holder.imageView.setImageResource(R.drawable.default_image_food);
+        } else {
+            Picasso.get().load(foodBasket.getImg()).into(holder.imageView);
+        }
 
         //Calculate total price
         calculateTotalPrice();

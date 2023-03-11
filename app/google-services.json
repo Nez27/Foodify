@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "213676556381",
+    "firebase_url": "https://foodify-55954-default-rtdb.firebaseio.com",
+    "project_id": "foodify-55954",
+    "storage_bucket": "foodify-55954.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:213676556381:android:b1fb5bb1a827c24ce88db4",
+        "android_client_info": {
+          "package_name": "com.capstone.foodify"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "213676556381-jmh1dva918r6juc331d1jclgjeinqor1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBboME-vz27_Rgg98ftivvSvMVoH9lV1A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "213676556381-jmh1dva918r6juc331d1jclgjeinqor1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

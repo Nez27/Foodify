@@ -13,12 +13,13 @@ import androidx.fragment.app.Fragment;
 import com.capstone.foodify.Activity.AccountAndProfileActivity;
 import com.capstone.foodify.Activity.AddressManagerActivity;
 import com.capstone.foodify.Activity.OrderActivity;
+import com.capstone.foodify.Activity.SignInActivity;
 import com.capstone.foodify.Activity.SignUpActivity;
 import com.capstone.foodify.R;
 
 public class ProfileFragment extends Fragment {
 
-    Button btnSignUp;
+    Button btnSignUp, btnSignIn;
 
     LinearLayout account_and_profile, manage_address, order_history;
     @Override
@@ -30,6 +31,7 @@ public class ProfileFragment extends Fragment {
         account_and_profile = rootView.findViewById(R.id.account_and_profile);
         manage_address = rootView.findViewById(R.id.manage_address);
         order_history = rootView.findViewById(R.id.order_history);
+        btnSignIn = rootView.findViewById(R.id.sign_in_button);
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,6 +58,13 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getActivity(), OrderActivity.class));
+            }
+        });
+
+        btnSignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getContext().startActivity(new Intent(getContext(), SignInActivity.class));
             }
         });
         return rootView;

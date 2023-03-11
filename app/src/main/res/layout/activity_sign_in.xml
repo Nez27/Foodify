@@ -102,7 +102,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textInput_password" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/sign_up_button"
+        android:id="@+id/sign_in_button"
         style="@style/DefaultSolid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

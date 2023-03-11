@@ -1,4 +1,4 @@
-package com.capstone.foodify.Model.Review;
+package com.capstone.foodify.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.capstone.foodify.Model.Menu.MenuAdapter;
+import com.capstone.foodify.Model.Review.Review;
 import com.capstone.foodify.R;
 import com.willy.ratingbar.ScaleRatingBar;
 

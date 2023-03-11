@@ -10,10 +10,8 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.capstone.foodify.Model.Food.Food;
-import com.capstone.foodify.Model.Food.FoodFavoriteAdapter;
-import com.capstone.foodify.Model.Food.FoodShopAdapter;
+import com.capstone.foodify.Adapter.FoodShopAdapter;
 import com.capstone.foodify.R;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

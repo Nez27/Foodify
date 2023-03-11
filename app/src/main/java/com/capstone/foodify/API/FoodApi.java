@@ -26,7 +26,7 @@ public interface FoodApi {
     Gson gson = new GsonBuilder().setDateFormat("HH:mm:ss dd-MM-yyyy").create();
 
     FoodApi apiService = new Retrofit.Builder()
-            .baseUrl("http://192.168.1.183:8080/api/").addConverterFactory(GsonConverterFactory.create(gson))
+            .baseUrl("http://10.0.2.2:8080/api/").addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(FoodApi.class);
 
@@ -51,7 +51,7 @@ public interface FoodApi {
     @GET("products/categories")
     Call<Foods> listFoodByCategory(@Query("id") List<Integer> id, @Query("pageNo") int pageNo, @Query("pageSize") int pageSize, @Query("sortBy") String sortBy, @Query("sortDir") String sortDir);
 
-    @GET("detail/{id}")
+    @GET("products/{id}")
     Call<Food> detailFood(@Path("id") String id);
 
 //    @GET("detail/{id}/image")

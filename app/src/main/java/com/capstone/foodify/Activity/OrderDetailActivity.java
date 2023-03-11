@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.capstone.foodify.Model.Order.OrderDetail;
-import com.capstone.foodify.Model.Order.OrderDetailAdapter;
+import com.capstone.foodify.Adapter.OrderDetailAdapter;
 import com.capstone.foodify.R;
 
 import java.time.LocalDateTime;

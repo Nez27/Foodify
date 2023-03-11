@@ -4,16 +4,16 @@ public class Basket {
     private String id;
     private String img;
     private String name;
-    private String price;
+    private float cost;
     private String shopName;
     private String quantity;
-    private String discount;
+    private float discount;
 
-    public Basket(String id, String img, String name, String price, String shopName, String quantity, String discount) {
+    public Basket(String id, String img, String name, float cost, String shopName, String quantity, float discount) {
         this.id = id;
         this.img = img;
         this.name = name;
-        this.price = price;
+        this.cost = cost;
         this.shopName = shopName;
         this.quantity = quantity;
         this.discount = discount;
@@ -43,12 +43,12 @@ public class Basket {
         this.name = name;
     }
 
-    public String getPrice() {
-        return price;
+    public float getCost() {
+        return cost;
     }
 
-    public void setPrice(String price) {
-        this.price = price;
+    public void setCost(float cost) {
+        this.cost = cost;
     }
 
     public String getShopName() {
@@ -66,11 +66,12 @@ public class Basket {
     public void setQuantity(String quantity) {
         this.quantity = quantity;
     }
-    public String getDiscount() {
+
+    public float getDiscount() {
         return discount;
     }
 
-    public void setDiscount(String discount) {
+    public void setDiscount(float discount) {
         this.discount = discount;
     }
 }

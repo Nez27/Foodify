@@ -1,4 +1,4 @@
-package com.capstone.foodify.Model.Food;
+package com.capstone.foodify.Adapter;
 
 import android.graphics.Canvas;
 import android.view.View;
@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstone.foodify.ItemTouchHelperListener;
-import com.capstone.foodify.Model.Food.FoodFavoriteAdapter;
 
 public class RecyclerViewItemTouchHelperFavoriteFood extends ItemTouchHelper.SimpleCallback{
 

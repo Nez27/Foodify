@@ -3,7 +3,6 @@ package com.capstone.foodify.Fragment.Order;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.capstone.foodify.Model.Order.Order;
-import com.capstone.foodify.Model.Order.OrderAdapter;
+import com.capstone.foodify.Adapter.OrderAdapter;
 import com.capstone.foodify.R;
 
 import java.util.ArrayList;

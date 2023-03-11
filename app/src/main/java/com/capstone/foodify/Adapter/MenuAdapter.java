@@ -1,4 +1,4 @@
-package com.capstone.foodify.Model.Menu;
+package com.capstone.foodify.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.capstone.foodify.Model.Food.FoodAdapter;
+import com.capstone.foodify.Model.Menu.Menu;
 import com.capstone.foodify.R;
 
 import java.util.List;

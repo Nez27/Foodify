@@ -1,4 +1,4 @@
-package com.capstone.foodify.Model.Food;
+package com.capstone.foodify.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,16 +10,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstone.foodify.API.FoodApi;
+import com.capstone.foodify.Model.Food.Food;
 import com.capstone.foodify.R;
-import com.squareup.picasso.Picasso;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.List;
 

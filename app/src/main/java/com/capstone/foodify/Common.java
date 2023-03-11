@@ -69,4 +69,8 @@ public class Common {
                 })
                 .show();
     }
+
+    public static Basket getFoodExistInBasket(String foodId) {
+        return Common.LIST_BASKET_FOOD.stream().filter(food -> foodId.equals(food.getId())).findFirst().orElse(null);
+    }
 }

@@ -1,7 +1,5 @@
 package com.capstone.foodify.Fragment;
 
-import static com.capstone.foodify.Fragment.HomeFragment.listFood;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +15,6 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,13 +22,12 @@ import com.capstone.foodify.API.FoodApi;
 import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.Category.Category;
 import com.capstone.foodify.Model.Food.Food;
-import com.capstone.foodify.Model.Food.FoodSearchAdapter;
+import com.capstone.foodify.Adapter.FoodSearchAdapter;
 import com.capstone.foodify.Model.Response.Foods;
 import com.capstone.foodify.R;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
-import java.nio.file.LinkOption;
 import java.util.ArrayList;
 import java.util.List;
 

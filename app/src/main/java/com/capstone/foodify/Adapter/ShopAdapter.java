@@ -1,4 +1,4 @@
-package com.capstone.foodify.Model.Shop;
+package com.capstone.foodify.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstone.foodify.Activity.ShopDetailActivity;
+import com.capstone.foodify.Model.Shop.Shop;
 import com.capstone.foodify.R;
 import com.squareup.picasso.Picasso;
 

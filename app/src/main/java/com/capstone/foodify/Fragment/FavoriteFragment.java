@@ -20,9 +20,9 @@ import com.capstone.foodify.API.FoodApi;
 import com.capstone.foodify.Common;
 import com.capstone.foodify.ItemTouchHelperListener;
 import com.capstone.foodify.Model.Food.Food;
-import com.capstone.foodify.Model.Food.FoodFavoriteAdapter;
+import com.capstone.foodify.Adapter.FoodFavoriteAdapter;
 import com.capstone.foodify.R;
-import com.capstone.foodify.Model.Food.RecyclerViewItemTouchHelperFavoriteFood;
+import com.capstone.foodify.Adapter.RecyclerViewItemTouchHelperFavoriteFood;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;

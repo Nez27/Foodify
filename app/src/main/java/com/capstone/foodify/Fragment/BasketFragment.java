@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
@@ -19,8 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.capstone.foodify.Common;
 import com.capstone.foodify.ItemTouchHelperListener;
 import com.capstone.foodify.Model.Basket.Basket;
-import com.capstone.foodify.Model.Basket.BasketAdapter;
-import com.capstone.foodify.Model.Basket.RecyclerViewItemTouchHelperBasketFood;
+import com.capstone.foodify.Adapter.BasketAdapter;
+import com.capstone.foodify.Adapter.RecyclerViewItemTouchHelperBasketFood;
 import com.capstone.foodify.R;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -57,11 +56,7 @@ public class BasketFragment extends Fragment implements ItemTouchHelperListener 
         getListBasketFood();
 
         //Check list basket is null or not!
-        if(Common.LIST_BASKET_FOOD.size() > 0){
-            showRecycleViewAndHideNotificationEmpty();
-        } else {
-            hideRecyclerViewAndShowNotificationEmpty();
-        }
+        checkListBasket();
 
         //Set layout recyclerview
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -74,6 +69,14 @@ public class BasketFragment extends Fragment implements ItemTouchHelperListener 
         new ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView_basket_food);
 
         return view;
+    }
+
+    private void checkListBasket() {
+        if(Common.LIST_BASKET_FOOD.size() > 0){
+            showRecycleViewAndHideNotificationEmpty();
+        } else {
+            hideRecyclerViewAndShowNotificationEmpty();
+        }
     }
 
     private void showRecycleViewAndHideNotificationEmpty(){
@@ -113,5 +116,15 @@ public class BasketFragment extends Fragment implements ItemTouchHelperListener 
             snackbar.setActionTextColor(Color.YELLOW);
             snackbar.show();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        listBasketFood = Common.LIST_BASKET_FOOD;
+        adapter.setData(listBasketFood);
+
+        checkListBasket();
     }
 }

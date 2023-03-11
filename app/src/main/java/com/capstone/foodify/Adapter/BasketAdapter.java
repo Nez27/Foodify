@@ -1,4 +1,4 @@
-package com.capstone.foodify.Model.Basket;
+package com.capstone.foodify.Adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -14,13 +14,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstone.foodify.Common;
 import com.capstone.foodify.Fragment.BasketFragment;
+import com.capstone.foodify.Model.Basket.Basket;
 import com.capstone.foodify.R;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.squareup.picasso.Picasso;
 
-import java.text.NumberFormat;
 import java.util.List;
-import java.util.Locale;
 
 public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketViewHolder> {
 
@@ -35,7 +34,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketView
     @SuppressLint("NotifyDataSetChanged")
     public void setData(List<Basket> listBasketFood){
         this.listBasketFood = listBasketFood;
-        notifyDataSetChanged();
+        this.notifyDataSetChanged();
     }
 
     @NonNull
@@ -55,7 +54,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketView
         //Init data
         holder.foodName.setText(foodBasket.getName());
         holder.shopName.setText(foodBasket.getShopName());
-        holder.price.setText(Common.changeCurrencyUnit(Float.parseFloat(foodBasket.getPrice())));
+        holder.price.setText(Common.changeCurrencyUnit(foodBasket.getCost()));
         Picasso.get().load(foodBasket.getImg()).into(holder.imageView);
         holder.quantity.setNumber(foodBasket.getQuantity());
 
@@ -83,7 +82,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketView
         float total = 0;
 
         for(Basket foodTemp: listBasketFood){
-            total += (Float.parseFloat(foodTemp.getPrice())) * (Float.parseFloat(foodTemp.getQuantity())) * (100 - Long.parseLong(foodTemp.getDiscount()))/100;
+            total += (foodTemp.getCost()) * (Float.parseFloat(foodTemp.getQuantity())) * (100 - foodTemp.getDiscount())/100;
         }
         basketFragment.total.setText(Common.changeCurrencyUnit(total));
     }

@@ -1,4 +1,4 @@
-package com.capstone.foodify.Model.Food;
+package com.capstone.foodify.Adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,9 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.capstone.foodify.Model.Food.Food;
 import com.capstone.foodify.R;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 

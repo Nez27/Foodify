@@ -1,4 +1,4 @@
-package com.capstone.foodify.Model.Address;
+package com.capstone.foodify.Adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.capstone.foodify.Model.Food.FoodAdapter;
+import com.capstone.foodify.Model.Address.Address;
 import com.capstone.foodify.R;
 
 import java.util.List;

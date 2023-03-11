@@ -1,4 +1,4 @@
-package com.capstone.foodify.Model.Basket;
+package com.capstone.foodify.Adapter;
 
 import android.graphics.Canvas;
 import android.view.View;
@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.capstone.foodify.Adapter.BasketAdapter;
 import com.capstone.foodify.ItemTouchHelperListener;
 
 public class RecyclerViewItemTouchHelperBasketFood extends ItemTouchHelper.SimpleCallback{

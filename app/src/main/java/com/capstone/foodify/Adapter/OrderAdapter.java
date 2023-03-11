@@ -1,4 +1,4 @@
-package com.capstone.foodify.Model.Order;
+package com.capstone.foodify.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstone.foodify.Activity.OrderDetailActivity;
+import com.capstone.foodify.Model.Order.Order;
 import com.capstone.foodify.R;
 
 import java.time.LocalDateTime;

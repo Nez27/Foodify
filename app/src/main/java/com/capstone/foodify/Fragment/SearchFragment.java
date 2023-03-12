@@ -1,6 +1,7 @@
 package com.capstone.foodify.Fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -160,6 +161,8 @@ public class SearchFragment extends Fragment {
             public void onFailure(Call<Foods> call, Throwable t) {
                 //Check internet connection
                 Common.showNotificationError(t, getContext(), getActivity());
+
+                Log.e("ERROR", "Get search food by name error!");
             }
         });
     }
@@ -238,6 +241,8 @@ public class SearchFragment extends Fragment {
             public void onFailure(Call<List<Category>> call, Throwable t) {
                 //Check internet connection
                 Common.showNotificationError(t, getContext(), getActivity());
+
+                Log.e("ERROR", "Get list category Error!");
             }
         });
     }
@@ -254,8 +259,9 @@ public class SearchFragment extends Fragment {
             @Override
             public void onFailure(Call<Foods> call, Throwable t) {
                 //Check internet connection
-                //Check internet connection
                 Common.showNotificationError(t, getContext(), getActivity());
+
+                Log.e("ERROR", "Get List Food By Category Error!");
             }
         });
     }
@@ -272,6 +278,8 @@ public class SearchFragment extends Fragment {
             public void onFailure(Call<Foods> call, Throwable t) {
                 //Check internet connection
                 Common.showNotificationError(t, getContext(), getActivity());
+
+                Log.e("ERROR", "Get list food error!");
             }
         });
     }

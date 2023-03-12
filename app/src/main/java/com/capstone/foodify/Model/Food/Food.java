@@ -1,7 +1,7 @@
 package com.capstone.foodify.Model.Food;
 
 import com.capstone.foodify.Model.Category.Category;
-import com.capstone.foodify.Model.Image;
+import com.capstone.foodify.Model.Image.Image;
 import com.capstone.foodify.Model.Shop.Shop;
 
 import java.util.List;

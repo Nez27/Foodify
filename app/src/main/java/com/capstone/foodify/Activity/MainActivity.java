@@ -1,6 +1,7 @@
 package com.capstone.foodify.Activity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -12,19 +13,58 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.capstone.foodify.API.FoodApi;
 import com.capstone.foodify.Common;
+import com.capstone.foodify.Model.Image.Images;
 import com.capstone.foodify.R;
 import com.capstone.foodify.ViewPagerAdapter;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
+import com.saadahmedsoft.popupdialog.PopupDialog;
+
+import io.paperdb.Paper;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
     ViewPager2 viewPager2;
     ViewPagerAdapter viewPagerAdapter;
     BottomNavigationView bottomNavigationView;
+    private FirebaseAuth mAuth;
+    private FirebaseUser user;
+    @Override
+    public void onStart() {
+        super.onStart();
 
+        //Get user from Paper
+        user = Paper.book().read("user");
+
+        // Check if user is signed in (non-null) and update UI accordingly.
+        user = mAuth.getCurrentUser();
+        if(user != null){
+            user.getIdToken(true)
+                    .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<GetTokenResult> task) {
+                            if(task.isSuccessful()){
+                                Common.TOKEN = task.getResult().getToken();
+                            } else {
+                                Toast.makeText(MainActivity.this, "Error when taking token!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        }
+
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +72,12 @@ public class MainActivity extends AppCompatActivity {
         SplashScreen.installSplashScreen(this);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         setContentView(R.layout.activity_main);
+
+        //Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
+
+        //Paper Init
+        Paper.init(this);
 
         initComponent();
 
@@ -62,10 +108,18 @@ public class MainActivity extends AppCompatActivity {
                         viewPager2.setCurrentItem(2);
                         break;
                     case R.id.activity_favorite:
-                        viewPager2.setCurrentItem(3);
+                        if(Common.TOKEN != null){
+                            viewPager2.setCurrentItem(3);
+                        } else {
+                            startActivity(new Intent(MainActivity.this, SignInActivity.class));
+                        }
                         break;
                     case R.id.activity_profile:
-                        viewPager2.setCurrentItem(4);
+                        if(Common.TOKEN != null){
+                            viewPager2.setCurrentItem(4);
+                        } else {
+                            startActivity(new Intent(MainActivity.this, SignInActivity.class));
+                        }
                         break;
                 }
                 return false;

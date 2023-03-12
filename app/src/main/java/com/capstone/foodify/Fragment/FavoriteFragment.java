@@ -11,12 +11,14 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.capstone.foodify.API.FoodApi;
+import com.capstone.foodify.API.FoodApiToken;
 import com.capstone.foodify.Common;
 import com.capstone.foodify.ItemTouchHelperListener;
 import com.capstone.foodify.Model.Food.Food;
@@ -67,31 +69,34 @@ public class FavoriteFragment extends Fragment implements ItemTouchHelperListene
 
     private void getListFavoriteFood() {
         //Get data from api
-        FoodApi.apiService.getListFavoriteFood().enqueue(new Callback<List<Food>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<Food>> call, @NonNull Response<List<Food>> response) {
-                List<Food> listFoodData = response.body();
-                if(listFoodData != null){
-                    listFavoriteFood.addAll(listFoodData);
-                }
-                Collections.sort(listFavoriteFood);
-
-                adapter.setData(listFavoriteFood);
-                recyclerView_favorite_food.setAdapter(adapter);
-            }
-
-            @Override
-            public void onFailure(Call<List<Food>> call, Throwable t) {
-                //Check internet connection
-                if(Common.checkInternetConnection(getContext())){
-                    //Has internet connection
-                    Toast.makeText(getContext(), "Error: " + t, Toast.LENGTH_SHORT).show();
-                } else {
-                    //No internet, show notification
-                    Common.showErrorInternetConnectionNotification(getActivity());
-                }
-            }
-        });
+//        FoodApiToken.apiService.getListFavoriteFood().enqueue(new Callback<List<Food>>() {
+//            @Override
+//            public void onResponse(@NonNull Call<List<Food>> call, @NonNull Response<List<Food>> response) {
+//                List<Food> listFoodData = response.body();
+//                if(listFoodData != null){
+//                    listFavoriteFood.addAll(listFoodData);
+//                }
+//                Collections.sort(listFavoriteFood);
+//
+//                adapter.setData(listFavoriteFood);
+//                recyclerView_favorite_food.setAdapter(adapter);
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<Food>> call, Throwable t) {
+//                //Check internet connection
+//                if(Common.checkInternetConnection(getContext())){
+//                    //Has internet connection
+//                    Toast.makeText(getContext(), "Error: " + t, Toast.LENGTH_SHORT).show();
+//                } else {
+//                    //No internet, show notification
+//                    Common.showErrorInternetConnectionNotification(getActivity());
+//
+//                    Log.e("ERROR", "Get list favorite food error!");
+//
+//                }
+//            }
+//        });
     }
 
     @Override

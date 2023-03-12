@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstone.foodify.API.FoodApi;
+import com.capstone.foodify.API.FoodApiToken;
 import com.capstone.foodify.Model.Food.Food;
 import com.capstone.foodify.R;
 
@@ -81,7 +82,7 @@ public class FoodFavoriteAdapter extends  RecyclerView.Adapter<FoodFavoriteAdapt
         listFavoriteFood.remove(index);
         notifyItemRemoved(index);
 
-        FoodApi.apiService.removeFoodFromFavorite(index).enqueue(new Callback<Food>() {
+        FoodApiToken.apiService.removeFoodFromFavorite(index).enqueue(new Callback<Food>() {
             @Override
             public void onResponse(Call<Food> call, Response<Food> response) {
                 Toast.makeText(context, "Remove successful!", Toast.LENGTH_SHORT).show();
@@ -98,7 +99,7 @@ public class FoodFavoriteAdapter extends  RecyclerView.Adapter<FoodFavoriteAdapt
         listFavoriteFood.add(index, food);
         notifyItemInserted(index);
 
-        FoodApi.apiService.addFoodToFavorite(food).enqueue(new Callback<Food>() {
+        FoodApiToken.apiService.addFoodToFavorite(food).enqueue(new Callback<Food>() {
             @Override
             public void onResponse(@NonNull Call<Food> call, @NonNull Response<Food> response) {
                 Toast.makeText(context, "Add successful!", Toast.LENGTH_SHORT).show();

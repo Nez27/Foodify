@@ -23,11 +23,10 @@ import retrofit2.http.Query;
 
 
 public interface FoodApi {
-
     Gson gson = new GsonBuilder().setDateFormat("HH:mm:ss dd-MM-yyyy").create();
 
     FoodApi apiService = new Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8080/api/").addConverterFactory(GsonConverterFactory.create(gson))
+            .baseUrl("http://192.168.1.183:8080/api/").addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(FoodApi.class);
 
@@ -66,13 +65,4 @@ public interface FoodApi {
 
     @GET("district")
     Call<List<DistrictWardResponse>> districtResponse();
-
-    @GET("wishlist")
-    Call<List<Food>> getListFavoriteFood();
-
-    @POST("wishlist")
-    Call<Food> addFoodToFavorite(@Body Food food);
-
-    @DELETE("wishlist/{id}")
-    Call<Food> removeFoodFromFavorite(@Path("id") int id);
 }

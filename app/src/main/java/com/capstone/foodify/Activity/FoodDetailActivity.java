@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -25,7 +26,7 @@ import com.capstone.foodify.API.FoodApi;
 import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.Basket.Basket;
 import com.capstone.foodify.Model.Food.Food;
-import com.capstone.foodify.Model.Image;
+import com.capstone.foodify.Model.Image.Image;
 import com.capstone.foodify.Model.Review.Review;
 import com.capstone.foodify.Adapter.ReviewAdapter;
 import com.capstone.foodify.R;
@@ -267,6 +268,8 @@ public class FoodDetailActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Food> call, Throwable t) {
                 Common.showNotificationError(t, getBaseContext(), FoodDetailActivity.this);
+
+                Log.e("ERROR", "Get Detail Food Error!");
             }
         });
     }

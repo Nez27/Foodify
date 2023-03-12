@@ -1,6 +1,7 @@
 package com.capstone.foodify.Fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -114,6 +115,9 @@ public class HomeFragment extends Fragment {
             public void onFailure(Call<Foods> call, Throwable t) {
                 //Check internet connection
                 Common.showNotificationError(t, getContext(), getActivity());
+
+                Log.e("ERROR", "Get recommend food error!");
+
             }
         });
     }
@@ -138,6 +142,9 @@ public class HomeFragment extends Fragment {
             public void onFailure(Call<Foods> call, Throwable t) {
                 //Check internet connection
                 Common.showNotificationError(t,getContext(), getActivity());
+
+                Log.e("ERROR", "Get recent food error!");
+
             }
         });
     }
@@ -161,6 +168,8 @@ public class HomeFragment extends Fragment {
             public void onFailure(Call<Shops> call, Throwable t) {
                 //Check internet connection
                 Common.showNotificationError(t, getContext(), getActivity());
+
+                Log.e("ERROR", "Get all shop error!");
             }
         });
     }

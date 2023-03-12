@@ -27,6 +27,8 @@ import java.util.Locale;
 public class Common {
     public static List<Basket> LIST_BASKET_FOOD = new ArrayList<>();
 
+    public static String TOKEN = null;
+
     public static String changeCurrencyUnit(float price){
         Locale locale = new Locale("vi", "VN");
         NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);

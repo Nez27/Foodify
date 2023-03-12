@@ -25,28 +25,36 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
+import com.saadahmedsoft.popupdialog.PopupDialog;
+import com.saadahmedsoft.popupdialog.Styles;
+
+import io.paperdb.Paper;
 
 public class SignInActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     TextView signUp_textView, forgotPassword_textView;
-
     TextInputLayout textInput_account, textInput_password;
     TextInputEditText email, password;
     MaterialButton signInButton;
-
     ImageView back_image;
+    PopupDialog popupDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         //Init firebase app
         FirebaseApp.initializeApp(SignInActivity.this);
-
         setContentView(R.layout.activity_sign_in);
 
+        //Init Paper
+        Paper.init(this);
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+
+        //Init Popup Dialog
+        popupDialog = PopupDialog.getInstance(SignInActivity.this);
 
         initComponent();
         setFontUI();
@@ -73,10 +81,16 @@ public class SignInActivity extends AppCompatActivity {
             }
         });
 
+
         //Set event when user click sign in button
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //Show progress bar
+                popupDialog.setStyle(Styles.PROGRESS).setProgressDialogTint(getResources().getColor(R.color.primaryColor, null))
+                        .setCancelable(false).showDialog();
+
                 mAuth.signInWithEmailAndPassword(email.getText().toString(), password.getText().toString())
                         .addOnCompleteListener(SignInActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
@@ -85,14 +99,20 @@ public class SignInActivity extends AppCompatActivity {
                                     // Sign in success, update UI with the signed-in user's information
                                     FirebaseUser user = mAuth.getCurrentUser();
 
+                                    //Save user
+                                    Paper.book().write("user", user);
+
                                     user.getIdToken(true)
                                             .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<GetTokenResult> task) {
                                                     if(task.isSuccessful()){
-                                                        String idToken = task.getResult().getToken();
+                                                        Common.TOKEN = task.getResult().getToken();
 
-                                                        System.out.println("TOKEN: " + idToken);
+                                                        //Dismiss progress bar dialog
+                                                        popupDialog.dismissDialog();
+
+                                                        startActivity(new Intent(SignInActivity.this, MainActivity.class));
                                                     } else {
                                                         Toast.makeText(SignInActivity.this, "Error when taking token!", Toast.LENGTH_SHORT).show();
                                                     }
@@ -100,8 +120,10 @@ public class SignInActivity extends AppCompatActivity {
                                             });
                                 } else {
                                     // If sign in fails, display a message to the user.
-                                    Toast.makeText(SignInActivity.this, "Authentication failed.",
+                                    Toast.makeText(SignInActivity.this, "Thông tin đăng nhập không đúng! Vui lòng kiểm tra và thử lại!",
                                             Toast.LENGTH_SHORT).show();
+
+                                    popupDialog.dismissDialog();
                                 }
                             }
                         });

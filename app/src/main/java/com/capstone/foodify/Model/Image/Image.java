@@ -1,4 +1,4 @@
-package com.capstone.foodify.Model;
+package com.capstone.foodify.Model.Image;
 
 public class Image {
     private int id;

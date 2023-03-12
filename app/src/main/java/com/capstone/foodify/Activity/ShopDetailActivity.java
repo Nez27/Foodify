@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -135,6 +136,8 @@ public class ShopDetailActivity extends AppCompatActivity {
             public void onFailure(Call<Foods> call, Throwable t) {
                 //Check internet connection
                 Common.showNotificationError(t, getBaseContext(), ShopDetailActivity.this);
+
+                Log.e("ERROR", "List Food By Shop Id Error!");
             }
         });
     }
@@ -155,6 +158,8 @@ public class ShopDetailActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Shop> call, Throwable t) {
                 Common.showNotificationError(t, getBaseContext(), ShopDetailActivity.this);
+
+                Log.e("ERROR", "Get Detail Shop Error!");
             }
         });
     }

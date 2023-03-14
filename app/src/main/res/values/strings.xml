@@ -23,7 +23,7 @@
     <string name="dont_have_an_account">Bạn chưa có tài khoản?</string>
     <string name="forgot_password_description">Chúng tôi sẽ gửi mã xác nhận qua email của bạn.</string>
     <string name="confirm_code">mã xác nhận</string>
-    <string name="confirm_code_description">Chúng tôi đã gửi tin mã xác nhận qua email của bạn.</string>
+    <string name="confirm_code_description">Chúng tôi đã gửi tin mã xác nhận qua số điện thoại của bạn.</string>
     <string name="did_not_receive_code">Chưa nhận được mã?</string>
     <string name="resend_code">Gửi lại</string>
     <string name="confirm">Xác nhận</string>

@@ -1,6 +1,8 @@
 package com.capstone.foodify.Activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -22,13 +24,22 @@ import com.capstone.foodify.API.FoodApi;
 import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.DistrictWard.DistrictWardResponse;
 import com.capstone.foodify.R;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthOptions;
+import com.google.firebase.auth.PhoneAuthProvider;
+import com.saadahmedsoft.popupdialog.PopupDialog;
+import com.saadahmedsoft.popupdialog.Styles;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,19 +47,19 @@ import retrofit2.Response;
 
 public class SignUpActivity extends AppCompatActivity {
 
+    private static final String PHONE_CODE = "+84";
     TextInputLayout textInput_email, textInput_password, textInput_phone,
             textInput_address, textInput_repeatPassword, textInput_fullName, textInput_birthDay;
     final Calendar myCalendar= Calendar.getInstance();
-    EditText edt_birthday;
-    TextView signIn_textView;
+    EditText edt_birthday, edt_phone;
+    TextView signIn_textView, errorText;
     Spinner wardSpinner, districtSpinner;
     ImageView back_image;
+    MaterialButton signUpButton;
+    ConstraintLayout progressLayout;
 
     private static final ArrayList<String> wardList = new ArrayList<>();
     private static final ArrayList<String> districtList = new ArrayList<>();
-
-    String selectedDistrict = "";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,9 +102,68 @@ public class SignUpActivity extends AppCompatActivity {
 
             }
         });
+
+        //Set event for sign up button
+        signUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loading();
+                signUp();
+            }
+        });
     }
 
-    public void initComponent() {
+    private void signUp(){
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        PhoneAuthOptions options = PhoneAuthOptions.newBuilder(auth)
+                .setPhoneNumber(PHONE_CODE + edt_phone.getText().toString())
+                .setTimeout(60L, TimeUnit.SECONDS)
+                .setActivity(this)
+                .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+                    @Override
+                    public void onCodeSent(@NonNull String verificationId,
+                                           @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                        loadCompleted();
+
+                        Intent intent = new Intent(SignUpActivity.this, VerifyAccountActivity.class);
+                        intent.putExtra("phone", edt_phone.getText().toString());
+                        intent.putExtra("verificationId", verificationId);
+                        intent.putExtra("token", forceResendingToken);
+                        startActivity(intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
+                        loadCompleted();
+                    }
+
+                    @Override
+                    public void onVerificationFailed(@NonNull FirebaseException e) {
+                        // ...
+                        loadCompleted();
+                        showError(e.toString());
+                    }
+                })
+                .build();
+        PhoneAuthProvider.verifyPhoneNumber(options);
+        // [END auth_test_phone_verify]
+    }
+
+    private void showError(String msg){
+        errorText.setText(msg);
+    }
+
+    private void loading(){
+        progressLayout.setVisibility(View.VISIBLE);
+        signUpButton.setEnabled(false);
+    }
+
+    private void loadCompleted(){
+        progressLayout.setVisibility(View.GONE);
+        signUpButton.setEnabled(true);
+    }
+    private void initComponent() {
         textInput_email= (TextInputLayout) findViewById(R.id.textInput_email);
         textInput_password = (TextInputLayout) findViewById(R.id.textInput_password);
         textInput_phone = (TextInputLayout) findViewById(R.id.textInput_phone);
@@ -102,14 +172,20 @@ public class SignUpActivity extends AppCompatActivity {
         textInput_fullName = (TextInputLayout) findViewById(R.id.textInput_fullName);
         textInput_birthDay = (TextInputLayout) findViewById(R.id.textInput_birthDay);
 
+        signUpButton = findViewById(R.id.sign_up_button);
+
         edt_birthday = (EditText) findViewById(R.id.edt_birthDay);
+        edt_phone = findViewById(R.id.edt_phone);
 
         districtSpinner = (Spinner) findViewById(R.id.district);
         wardSpinner = (Spinner) findViewById(R.id.ward);
 
         signIn_textView = (TextView) findViewById(R.id.signIn_textView);
+        errorText = findViewById(R.id.errorText);
 
         back_image = (ImageView) findViewById(R.id.back_image);
+
+        progressLayout = findViewById(R.id.progress_layout);
 
     }
 

@@ -91,6 +91,8 @@ public class SignInActivity extends AppCompatActivity {
                 popupDialog.setStyle(Styles.PROGRESS).setProgressDialogTint(getResources().getColor(R.color.primaryColor, null))
                         .setCancelable(false).showDialog();
 
+                mAuth.setLanguageCode("vi");
+
                 mAuth.signInWithEmailAndPassword(email.getText().toString(), password.getText().toString())
                         .addOnCompleteListener(SignInActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override

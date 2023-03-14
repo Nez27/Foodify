@@ -3,7 +3,6 @@ package com.capstone.foodify.Activity;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -37,7 +36,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         send_code_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(ForgotPasswordActivity.this, SendEmailActivity.class));
+                startActivity(new Intent(ForgotPasswordActivity.this, VerifyAccountActivity.class));
             }
         });
 

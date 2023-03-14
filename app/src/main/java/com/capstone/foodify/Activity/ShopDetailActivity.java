@@ -135,9 +135,7 @@ public class ShopDetailActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Foods> call, Throwable t) {
                 //Check internet connection
-                Common.showNotificationError(t, getBaseContext(), ShopDetailActivity.this);
-
-                Log.e("ERROR", "List Food By Shop Id Error!");
+                Common.showNotificationError(getBaseContext(), ShopDetailActivity.this);
             }
         });
     }
@@ -157,9 +155,7 @@ public class ShopDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Shop> call, Throwable t) {
-                Common.showNotificationError(t, getBaseContext(), ShopDetailActivity.this);
-
-                Log.e("ERROR", "Get Detail Shop Error!");
+                Common.showNotificationError(getBaseContext(), ShopDetailActivity.this);
             }
         });
     }

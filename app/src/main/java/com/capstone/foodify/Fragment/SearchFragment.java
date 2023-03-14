@@ -160,9 +160,7 @@ public class SearchFragment extends Fragment {
             @Override
             public void onFailure(Call<Foods> call, Throwable t) {
                 //Check internet connection
-                Common.showNotificationError(t, getContext(), getActivity());
-
-                Log.e("ERROR", "Get search food by name error!");
+                Common.showNotificationError(getContext(), getActivity());
             }
         });
     }
@@ -240,9 +238,7 @@ public class SearchFragment extends Fragment {
             @Override
             public void onFailure(Call<List<Category>> call, Throwable t) {
                 //Check internet connection
-                Common.showNotificationError(t, getContext(), getActivity());
-
-                Log.e("ERROR", "Get list category Error!");
+                Common.showNotificationError(getContext(), getActivity());
             }
         });
     }
@@ -259,9 +255,7 @@ public class SearchFragment extends Fragment {
             @Override
             public void onFailure(Call<Foods> call, Throwable t) {
                 //Check internet connection
-                Common.showNotificationError(t, getContext(), getActivity());
-
-                Log.e("ERROR", "Get List Food By Category Error!");
+                Common.showNotificationError(getContext(), getActivity());
             }
         });
     }
@@ -277,9 +271,7 @@ public class SearchFragment extends Fragment {
             @Override
             public void onFailure(Call<Foods> call, Throwable t) {
                 //Check internet connection
-                Common.showNotificationError(t, getContext(), getActivity());
-
-                Log.e("ERROR", "Get list food error!");
+                Common.showNotificationError(getContext(), getActivity());
             }
         });
     }

@@ -6,6 +6,7 @@ import com.capstone.foodify.Model.Food.Food;
 import com.capstone.foodify.Model.Response.Foods;
 import com.capstone.foodify.Model.Response.Shops;
 import com.capstone.foodify.Model.Shop.Shop;
+import com.capstone.foodify.Model.Slider.Slider;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -65,4 +66,7 @@ public interface FoodApi {
 
     @GET("district")
     Call<List<DistrictWardResponse>> districtResponse();
+
+    @GET("sliders")
+    Call<List<Slider>> listSlider();
 }

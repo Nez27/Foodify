@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstone.foodify.API.FoodApi;
+import com.capstone.foodify.Activity.MainActivity;
 import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.Food.Food;
 import com.capstone.foodify.Model.Menu.Menu;
@@ -20,10 +21,13 @@ import com.capstone.foodify.Model.Response.Foods;
 import com.capstone.foodify.Model.Response.Shops;
 import com.capstone.foodify.Model.Shop.Shop;
 import com.capstone.foodify.Adapter.ShopAdapter;
+import com.capstone.foodify.Model.Slider.Slider;
 import com.capstone.foodify.R;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
+import com.saadahmedsoft.popupdialog.PopupDialog;
+import com.saadahmedsoft.popupdialog.Styles;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +48,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView rcvMenu, recyclerView_restaurant;
     private MenuAdapter menuAdapter;
     private ShopAdapter shopAdapter;
+    private PopupDialog popupDialog;
 
 
     @Override
@@ -58,6 +63,12 @@ public class HomeFragment extends Fragment {
         recyclerView_restaurant = view.findViewById(R.id.recycler_view_restaurant);
         shopAdapter = new ShopAdapter(getContext());
 
+        popupDialog = PopupDialog.getInstance(getContext());
+
+        //Show progress bar
+        popupDialog.setStyle(Styles.PROGRESS).setProgressDialogTint(getResources().getColor(R.color.primaryColor, null))
+                .setCancelable(false).showDialog();
+
 
         if(listFood.isEmpty() || recentFood.isEmpty()){
             getListFood();
@@ -70,20 +81,37 @@ public class HomeFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         rcvMenu.setLayoutManager(linearLayoutManager);
 
-        List<SlideModel> slideModels = new ArrayList<>();
-        slideModels.add(new SlideModel("https://res.cloudinary.com/dnkmxpujh/image/upload/v1676023773/banner1_dandvd.png", null));
-        slideModels.add(new SlideModel("https://res.cloudinary.com/dnkmxpujh/image/upload/v1676023777/banner2_okkqac.png", null));
-        slideModels.add(new SlideModel("https://res.cloudinary.com/dnkmxpujh/image/upload/v1676023775/banner3_rklfi6.png", null));
-        slideModels.add(new SlideModel("https://res.cloudinary.com/dnkmxpujh/image/upload/v1676023852/banner4_ufsaps.png", null));
-        slideModels.add(new SlideModel("https://res.cloudinary.com/dnkmxpujh/image/upload/v1676023778/banner5_b4d1b8.png", null));
-
-        imageSlider.setImageList(slideModels, ScaleTypes.FIT);
+        showSlider();
 
         //Get list shop
         getListShop();
 
         // Inflate the layout for this fragment
         return view;
+    }
+
+    private void showSlider(){
+        FoodApi.apiService.listSlider().enqueue(new Callback<List<Slider>>() {
+            @Override
+            public void onResponse(Call<List<Slider>> call, Response<List<Slider>> response) {
+                List<Slider> sliders = response.body();
+
+                List<SlideModel> slideModels = new ArrayList<>();
+                for(Slider slider: sliders){
+                    slideModels.add(new SlideModel(slider.getImageUrl(), null));
+                }
+
+                imageSlider.setImageList(slideModels, ScaleTypes.FIT);
+
+                popupDialog.dismissDialog();
+            }
+
+            @Override
+            public void onFailure(Call<List<Slider>> call, Throwable t) {
+                popupDialog.dismissDialog();
+                Common.showNotificationError(getContext(), getActivity());
+            }
+        });
     }
 
     private List<Menu> getListMenu() {
@@ -106,18 +134,13 @@ public class HomeFragment extends Fragment {
                     return;
 
                 listFood = foodResponse.getProducts();
-
-
                 recentFood();
             }
 
             @Override
             public void onFailure(Call<Foods> call, Throwable t) {
                 //Check internet connection
-                Common.showNotificationError(t, getContext(), getActivity());
-
-                Log.e("ERROR", "Get recommend food error!");
-
+                Common.showNotificationError(getContext(), getActivity());
             }
         });
     }
@@ -141,10 +164,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onFailure(Call<Foods> call, Throwable t) {
                 //Check internet connection
-                Common.showNotificationError(t,getContext(), getActivity());
-
-                Log.e("ERROR", "Get recent food error!");
-
+                Common.showNotificationError(getContext(), getActivity());
             }
         });
     }
@@ -167,9 +187,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onFailure(Call<Shops> call, Throwable t) {
                 //Check internet connection
-                Common.showNotificationError(t, getContext(), getActivity());
-
-                Log.e("ERROR", "Get all shop error!");
+                Common.showNotificationError(getContext(), getActivity());
             }
         });
     }

@@ -142,6 +142,7 @@ public class SignInActivity extends AppCompatActivity {
         password = (TextInputEditText) findViewById(R.id.edt_password);
 
         signInButton = (MaterialButton) findViewById(R.id.sign_in_button);
+
     }
     private void setFontUI() {
         textInput_account.setTypeface(Common.setFontBebas(getAssets()));

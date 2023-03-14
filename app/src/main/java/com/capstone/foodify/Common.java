@@ -1,6 +1,7 @@
 package com.capstone.foodify;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
@@ -14,6 +15,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.capstone.foodify.Model.Basket.Basket;
+import com.saadahmedsoft.popupdialog.PopupDialog;
+import com.saadahmedsoft.popupdialog.Styles;
+import com.saadahmedsoft.popupdialog.listener.OnDialogButtonClickListener;
 import com.thecode.aestheticdialogs.AestheticDialog;
 import com.thecode.aestheticdialogs.DialogStyle;
 import com.thecode.aestheticdialogs.DialogType;
@@ -73,14 +77,30 @@ public class Common {
                 .show();
     }
 
-    public static void showNotificationError(Throwable t, Context context, Activity activity) {
+    public static void showNotificationError(Context context, Activity activity) {
         if(checkInternetConnection(context)){
             //Has internet connection
-            Toast.makeText(context, "Error: " + t, Toast.LENGTH_SHORT).show();
+            showErrorServerNotification(activity);
         } else {
             //No internet, show notification
             showErrorInternetConnectionNotification(activity);
         }
+    }
+
+    private static void showErrorServerNotification(Activity activity){
+        PopupDialog.getInstance(activity)
+                .setStyle(Styles.FAILED)
+                .setHeading("Lỗi")
+                .setDescription("Đã xuất hiện lỗi từ hệ thống. Vui lòng thử lại sau!")
+                .setCancelable(false)
+                .setDismissButtonText("Thoát")
+                .showDialog(new OnDialogButtonClickListener() {
+                    @Override
+                    public void onDismissClicked(Dialog dialog) {
+                        activity.finishAffinity();
+                        System.exit(0);
+                    }
+                });
     }
 
     public static Basket getFoodExistInBasket(String foodId) {

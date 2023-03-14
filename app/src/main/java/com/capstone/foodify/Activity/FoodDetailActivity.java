@@ -267,9 +267,7 @@ public class FoodDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Food> call, Throwable t) {
-                Common.showNotificationError(t, getBaseContext(), FoodDetailActivity.this);
-
-                Log.e("ERROR", "Get Detail Food Error!");
+                Common.showNotificationError(getBaseContext(), FoodDetailActivity.this);
             }
         });
     }

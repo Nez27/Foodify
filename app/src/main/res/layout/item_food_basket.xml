@@ -124,7 +124,7 @@
                     app:backGroundColor="@color/white"
                     app:textColor="@color/primaryColor"
                     android:layout_gravity="center_vertical"
-                    android:layout_weight="0.4"
+                    android:layout_weight="0.43"
                     />
 
             </LinearLayout>

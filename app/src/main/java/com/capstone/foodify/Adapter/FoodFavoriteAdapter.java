@@ -99,16 +99,16 @@ public class FoodFavoriteAdapter extends  RecyclerView.Adapter<FoodFavoriteAdapt
         listFavoriteFood.add(index, food);
         notifyItemInserted(index);
 
-        FoodApiToken.apiService.addFoodToFavorite(food).enqueue(new Callback<Food>() {
-            @Override
-            public void onResponse(@NonNull Call<Food> call, @NonNull Response<Food> response) {
-                Toast.makeText(context, "Add successful!", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<Food> call, @NonNull Throwable t) {
-                Toast.makeText(context, "Error: " + t, Toast.LENGTH_SHORT).show();
-            }
-        });
+//        FoodApiToken.apiService.addFoodToFavorite(food.getId()).enqueue(new Callback<Food>() {
+//            @Override
+//            public void onResponse(@NonNull Call<Food> call, @NonNull Response<Food> response) {
+//                Toast.makeText(context, "Add successful!", Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @Override
+//            public void onFailure(@NonNull Call<Food> call, @NonNull Throwable t) {
+//                Toast.makeText(context, "Error: " + t, Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 }

@@ -46,8 +46,8 @@ public interface FoodApiToken {
     @GET("wishlist")
     Call<List<Food>> getListFavoriteFood();
 
-    @POST("wishlist")
-    Call<Food> addFoodToFavorite(@Body Food food);
+    @POST("users/{userId}/loves/{productId}")
+    Call<Food> addFoodToFavorite(@Path("userId") String userId, @Path("productId") String productId);
 
     @DELETE("wishlist/{id}")
     Call<Food> removeFoodFromFavorite(@Path("id") int id);

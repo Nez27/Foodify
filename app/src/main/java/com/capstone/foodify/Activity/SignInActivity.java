@@ -1,10 +1,7 @@
 package com.capstone.foodify.Activity;
 
 import android.content.Intent;
-import android.graphics.Path;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -134,16 +131,16 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void initComponent() {
-        textInput_account = (TextInputLayout) findViewById(R.id.textInput_account);
-        textInput_password = (TextInputLayout) findViewById(R.id.textInput_password);
-        signUp_textView = (TextView) findViewById(R.id.sign_up_textView);
-        forgotPassword_textView = (TextView) findViewById(R.id.forgotPassword_textView);
-        back_image = (ImageView) findViewById(R.id.back_image);
+        textInput_account = findViewById(R.id.textInput_account);
+        textInput_password = findViewById(R.id.textInput_password);
+        signUp_textView = findViewById(R.id.sign_up_textView);
+        forgotPassword_textView = findViewById(R.id.forgotPassword_textView);
+        back_image = findViewById(R.id.back_image);
 
-        email = (TextInputEditText) findViewById(R.id.edt_email);
-        password = (TextInputEditText) findViewById(R.id.edt_password);
+        email = findViewById(R.id.edt_email);
+        password = findViewById(R.id.edt_password);
 
-        signInButton = (MaterialButton) findViewById(R.id.sign_in_button);
+        signInButton = findViewById(R.id.sign_in_button);
 
     }
     private void setFontUI() {

@@ -1,26 +1,25 @@
 package com.capstone.foodify.Activity;
 
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.capstone.foodify.API.FoodApi;
+import com.capstone.foodify.Adapter.FoodShopAdapter;
 import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.Food.Food;
-import com.capstone.foodify.Adapter.FoodShopAdapter;
 import com.capstone.foodify.Model.Response.Foods;
-import com.capstone.foodify.Model.Response.Shops;
 import com.capstone.foodify.Model.Shop.Shop;
 import com.capstone.foodify.R;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -49,10 +48,10 @@ public class ShopDetailActivity extends AppCompatActivity {
     RecyclerView recycler_view_food_shop;
     FoodShopAdapter adapter;
     private CollapsingToolbarLayout collapsingToolbarLayout;
-    private PopupDialog popupDialog;
     private NestedScrollView nestedScrollView;
     private ProgressBar progressBar;
     private Shop shop;
+    private ConstraintLayout progressLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,10 +69,7 @@ public class ShopDetailActivity extends AppCompatActivity {
         nestedScrollView = findViewById(R.id.food_detail);
         progressBar = findViewById(R.id.progress_bar);
         end_of_list_text_view = findViewById(R.id.end_of_list_text);
-
-        popupDialog = PopupDialog.getInstance(this);
-        popupDialog.setStyle(Styles.PROGRESS).setProgressDialogTint(getResources().getColor(R.color.primaryColor, null))
-                .setCancelable(false).showDialog();
+        progressLayout = findViewById(R.id.progress_layout);
 
         //Get data
         if (getIntent() != null)
@@ -130,12 +126,15 @@ public class ShopDetailActivity extends AppCompatActivity {
                 recycler_view_food_shop.setAdapter(adapter);
 
                 initData(shop);
+
+                progressLayout.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<Foods> call, Throwable t) {
                 //Check internet connection
                 Common.showNotificationError(getBaseContext(), ShopDetailActivity.this);
+                progressLayout.setVisibility(View.GONE);
             }
         });
     }
@@ -176,7 +175,6 @@ public class ShopDetailActivity extends AppCompatActivity {
             hideProgressBarAndShowEndOfListText();
 
         nestedScrollView.setVisibility(View.VISIBLE);
-        popupDialog.dismissDialog();
     }
 
     private void hideProgressBarAndShowEndOfListText(){

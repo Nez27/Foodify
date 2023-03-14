@@ -12,6 +12,7 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.widget.Toast;
 
+import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 
 import com.capstone.foodify.Model.Basket.Basket;
@@ -47,19 +48,39 @@ public class Common {
         return Typeface.createFromAsset(assetManager, "font/opensans.ttf");
     }
 
-    public static boolean checkInternetConnection(Context context){
-        ConnectivityManager connectivityManager =
-                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        Network activeNetwork = connectivityManager.getActiveNetwork();
-        NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(activeNetwork);
-
-        if (capabilities != null) {
-            if (capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_SUPL)) return true;
-            else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) return true;
-            else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) return true;
-            else return false;
+    @IntRange(from = 0, to = 3)
+    public static int getConnectionType(Context context) {
+        int result = 0; // Returns connection type. 0: none; 1: mobile data; 2: wifi
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (cm != null) {
+                NetworkCapabilities capabilities = cm.getNetworkCapabilities(cm.getActiveNetwork());
+                if (capabilities != null) {
+                    if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                        result = 2;
+                    } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                        result = 1;
+                    } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
+                        result = 3;
+                    }
+                }
+            }
+        } else {
+            if (cm != null) {
+                NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+                if (activeNetwork != null) {
+                    // connected to the internet
+                    if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+                        result = 2;
+                    } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+                        result = 1;
+                    } else if (activeNetwork.getType() == ConnectivityManager.TYPE_VPN) {
+                        result = 3;
+                    }
+                }
+            }
         }
-        return false;
+        return result;
     }
 
     public static void showErrorInternetConnectionNotification(Activity activity){
@@ -78,7 +99,7 @@ public class Common {
     }
 
     public static void showNotificationError(Context context, Activity activity) {
-        if(checkInternetConnection(context)){
+        if(getConnectionType(context) != 0){
             //Has internet connection
             showErrorServerNotification(activity);
         } else {

@@ -65,10 +65,6 @@ public class HomeFragment extends Fragment {
 
         popupDialog = PopupDialog.getInstance(getContext());
 
-        //Show progress bar
-        popupDialog.setStyle(Styles.PROGRESS).setProgressDialogTint(getResources().getColor(R.color.primaryColor, null))
-                .setCancelable(false).showDialog();
-
 
         if(listFood.isEmpty() || recentFood.isEmpty()){
             getListFood();
@@ -90,7 +86,18 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        System.out.println("Main activity destroy!");
+    }
+
     private void showSlider(){
+
+        //Show progress bar
+        popupDialog.setStyle(Styles.PROGRESS).setProgressDialogTint(getResources().getColor(R.color.primaryColor, null))
+                .setCancelable(false).showDialog();
+
         FoodApi.apiService.listSlider().enqueue(new Callback<List<Slider>>() {
             @Override
             public void onResponse(Call<List<Slider>> call, Response<List<Slider>> response) {

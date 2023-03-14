@@ -61,10 +61,10 @@ public interface FoodApi {
     @GET("products/shops/{id}")
     Call<Foods> listFoodByShopId(@Path("id") int id, @Query("pageNo") int pageNo, @Query("pageSize") int pageSize, @Query("sortBy") String sortBy, @Query("sortDir") String sortDir);
 
-    @GET("district/{districtId}/ward")
+    @GET("districts/{districtId}/wards")
     Call<List<DistrictWardResponse>> wardResponse(@Path("districtId") int district_id);
 
-    @GET("district")
+    @GET("districts")
     Call<List<DistrictWardResponse>> districtResponse();
 
     @GET("sliders")

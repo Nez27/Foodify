@@ -106,7 +106,7 @@ public class Common {
         }
     }
 
-    private static void showErrorServerNotification(Activity activity){
+    public static void showErrorServerNotification(Activity activity){
         PopupDialog.getInstance(activity)
                 .setStyle(Styles.FAILED)
                 .setHeading("Lỗi")

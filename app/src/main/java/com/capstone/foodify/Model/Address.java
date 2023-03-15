@@ -1,10 +1,18 @@
 package com.capstone.foodify.Model;
 
-public class Address {
+import java.io.Serializable;
+
+public class Address implements Serializable {
     private int id;
     private String address;
     private String ward;
     private String district;
+
+    public Address(String address, String ward, String district) {
+        this.address = address;
+        this.ward = ward;
+        this.district = district;
+    }
 
     public Address(int id, String address, String ward, String district) {
         this.id = id;

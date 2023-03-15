@@ -16,14 +16,16 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 
 public interface FoodApi {
-    Gson gson = new GsonBuilder().setDateFormat("HH:mm:ss dd-MM-yyyy").create();
+    Gson gson = new GsonBuilder().setDateFormat("HH:mm:ss dd-MM-yyyy").setLenient().create();
 
     FoodApi apiService = new Retrofit.Builder()
             .baseUrl("http://192.168.1.183:8080/api/").addConverterFactory(GsonConverterFactory.create(gson))
@@ -69,6 +71,7 @@ public interface FoodApi {
     @GET("sliders")
     Call<List<Slider>> listSlider();
 
-    @POST("api/auth/signup")
-    Call<User> register(User user);
+    @Headers({"accept: */*", "Content-Type: application/json"})
+    @POST("auth/signup")
+    Call<User> register(@Body User user);
 }

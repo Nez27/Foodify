@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.capstone.foodify.API.FoodApi;
 import com.capstone.foodify.Common;
+import com.capstone.foodify.Model.Address;
 import com.capstone.foodify.Model.DistrictWardResponse;
 import com.capstone.foodify.Model.User;
 import com.capstone.foodify.R;
@@ -157,6 +158,7 @@ public class SignUpActivity extends AppCompatActivity {
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //TODO Check user have exits in database before sign up
                 if(validateData()){
                     loading();
                     signUp();
@@ -288,8 +290,19 @@ public class SignUpActivity extends AppCompatActivity {
                         loadCompleted();
 
                         //Create user object
+                        User user = new User();
+                        user.setAddress(new Address(address, ward, district));
+                        user.setDateOfBirth(dateOfBirth);
+                        user.setEmail(email);
+                        user.setFullName(name);
+                        user.setIdentifiedCode("");
+                        user.setImageUrl("");
+                        user.setLocked(false);
+                        user.setPhoneNumber(phone);
+                        user.setRoleName("ROLE_USER");
 
                         Intent intent = new Intent(SignUpActivity.this, VerifyAccountActivity.class);
+                        intent.putExtra("user", user);
                         intent.putExtra("phone", edt_phone.getText().toString());
                         intent.putExtra("verificationId", verificationId);
                         intent.putExtra("token", forceResendingToken);

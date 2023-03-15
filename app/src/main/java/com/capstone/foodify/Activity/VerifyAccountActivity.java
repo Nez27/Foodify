@@ -17,6 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.capstone.foodify.API.FoodApi;
+import com.capstone.foodify.Common;
+import com.capstone.foodify.Model.User;
 import com.capstone.foodify.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -32,6 +34,10 @@ import com.saadahmedsoft.popupdialog.Styles;
 
 import java.util.concurrent.TimeUnit;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class VerifyAccountActivity extends AppCompatActivity {
     private static final String PHONE_CODE = "+84";
 
@@ -41,6 +47,7 @@ public class VerifyAccountActivity extends AppCompatActivity {
     String verificationId, phone = null;
     ConstraintLayout progressLayout;
     TextView resendCodeText, resendCodeTextButton, countDown, errorText;
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +60,7 @@ public class VerifyAccountActivity extends AppCompatActivity {
         if(getIntent() != null){
             verificationId = getIntent().getStringExtra("verificationId");
             phone = getIntent().getStringExtra("phone");
+            user = (User) getIntent().getSerializableExtra("user");
         }
 
 
@@ -176,10 +184,19 @@ public class VerifyAccountActivity extends AppCompatActivity {
                             if(task.isSuccessful()) {
 
                                 //Add information user to server
-//                                FoodApi.apiService.register()
+                                FoodApi.apiService.register(user).enqueue(new Callback<User>() {
+                                    @Override
+                                    public void onResponse(Call<User> call, Response<User> response) {
+                                        //Create user success;
+                                        Toast.makeText(VerifyAccountActivity.this, "Tạo tài khoản thành công!", Toast.LENGTH_SHORT).show();
+                                        startActivity(new Intent(VerifyAccountActivity.this, SignInActivity.class));
+                                    }
 
-                                Toast.makeText(VerifyAccountActivity.this, "Tạo tài khoản thành công!", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(VerifyAccountActivity.this, SignInActivity.class));
+                                    @Override
+                                    public void onFailure(Call<User> call, Throwable t) {
+                                        Common.showErrorServerNotification(VerifyAccountActivity.this);
+                                    }
+                                });
                             } else {
                                 Toast.makeText(VerifyAccountActivity.this, "Mã code không đúng. Vui lòng kiểm tra lại!", Toast.LENGTH_SHORT).show();
                             }

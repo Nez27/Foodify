@@ -1,24 +1,38 @@
 package com.capstone.foodify.Model;
 
-public class User {
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
+
+public class User implements Serializable {
+    @SerializedName("addressDto")
+    private Address address;
     private String dateOfBirth;
     private String email;
     private String fullName;
     private String identifiedCode;
     private String imageUrl;
-    private String isLocked;
+    private boolean isLocked;
     private String phoneNumber;
     private String roleName;
 
-    public User(String dateOfBirth, String email, String fullName, String identifiedCode, String imageUrl, String isLocked, String phoneNumber, String roleName) {
-        this.dateOfBirth = dateOfBirth;
-        this.email = email;
-        this.fullName = fullName;
-        this.identifiedCode = identifiedCode;
-        this.imageUrl = imageUrl;
-        this.isLocked = isLocked;
-        this.phoneNumber = phoneNumber;
-        this.roleName = roleName;
+    public User() {
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public boolean isLocked() {
+        return isLocked;
+    }
+
+    public void setLocked(boolean locked) {
+        isLocked = locked;
     }
 
     public String getDateOfBirth() {
@@ -61,11 +75,11 @@ public class User {
         this.imageUrl = imageUrl;
     }
 
-    public String getIsLocked() {
+    public boolean getIsLocked() {
         return isLocked;
     }
 
-    public void setIsLocked(String isLocked) {
+    public void setIsLocked(boolean isLocked) {
         this.isLocked = isLocked;
     }
 

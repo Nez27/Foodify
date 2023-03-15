@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,7 +46,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView rcvMenu, recyclerView_restaurant;
     private MenuAdapter menuAdapter;
     private ShopAdapter shopAdapter;
-    private PopupDialog popupDialog;
+    private ConstraintLayout progressLayout;
 
 
     @Override
@@ -59,8 +60,7 @@ public class HomeFragment extends Fragment {
         menuAdapter = new MenuAdapter(getContext());
         recyclerView_restaurant = view.findViewById(R.id.recycler_view_restaurant);
         shopAdapter = new ShopAdapter(getContext());
-
-        popupDialog = PopupDialog.getInstance(getContext());
+        progressLayout = view.findViewById(R.id.progress_layout);
 
 
         if(listFood.isEmpty() || recentFood.isEmpty()){
@@ -91,10 +91,6 @@ public class HomeFragment extends Fragment {
 
     private void showSlider(){
 
-        //Show progress bar
-        popupDialog.setStyle(Styles.PROGRESS).setProgressDialogTint(getResources().getColor(R.color.primaryColor, null))
-                .setCancelable(false).showDialog();
-
         FoodApi.apiService.listSlider().enqueue(new Callback<List<Slider>>() {
             @Override
             public void onResponse(Call<List<Slider>> call, Response<List<Slider>> response) {
@@ -107,13 +103,17 @@ public class HomeFragment extends Fragment {
 
                 imageSlider.setImageList(slideModels, ScaleTypes.FIT);
 
-                popupDialog.dismissDialog();
+                //Dismiss progress bar
+                progressLayout.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<List<Slider>> call, Throwable t) {
-                popupDialog.dismissDialog();
-                Common.showNotificationError(getContext(), getActivity());
+                //Dismiss progress bar
+                progressLayout.setVisibility(View.GONE);
+
+                if(getActivity() != null)
+                    Common.showNotificationError(getContext(), getActivity());
             }
         });
     }
@@ -144,7 +144,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onFailure(Call<Foods> call, Throwable t) {
                 //Check internet connection
-                Common.showNotificationError(getContext(), getActivity());
+                if(getActivity() != null)
+                    Common.showNotificationError(getContext(), getActivity());
             }
         });
     }
@@ -191,7 +192,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onFailure(Call<Shops> call, Throwable t) {
                 //Check internet connection
-                Common.showNotificationError(getContext(), getActivity());
+                if(getActivity() != null)
+                    Common.showNotificationError(getContext(), getActivity());
             }
         });
     }

@@ -1,9 +1,8 @@
-package com.capstone.foodify.Model.Image;
+package com.capstone.foodify.Model;
 
-public class Image {
+public class Slider {
     private int id;
     private String imageUrl;
-    private int productId;
 
     public int getId() {
         return id;
@@ -19,13 +18,5 @@ public class Image {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public int getProductId() {
-        return productId;
-    }
-
-    public void setProductId(int productId) {
-        this.productId = productId;
     }
 }

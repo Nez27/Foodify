@@ -1,6 +1,5 @@
 package com.capstone.foodify.Activity;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,13 +17,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.capstone.foodify.API.FoodApi;
 import com.capstone.foodify.Adapter.FoodShopAdapter;
 import com.capstone.foodify.Common;
-import com.capstone.foodify.Model.Food.Food;
+import com.capstone.foodify.Model.Food;
 import com.capstone.foodify.Model.Response.Foods;
-import com.capstone.foodify.Model.Shop.Shop;
+import com.capstone.foodify.Model.Shop;
 import com.capstone.foodify.R;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.saadahmedsoft.popupdialog.PopupDialog;
-import com.saadahmedsoft.popupdialog.Styles;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

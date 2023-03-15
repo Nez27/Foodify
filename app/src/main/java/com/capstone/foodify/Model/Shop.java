@@ -1,4 +1,4 @@
-package com.capstone.foodify.Model.Shop;
+package com.capstone.foodify.Model;
 
 public class Shop {
     private int id;

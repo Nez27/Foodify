@@ -1,7 +1,6 @@
 package com.capstone.foodify.Fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +8,6 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
@@ -21,8 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstone.foodify.API.FoodApi;
 import com.capstone.foodify.Common;
-import com.capstone.foodify.Model.Category.Category;
-import com.capstone.foodify.Model.Food.Food;
+import com.capstone.foodify.Model.Category;
+import com.capstone.foodify.Model.Food;
 import com.capstone.foodify.Adapter.FoodSearchAdapter;
 import com.capstone.foodify.Model.Response.Foods;
 import com.capstone.foodify.R;

@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstone.foodify.Activity.FoodDetailActivity;
 import com.capstone.foodify.Common;
-import com.capstone.foodify.Model.Food.Food;
+import com.capstone.foodify.Model.Food;
 import com.capstone.foodify.R;
 import com.squareup.picasso.Picasso;
 

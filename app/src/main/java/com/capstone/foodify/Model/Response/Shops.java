@@ -1,7 +1,7 @@
 package com.capstone.foodify.Model.Response;
 
 import com.capstone.foodify.Model.Page;
-import com.capstone.foodify.Model.Shop.Shop;
+import com.capstone.foodify.Model.Shop;
 
 import java.util.List;
 

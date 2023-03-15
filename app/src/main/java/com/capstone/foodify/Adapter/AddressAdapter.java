@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.capstone.foodify.Model.Address.Address;
+import com.capstone.foodify.Model.Address;
 import com.capstone.foodify.R;
 
 import java.util.List;

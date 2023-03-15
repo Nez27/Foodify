@@ -3,7 +3,6 @@ package com.capstone.foodify.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -11,29 +10,19 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.capstone.foodify.API.FoodApi;
-import com.capstone.foodify.API.FoodApiToken;
-import com.capstone.foodify.Common;
 import com.capstone.foodify.ItemTouchHelperListener;
-import com.capstone.foodify.Model.Food.Food;
+import com.capstone.foodify.Model.Food;
 import com.capstone.foodify.Adapter.FoodFavoriteAdapter;
 import com.capstone.foodify.R;
 import com.capstone.foodify.Adapter.RecyclerViewItemTouchHelperFavoriteFood;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class FavoriteFragment extends Fragment implements ItemTouchHelperListener {
 

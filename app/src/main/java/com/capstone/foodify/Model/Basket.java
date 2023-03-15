@@ -1,4 +1,4 @@
-package com.capstone.foodify.Model.Basket;
+package com.capstone.foodify.Model;
 
 public class Basket {
     private String id;

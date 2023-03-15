@@ -13,25 +13,18 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.capstone.foodify.API.FoodApi;
 import com.capstone.foodify.Common;
-import com.capstone.foodify.Model.Image.Images;
 import com.capstone.foodify.R;
 import com.capstone.foodify.ViewPagerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
-import com.saadahmedsoft.popupdialog.PopupDialog;
 
 import io.paperdb.Paper;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 

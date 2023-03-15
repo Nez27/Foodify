@@ -12,9 +12,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.capstone.foodify.API.FoodApi;
 import com.capstone.foodify.API.FoodApiToken;
-import com.capstone.foodify.Model.Food.Food;
+import com.capstone.foodify.Model.Food;
 import com.capstone.foodify.R;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.capstone.foodify.Model.Order;
+package com.capstone.foodify.Model;
 
 public class OrderDetail {
     private int id;

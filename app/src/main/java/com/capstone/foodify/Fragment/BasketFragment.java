@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstone.foodify.Common;
 import com.capstone.foodify.ItemTouchHelperListener;
-import com.capstone.foodify.Model.Basket.Basket;
+import com.capstone.foodify.Model.Basket;
 import com.capstone.foodify.Adapter.BasketAdapter;
 import com.capstone.foodify.Adapter.RecyclerViewItemTouchHelperBasketFood;
 import com.capstone.foodify.R;

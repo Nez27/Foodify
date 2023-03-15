@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstone.foodify.Common;
 import com.capstone.foodify.Fragment.BasketFragment;
-import com.capstone.foodify.Model.Basket.Basket;
+import com.capstone.foodify.Model.Basket;
 import com.capstone.foodify.R;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.squareup.picasso.Picasso;

@@ -1,12 +1,13 @@
 package com.capstone.foodify.API;
 
-import com.capstone.foodify.Model.Category.Category;
-import com.capstone.foodify.Model.DistrictWard.DistrictWardResponse;
-import com.capstone.foodify.Model.Food.Food;
+import com.capstone.foodify.Model.Category;
+import com.capstone.foodify.Model.DistrictWardResponse;
+import com.capstone.foodify.Model.Food;
 import com.capstone.foodify.Model.Response.Foods;
 import com.capstone.foodify.Model.Response.Shops;
-import com.capstone.foodify.Model.Shop.Shop;
-import com.capstone.foodify.Model.Slider.Slider;
+import com.capstone.foodify.Model.Shop;
+import com.capstone.foodify.Model.Slider;
+import com.capstone.foodify.Model.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -15,8 +16,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Body;
-import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -69,4 +68,7 @@ public interface FoodApi {
 
     @GET("sliders")
     Call<List<Slider>> listSlider();
+
+    @POST("api/auth/signup")
+    Call<User> register(User user);
 }

@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.capstone.foodify.Model.Order.OrderDetail;
+import com.capstone.foodify.Model.OrderDetail;
 import com.capstone.foodify.R;
 import com.squareup.picasso.Picasso;
 

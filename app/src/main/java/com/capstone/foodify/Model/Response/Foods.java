@@ -1,6 +1,6 @@
 package com.capstone.foodify.Model.Response;
 
-import com.capstone.foodify.Model.Food.Food;
+import com.capstone.foodify.Model.Food;
 import com.capstone.foodify.Model.Page;
 
 import java.util.List;

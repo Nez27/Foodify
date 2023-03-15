@@ -6,16 +6,14 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
-import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.os.Build;
-import android.widget.Toast;
 
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 
-import com.capstone.foodify.Model.Basket.Basket;
+import com.capstone.foodify.Model.Basket;
 import com.saadahmedsoft.popupdialog.PopupDialog;
 import com.saadahmedsoft.popupdialog.Styles;
 import com.saadahmedsoft.popupdialog.listener.OnDialogButtonClickListener;

@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -22,7 +24,8 @@ import android.widget.Toast;
 
 import com.capstone.foodify.API.FoodApi;
 import com.capstone.foodify.Common;
-import com.capstone.foodify.Model.DistrictWard.DistrictWardResponse;
+import com.capstone.foodify.Model.DistrictWardResponse;
+import com.capstone.foodify.Model.User;
 import com.capstone.foodify.R;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
@@ -31,15 +34,18 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
-import com.saadahmedsoft.popupdialog.PopupDialog;
-import com.saadahmedsoft.popupdialog.Styles;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -48,18 +54,55 @@ import retrofit2.Response;
 public class SignUpActivity extends AppCompatActivity {
 
     private static final String PHONE_CODE = "+84";
-    TextInputLayout textInput_email, textInput_password, textInput_phone,
-            textInput_address, textInput_repeatPassword, textInput_fullName, textInput_birthDay;
+    private final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!_])(?=\\S+$).{4,}$";
+    private final String PHONE_PATTERN = "^0[98753]{1}\\d{8}$";
+    public static final String VALID_EMAIL_ADDRESS_REGEX = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
+    public static final String FORMAT_DATE="dd/MM/yyyy";
+    TextInputLayout textInput_password, textInput_phone, textInput_email,
+            textInput_address, textInput_confirmPassword, textInput_fullName, textInput_birthDay;
     final Calendar myCalendar= Calendar.getInstance();
-    EditText edt_birthday, edt_phone;
-    TextView signIn_textView, errorText;
-    Spinner wardSpinner, districtSpinner;
-    ImageView back_image;
-    MaterialButton signUpButton;
-    ConstraintLayout progressLayout;
+    private EditText edt_birthday, edt_phone, edt_passWord, edt_confirmPassword, edt_fullName, edt_address, edt_email;
+    private TextView signIn_textView, errorText, errorTextDistrictWard;
+    private Spinner wardSpinner, districtSpinner;
+    private ImageView back_image;
+    private MaterialButton signUpButton;
+    private ConstraintLayout progressLayout;
+    private String email, phone, name, dateOfBirth, address, district, ward, password = null;
 
     private static final ArrayList<String> wardList = new ArrayList<>();
     private static final ArrayList<String> districtList = new ArrayList<>();
+
+    private void initComponent() {
+        textInput_password = (TextInputLayout) findViewById(R.id.textInput_password);
+        textInput_phone = (TextInputLayout) findViewById(R.id.textInput_phone);
+        textInput_address = (TextInputLayout) findViewById(R.id.textInput_address);
+        textInput_confirmPassword = (TextInputLayout) findViewById(R.id.textInput_confirmPassword);
+        textInput_fullName = (TextInputLayout) findViewById(R.id.textInput_fullName);
+        textInput_birthDay = (TextInputLayout) findViewById(R.id.textInput_birthDay);
+        textInput_email = findViewById(R.id.textInput_email);
+
+        signUpButton = findViewById(R.id.sign_up_button);
+
+        edt_birthday = (EditText) findViewById(R.id.edt_birthDay);
+        edt_phone = findViewById(R.id.edt_phone);
+        edt_confirmPassword = findViewById(R.id.edt_confirmPassword);
+        edt_passWord = findViewById(R.id.edt_password);
+        edt_fullName = findViewById(R.id.edt_fullName);
+        edt_address = findViewById(R.id.edt_address);
+        edt_email = findViewById(R.id.edt_email);
+
+        districtSpinner = (Spinner) findViewById(R.id.district);
+        wardSpinner = (Spinner) findViewById(R.id.ward);
+
+        signIn_textView = (TextView) findViewById(R.id.signIn_textView);
+        errorText = findViewById(R.id.errorText);
+        errorTextDistrictWard = findViewById(R.id.errorTextDistrictWard);
+
+        back_image = (ImageView) findViewById(R.id.back_image);
+
+        progressLayout = findViewById(R.id.progress_layout);
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,12 +114,17 @@ public class SignUpActivity extends AppCompatActivity {
         setFontUI();
         chooseDateOfBirth();
 
+        //Get list district
         if(districtList.size() == 0){
             getListDistrict();
         } else {
             setAdapter(districtList, "---Quận", districtSpinner);
         }
+
+        //Get list ward
         getListWard(0);
+
+        //Add event when click on sign in button
         signIn_textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -84,6 +132,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
+        //Add event when click on back image
         back_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,6 +140,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
+        //Add event for district spinner
         districtSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -107,10 +157,122 @@ public class SignUpActivity extends AppCompatActivity {
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loading();
-                signUp();
+                if(validateData()){
+                    loading();
+                    signUp();
+                }
             }
         });
+    }
+
+    private boolean validateData(){
+        boolean dataHasValidate = true;
+
+        getDataFromForm();
+
+        //Check email valid
+        Pattern patternEmail = Pattern.compile(VALID_EMAIL_ADDRESS_REGEX, Pattern.CASE_INSENSITIVE);
+        Matcher matcherEmail = patternEmail.matcher(email);
+        if(!matcherEmail.matches()){
+            textInput_email.setError("Địa chỉ email không đúng định dạng. Xin vui lòng kiểm tra lại!");
+            dataHasValidate = false;
+        } else {
+            textInput_email.setErrorEnabled(false);
+        }
+
+        //Check phone number
+        Pattern patternPhone = Pattern.compile(PHONE_PATTERN);
+        Matcher matcherPhone = patternPhone.matcher(phone);
+        if(!matcherPhone.find()){
+            textInput_phone.setError("Số điện thoại không đúng định dạng. Vui lòng kiểm tra lại!");
+            dataHasValidate = false;
+        } else {
+            textInput_phone.setErrorEnabled(false);
+        }
+
+        //Check full name
+        if(name.length() < 8){
+            textInput_fullName.setError("Tên của bạn cần phải có 8 ký tự trở lên!");
+            dataHasValidate = false;
+        } else {
+            textInput_fullName.setErrorEnabled(false);
+        }
+
+        //Check birthday
+        if(dateOfBirth.isEmpty()){
+            textInput_birthDay.setError("Ngày tháng năm sinh của bạn còn trống!");
+            dataHasValidate = false;
+
+        } else {
+            //Calculate user age
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(FORMAT_DATE);
+            LocalDate birthday = LocalDate.parse(edt_birthday.getText().toString(), formatter);
+            if(calculateAge(birthday, LocalDate.now()) < 16){
+                textInput_birthDay.setError("Xin lỗi, bạn chưa đủ tuổi đề dùng app này!");
+                dataHasValidate = false;
+            } else {
+                textInput_birthDay.setErrorEnabled(false);
+            }
+        }
+
+        //Check address
+        if(address.length() < 8) {
+            textInput_address.setError("Trường địa chỉ của bạn tối thiếu từ 8 ký tự trở lên");
+            dataHasValidate = false;
+        } else {
+            textInput_address.setErrorEnabled(false);
+        }
+
+        //Check district
+        if(district.equals("---Quận") || ward.equals("---Phường")){
+            errorTextDistrictWard.setVisibility(View.VISIBLE);
+
+            dataHasValidate = false;
+        } else {
+            errorTextDistrictWard.setVisibility(View.GONE);
+        }
+
+
+
+        //Check password
+        Pattern patternPassword = Pattern.compile(PASSWORD_PATTERN);
+        Matcher matcherPassword = patternPassword.matcher(edt_passWord.getText().toString());
+
+        if(!matcherPassword.matches() || edt_passWord.getText().toString().length() < 8) {
+            textInput_password.setError("Mật khẩu của bạn cần tối thiểu có 8 ký tự, 1 ký tự viết hoa, 1 số và 1 ký tự đặc biệt!");
+            dataHasValidate = false;
+        } else {
+            textInput_password.setErrorEnabled(false);
+        }
+
+        if(!edt_passWord.getText().toString().equals(edt_confirmPassword.getText().toString())){
+            textInput_confirmPassword.setError("Mật khẩu không giống nhau. Vui lòng kiểm tra lại!");
+            dataHasValidate = false;
+        } else {
+            textInput_confirmPassword.setErrorEnabled(false);
+        }
+
+        return dataHasValidate;
+    }
+
+    private void getDataFromForm(){
+        email = edt_email.getText().toString();
+        phone = edt_phone.getText().toString();
+        name = edt_fullName.getText().toString();
+        dateOfBirth = edt_birthday.getText().toString();
+        address = edt_address.getText().toString();
+        district = districtSpinner.getSelectedItem().toString();
+        ward = wardSpinner.getSelectedItem().toString();
+        password = edt_confirmPassword.getText().toString();
+    }
+
+
+    public static int calculateAge(LocalDate birthDate, LocalDate currentDate) {
+        if ((birthDate != null) && (currentDate != null)) {
+            return Period.between(birthDate, currentDate).getYears();
+        } else {
+            return 0;
+        }
     }
 
     private void signUp(){
@@ -124,6 +286,8 @@ public class SignUpActivity extends AppCompatActivity {
                     public void onCodeSent(@NonNull String verificationId,
                                            @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                         loadCompleted();
+
+                        //Create user object
 
                         Intent intent = new Intent(SignUpActivity.this, VerifyAccountActivity.class);
                         intent.putExtra("phone", edt_phone.getText().toString());
@@ -159,34 +323,9 @@ public class SignUpActivity extends AppCompatActivity {
         signUpButton.setEnabled(false);
     }
 
-    private void loadCompleted(){
+    private void loadCompleted() {
         progressLayout.setVisibility(View.GONE);
         signUpButton.setEnabled(true);
-    }
-    private void initComponent() {
-        textInput_email= (TextInputLayout) findViewById(R.id.textInput_email);
-        textInput_password = (TextInputLayout) findViewById(R.id.textInput_password);
-        textInput_phone = (TextInputLayout) findViewById(R.id.textInput_phone);
-        textInput_address = (TextInputLayout) findViewById(R.id.textInput_address);
-        textInput_repeatPassword = (TextInputLayout) findViewById(R.id.textInput_confirmPassword);
-        textInput_fullName = (TextInputLayout) findViewById(R.id.textInput_fullName);
-        textInput_birthDay = (TextInputLayout) findViewById(R.id.textInput_birthDay);
-
-        signUpButton = findViewById(R.id.sign_up_button);
-
-        edt_birthday = (EditText) findViewById(R.id.edt_birthDay);
-        edt_phone = findViewById(R.id.edt_phone);
-
-        districtSpinner = (Spinner) findViewById(R.id.district);
-        wardSpinner = (Spinner) findViewById(R.id.ward);
-
-        signIn_textView = (TextView) findViewById(R.id.signIn_textView);
-        errorText = findViewById(R.id.errorText);
-
-        back_image = (ImageView) findViewById(R.id.back_image);
-
-        progressLayout = findViewById(R.id.progress_layout);
-
     }
 
     private void getListDistrict() {
@@ -309,19 +448,18 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void updateLabel(){
-        String myFormat="dd/MM/yyyy";
-        SimpleDateFormat dateFormat=new SimpleDateFormat(myFormat, Locale.US);
+        SimpleDateFormat dateFormat=new SimpleDateFormat(FORMAT_DATE, Locale.US);
         edt_birthday.setText(dateFormat.format(myCalendar.getTime()));
     }
 
     private void setFontUI() {
-        textInput_email.setTypeface(Common.setFontBebas(getAssets()));
         textInput_password.setTypeface(Common.setFontBebas(getAssets()));
         textInput_phone.setTypeface(Common.setFontBebas(getAssets()));
         textInput_address.setTypeface(Common.setFontBebas(getAssets()));
-        textInput_repeatPassword.setTypeface(Common.setFontBebas(getAssets()));
+        textInput_confirmPassword.setTypeface(Common.setFontBebas(getAssets()));
         textInput_fullName.setTypeface(Common.setFontBebas(getAssets()));
         textInput_birthDay.setTypeface(Common.setFontBebas(getAssets()));
+        textInput_email.setTypeface(Common.setFontBebas(getAssets()));
 
         edt_birthday.setTypeface(Common.setFontBebas(getAssets()));
     }

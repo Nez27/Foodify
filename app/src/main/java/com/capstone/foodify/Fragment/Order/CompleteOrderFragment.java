@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.capstone.foodify.Model.Order.Order;
+import com.capstone.foodify.Model.Order;
 import com.capstone.foodify.Adapter.OrderAdapter;
 import com.capstone.foodify.R;
 

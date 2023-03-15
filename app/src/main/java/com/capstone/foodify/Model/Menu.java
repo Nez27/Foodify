@@ -1,6 +1,4 @@
-package com.capstone.foodify.Model.Menu;
-
-import com.capstone.foodify.Model.Food.Food;
+package com.capstone.foodify.Model;
 
 import java.util.List;
 

@@ -1,9 +1,8 @@
-package com.capstone.foodify.Model.Category;
+package com.capstone.foodify.Model;
 
-public class Category {
+public class DistrictWardResponse {
     private String id;
     private String name;
-    private String imageUrl;
 
     public String getId() {
         return id;
@@ -19,13 +18,5 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 }

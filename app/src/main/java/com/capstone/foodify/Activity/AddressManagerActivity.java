@@ -20,9 +20,9 @@ import android.widget.Toast;
 
 import com.capstone.foodify.API.FoodApi;
 import com.capstone.foodify.Common;
-import com.capstone.foodify.Model.Address.Address;
+import com.capstone.foodify.Model.Address;
 import com.capstone.foodify.Adapter.AddressAdapter;
-import com.capstone.foodify.Model.DistrictWard.DistrictWardResponse;
+import com.capstone.foodify.Model.DistrictWardResponse;
 import com.capstone.foodify.R;
 import com.google.android.material.textfield.TextInputLayout;
 import com.sjapps.library.customdialog.CustomViewDialog;

@@ -1,27 +1,24 @@
 package com.capstone.foodify.Fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstone.foodify.API.FoodApi;
-import com.capstone.foodify.Activity.MainActivity;
 import com.capstone.foodify.Common;
-import com.capstone.foodify.Model.Food.Food;
-import com.capstone.foodify.Model.Menu.Menu;
+import com.capstone.foodify.Model.Food;
+import com.capstone.foodify.Model.Menu;
 import com.capstone.foodify.Adapter.MenuAdapter;
 import com.capstone.foodify.Model.Response.Foods;
 import com.capstone.foodify.Model.Response.Shops;
-import com.capstone.foodify.Model.Shop.Shop;
+import com.capstone.foodify.Model.Shop;
 import com.capstone.foodify.Adapter.ShopAdapter;
-import com.capstone.foodify.Model.Slider.Slider;
+import com.capstone.foodify.Model.Slider;
 import com.capstone.foodify.R;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;

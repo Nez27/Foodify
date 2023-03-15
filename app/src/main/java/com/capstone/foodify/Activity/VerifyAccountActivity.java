@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.capstone.foodify.API.FoodApi;
 import com.capstone.foodify.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -173,6 +174,9 @@ public class VerifyAccountActivity extends AppCompatActivity {
                             progressLayout.setVisibility(View.GONE);
 
                             if(task.isSuccessful()) {
+
+                                //Add information user to server
+//                                FoodApi.apiService.register()
 
                                 Toast.makeText(VerifyAccountActivity.this, "Tạo tài khoản thành công!", Toast.LENGTH_SHORT).show();
                                 startActivity(new Intent(VerifyAccountActivity.this, SignInActivity.class));

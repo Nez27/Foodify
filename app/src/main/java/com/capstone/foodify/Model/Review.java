@@ -1,4 +1,4 @@
-package com.capstone.foodify.Model.Review;
+package com.capstone.foodify.Model;
 
 public class Review {
     private String name;

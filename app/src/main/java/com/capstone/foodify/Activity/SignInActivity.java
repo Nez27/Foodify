@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.capstone.foodify.API.FoodApi;
 import com.capstone.foodify.Common;
@@ -30,6 +31,9 @@ import com.saadahmedsoft.popupdialog.Styles;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import io.paperdb.Paper;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,11 +43,12 @@ public class SignInActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     TextView signUp_textView, forgotPassword_textView;
-    TextInputLayout textInput_account, textInput_password;
-    TextInputEditText email, password;
+    TextInputLayout textInput_phone, textInput_password;
+    TextInputEditText edt_phone, edt_password;
     MaterialButton signInButton;
     ImageView back_image;
-    PopupDialog popupDialog;
+    ConstraintLayout progressLayout;
+    String phone, password = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,9 +62,6 @@ public class SignInActivity extends AppCompatActivity {
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
-
-        //Init Popup Dialog
-        popupDialog = PopupDialog.getInstance(SignInActivity.this);
 
         initComponent();
         setFontUI();
@@ -91,68 +93,115 @@ public class SignInActivity extends AppCompatActivity {
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                initData();
 
-                //Show progress bar
-                popupDialog.setStyle(Styles.PROGRESS).setProgressDialogTint(getResources().getColor(R.color.primaryColor, null))
-                        .setCancelable(false).showDialog();
-
-                mAuth.setLanguageCode("vi");
-
-                mAuth.signInWithEmailAndPassword(email.getText().toString(), password.getText().toString())
-                        .addOnCompleteListener(SignInActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    // Sign in success, update UI with the signed-in user's information
-                                    FirebaseUser user = mAuth.getCurrentUser();
-
-                                    //Save user
-                                    Paper.book().write("user", user);
-
-                                    user.getIdToken(true)
-                                            .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<GetTokenResult> task) {
-                                                    if(task.isSuccessful()){
-                                                        Common.TOKEN = task.getResult().getToken();
-
-                                                        //Dismiss progress bar dialog
-                                                        popupDialog.dismissDialog();
-
-                                                        startActivity(new Intent(SignInActivity.this, MainActivity.class));
-                                                    } else {
-                                                        Toast.makeText(SignInActivity.this, "Error when taking token!", Toast.LENGTH_SHORT).show();
-                                                    }
-                                                }
-                                            });
-                                } else {
-                                    // If sign in fails, display a message to the user.
-                                    Toast.makeText(SignInActivity.this, "Thông tin đăng nhập không đúng! Vui lòng kiểm tra và thử lại!",
-                                            Toast.LENGTH_SHORT).show();
-
-                                    popupDialog.dismissDialog();
-                                }
-                            }
-                        });
+                if(validData()){
+                    signIn();
+                }
             }
         });
     }
 
+    private void initData(){
+        phone = edt_phone.getText().toString();
+        password = edt_password.getText().toString();
+    }
+
+    private boolean validData(){
+        boolean dataHasValidate = true;
+
+        //Check phone number
+        if(phone.isEmpty()){
+            textInput_phone.setError("Số điện thoại không được bỏ trống!");
+            dataHasValidate = false;
+        } else {
+
+
+            Pattern patternPhone = Pattern.compile(Common.PHONE_PATTERN);
+            Matcher matcherPhone = patternPhone.matcher(phone);
+            if(!matcherPhone.find()){
+                textInput_phone.setError("Số điện thoại không đúng định dạng. Vui lòng kiểm tra lại!");
+                dataHasValidate = false;
+            } else {
+                textInput_phone.setErrorEnabled(false);
+            }
+        }
+
+        //Check password
+        Pattern patternPassword = Pattern.compile(Common.PASSWORD_PATTERN);
+        Matcher matcherPassword = patternPassword.matcher(edt_password.getText().toString());
+
+        if(!matcherPassword.matches() || edt_password.getText().toString().length() < 8) {
+            textInput_password.setError("Mật khẩu của bạn cần tối thiểu có 8 ký tự, 1 ký tự viết hoa, 1 số và 1 ký tự đặc biệt!");
+            dataHasValidate = false;
+        } else {
+            textInput_password.setErrorEnabled(false);
+        }
+
+        return dataHasValidate;
+    }
+
+    private void signIn(){
+        //Show progress bar
+        progressLayout.setVisibility(View.VISIBLE);
+
+        mAuth.setLanguageCode("vi");
+
+        mAuth.signInWithEmailAndPassword(edt_phone.getText().toString(), edt_password.getText().toString())
+                .addOnCompleteListener(SignInActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            FirebaseUser user = mAuth.getCurrentUser();
+
+                            //Save user
+                            Paper.book().write("user", user);
+
+                            user.getIdToken(true)
+                                    .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<GetTokenResult> task) {
+                                            if(task.isSuccessful()){
+                                                Common.TOKEN = task.getResult().getToken();
+
+                                                //Dismiss progress bar
+                                                progressLayout.setVisibility(View.GONE);
+
+                                                startActivity(new Intent(SignInActivity.this, MainActivity.class));
+                                            } else {
+                                                Toast.makeText(SignInActivity.this, "Error when taking token!", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Toast.makeText(SignInActivity.this, "Thông tin đăng nhập không đúng! Vui lòng kiểm tra và thử lại!",
+                                    Toast.LENGTH_SHORT).show();
+
+                            //Dismiss progress bar
+                            progressLayout.setVisibility(View.GONE);
+                        }
+                    }
+                });
+    }
+
     private void initComponent() {
-        textInput_account = findViewById(R.id.textInput_account);
+        textInput_phone = findViewById(R.id.textInput_phone);
         textInput_password = findViewById(R.id.textInput_password);
         signUp_textView = findViewById(R.id.sign_up_textView);
         forgotPassword_textView = findViewById(R.id.forgotPassword_textView);
         back_image = findViewById(R.id.back_image);
-
-        email = findViewById(R.id.edt_email);
-        password = findViewById(R.id.edt_password);
+        edt_phone = findViewById(R.id.edt_email);
+        edt_password = findViewById(R.id.edt_password);
 
         signInButton = findViewById(R.id.sign_in_button);
 
+        progressLayout = findViewById(R.id.progress_layout);
+
     }
     private void setFontUI() {
-        textInput_account.setTypeface(Common.setFontBebas(getAssets()));
+        textInput_phone.setTypeface(Common.setFontBebas(getAssets()));
         textInput_password.setTypeface(Common.setFontBebas(getAssets()));
     }
 

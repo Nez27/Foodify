@@ -60,7 +60,7 @@ public class FoodDetailActivity extends AppCompatActivity {
     private RecyclerView recyclerView_review;
     private ReviewAdapter reviewAdapter;
     private Button rating_button;
-    private PopupDialog popupDialog;
+    private ConstraintLayout progressLayout;
 
 
     @Override
@@ -84,8 +84,7 @@ public class FoodDetailActivity extends AppCompatActivity {
         recyclerView_review = findViewById(R.id.recycler_view_review);
         rating_button = findViewById(R.id.rating_button);
         content_view = findViewById(R.id.content_view);
-
-        popupDialog = PopupDialog.getInstance(this);
+        progressLayout = findViewById(R.id.progress_layout);
 
         reviewAdapter = new ReviewAdapter(this);
 
@@ -210,15 +209,12 @@ public class FoodDetailActivity extends AppCompatActivity {
 
     private void hideUI() {
         content_view.setVisibility(View.GONE);
-
-        popupDialog.setStyle(Styles.PROGRESS).setProgressDialogTint(getResources().getColor(R.color.primaryColor, null))
-                .setCancelable(false).showDialog();
     }
 
     private void showUI() {
         content_view.setVisibility(View.VISIBLE);
 
-        popupDialog.dismissDialog();
+        progressLayout.setVisibility(View.GONE);
     }
 
     private void initData() {

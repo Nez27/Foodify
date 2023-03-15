@@ -53,10 +53,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SignUpActivity extends AppCompatActivity {
-
-    private static final String PHONE_CODE = "+84";
-    private final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!_])(?=\\S+$).{4,}$";
-    private final String PHONE_PATTERN = "^0[98753]{1}\\d{8}$";
     public static final String VALID_EMAIL_ADDRESS_REGEX = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
     public static final String FORMAT_DATE="dd/MM/yyyy";
     TextInputLayout textInput_password, textInput_phone, textInput_email,
@@ -183,14 +179,22 @@ public class SignUpActivity extends AppCompatActivity {
         }
 
         //Check phone number
-        Pattern patternPhone = Pattern.compile(PHONE_PATTERN);
-        Matcher matcherPhone = patternPhone.matcher(phone);
-        if(!matcherPhone.find()){
-            textInput_phone.setError("Số điện thoại không đúng định dạng. Vui lòng kiểm tra lại!");
+        if(phone.isEmpty()){
+            textInput_phone.setError("Số điện thoại không được bỏ trống!");
             dataHasValidate = false;
         } else {
-            textInput_phone.setErrorEnabled(false);
+
+
+            Pattern patternPhone = Pattern.compile(Common.PHONE_PATTERN);
+            Matcher matcherPhone = patternPhone.matcher(phone);
+            if(!matcherPhone.find()){
+                textInput_phone.setError("Số điện thoại không đúng định dạng. Vui lòng kiểm tra lại!");
+                dataHasValidate = false;
+            } else {
+                textInput_phone.setErrorEnabled(false);
+            }
         }
+
 
         //Check full name
         if(name.length() < 8){
@@ -237,7 +241,7 @@ public class SignUpActivity extends AppCompatActivity {
 
 
         //Check password
-        Pattern patternPassword = Pattern.compile(PASSWORD_PATTERN);
+        Pattern patternPassword = Pattern.compile(Common.PASSWORD_PATTERN);
         Matcher matcherPassword = patternPassword.matcher(edt_passWord.getText().toString());
 
         if(!matcherPassword.matches() || edt_passWord.getText().toString().length() < 8) {
@@ -280,7 +284,7 @@ public class SignUpActivity extends AppCompatActivity {
     private void signUp(){
         FirebaseAuth auth = FirebaseAuth.getInstance();
         PhoneAuthOptions options = PhoneAuthOptions.newBuilder(auth)
-                .setPhoneNumber(PHONE_CODE + edt_phone.getText().toString())
+                .setPhoneNumber(Common.PHONE_CODE + edt_phone.getText().toString())
                 .setTimeout(60L, TimeUnit.SECONDS)
                 .setActivity(this)
                 .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {

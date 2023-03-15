@@ -18,7 +18,7 @@
     <string name="last_name_text">Tên</string>
     <string name="birthday_text">ngày tháng năm sinh</string>
     <string name="address_text">địa chỉ</string>
-    <string name="phone_or_email">số điện thoại hoặc email</string>
+    <string name="phone">số điện thoại</string>
     <string name="forgot_password">Quên mật khẩu?</string>
     <string name="dont_have_an_account">Bạn chưa có tài khoản?</string>
     <string name="forgot_password_description">Chúng tôi sẽ gửi mã xác nhận qua email của bạn.</string>

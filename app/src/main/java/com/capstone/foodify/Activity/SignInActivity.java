@@ -43,12 +43,12 @@ public class SignInActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     TextView signUp_textView, forgotPassword_textView;
-    TextInputLayout textInput_phone, textInput_password;
-    TextInputEditText edt_phone, edt_password;
+    TextInputLayout textInput_email, textInput_password;
+    TextInputEditText edt_email, edt_password;
     MaterialButton signInButton;
     ImageView back_image;
     ConstraintLayout progressLayout;
-    String phone, password = null;
+    String email, password = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +59,9 @@ public class SignInActivity extends AppCompatActivity {
 
         //Init Paper
         Paper.init(this);
+
+        if(Common.TOKEN != null)
+            startActivity(new Intent(this, MainActivity.class));
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
@@ -103,7 +106,7 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void initData(){
-        phone = edt_phone.getText().toString();
+        email = edt_email.getText().toString();
         password = edt_password.getText().toString();
     }
 
@@ -111,19 +114,19 @@ public class SignInActivity extends AppCompatActivity {
         boolean dataHasValidate = true;
 
         //Check phone number
-        if(phone.isEmpty()){
-            textInput_phone.setError("Số điện thoại không được bỏ trống!");
+        if(email.isEmpty()){
+            textInput_email.setError("Email không được bỏ trống!");
             dataHasValidate = false;
         } else {
 
-
-            Pattern patternPhone = Pattern.compile(Common.PHONE_PATTERN);
-            Matcher matcherPhone = patternPhone.matcher(phone);
-            if(!matcherPhone.find()){
-                textInput_phone.setError("Số điện thoại không đúng định dạng. Vui lòng kiểm tra lại!");
+            //Check email valid
+            Pattern patternEmail = Pattern.compile(Common.VALID_EMAIL_ADDRESS_REGEX, Pattern.CASE_INSENSITIVE);
+            Matcher matcherEmail = patternEmail.matcher(email);
+            if(!matcherEmail.matches()){
+                textInput_email.setError("Địa chỉ email không đúng định dạng. Xin vui lòng kiểm tra lại!");
                 dataHasValidate = false;
             } else {
-                textInput_phone.setErrorEnabled(false);
+                textInput_email.setErrorEnabled(false);
             }
         }
 
@@ -147,7 +150,7 @@ public class SignInActivity extends AppCompatActivity {
 
         mAuth.setLanguageCode("vi");
 
-        mAuth.signInWithEmailAndPassword(edt_phone.getText().toString(), edt_password.getText().toString())
+        mAuth.signInWithEmailAndPassword(edt_email.getText().toString(), edt_password.getText().toString())
                 .addOnCompleteListener(SignInActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -187,12 +190,12 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void initComponent() {
-        textInput_phone = findViewById(R.id.textInput_phone);
+        textInput_email = findViewById(R.id.textInput_email);
         textInput_password = findViewById(R.id.textInput_password);
         signUp_textView = findViewById(R.id.sign_up_textView);
         forgotPassword_textView = findViewById(R.id.forgotPassword_textView);
         back_image = findViewById(R.id.back_image);
-        edt_phone = findViewById(R.id.edt_email);
+        edt_email = findViewById(R.id.edt_email);
         edt_password = findViewById(R.id.edt_password);
 
         signInButton = findViewById(R.id.sign_in_button);
@@ -201,7 +204,7 @@ public class SignInActivity extends AppCompatActivity {
 
     }
     private void setFontUI() {
-        textInput_phone.setTypeface(Common.setFontBebas(getAssets()));
+        textInput_email.setTypeface(Common.setFontBebas(getAssets()));
         textInput_password.setTypeface(Common.setFontBebas(getAssets()));
     }
 

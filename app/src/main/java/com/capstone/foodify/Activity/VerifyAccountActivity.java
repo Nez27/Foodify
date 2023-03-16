@@ -44,10 +44,11 @@ public class VerifyAccountActivity extends AppCompatActivity {
     private EditText inputCode1, inputCode2, inputCode3, inputCode4, inputCode5, inputCode6;
     ImageView close_image;
     MaterialButton confirm_code;
-    String verificationId, phone = null;
+    String verificationId, phone, password = null;
     ConstraintLayout progressLayout;
     TextView resendCodeText, resendCodeTextButton, countDown, errorText;
     User user;
+    FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +62,11 @@ public class VerifyAccountActivity extends AppCompatActivity {
             verificationId = getIntent().getStringExtra("verificationId");
             phone = getIntent().getStringExtra("phone");
             user = (User) getIntent().getSerializableExtra("user");
+            password = getIntent().getStringExtra("password");
         }
+
+        //Init firebase auth
+        mAuth = FirebaseAuth.getInstance();
 
 
         //Init text changedListener
@@ -166,7 +171,7 @@ public class VerifyAccountActivity extends AppCompatActivity {
                         inputCode4.getText().toString() +
                         inputCode5.getText().toString() +
                         inputCode6.getText().toString();
-        if(verificationId != null) {
+        if(verificationId != null && user != null && password != null) {
             //Show progress bar
             progressLayout.setVisibility(View.VISIBLE);
 
@@ -174,34 +179,41 @@ public class VerifyAccountActivity extends AppCompatActivity {
                     verificationId,
                     code
             );
-            FirebaseAuth.getInstance().signInWithCredential(phoneAuthCredential)
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            //Dismiss progress layout
-                            progressLayout.setVisibility(View.GONE);
 
-                            if(task.isSuccessful()) {
+            if(phoneAuthCredential.getSmsCode().equals(code)){
+                //Create user account
+                mAuth.createUserWithEmailAndPassword(user.getEmail(), password)
+                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if(task.isSuccessful()){
+                                    //Add information user to server
+                                    FoodApi.apiService.register(user).enqueue(new Callback<User>() {
+                                        @Override
+                                        public void onResponse(Call<User> call, Response<User> response) {
 
-                                //Add information user to server
-                                FoodApi.apiService.register(user).enqueue(new Callback<User>() {
-                                    @Override
-                                    public void onResponse(Call<User> call, Response<User> response) {
-                                        //Create user success;
-                                        Toast.makeText(VerifyAccountActivity.this, "Tạo tài khoản thành công!", Toast.LENGTH_SHORT).show();
-                                        startActivity(new Intent(VerifyAccountActivity.this, SignInActivity.class));
-                                    }
+                                            progressLayout.setVisibility(View.GONE);
+                                            //Create user success;
+                                            Toast.makeText(VerifyAccountActivity.this, "Tạo tài khoản thành công!", Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(VerifyAccountActivity.this, SignInActivity.class));
+                                        }
 
-                                    @Override
-                                    public void onFailure(Call<User> call, Throwable t) {
-                                        Common.showErrorServerNotification(VerifyAccountActivity.this);
-                                    }
-                                });
-                            } else {
-                                Toast.makeText(VerifyAccountActivity.this, "Mã code không đúng. Vui lòng kiểm tra lại!", Toast.LENGTH_SHORT).show();
+                                        @Override
+                                        public void onFailure(Call<User> call, Throwable t) {
+                                            progressLayout.setVisibility(View.GONE);
+                                            showErrorText(t.toString());
+                                            Common.showErrorServerNotification(VerifyAccountActivity.this);
+                                        }
+                                    });
+                                } else {
+                                    progressLayout.setVisibility(View.GONE);
+                                    Common.showErrorServerNotification(VerifyAccountActivity.this);
+                                }
                             }
-                        }
-                    });
+                        });
+            }
+
+
         }
     }
 

@@ -53,7 +53,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SignUpActivity extends AppCompatActivity {
-    public static final String VALID_EMAIL_ADDRESS_REGEX = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
     public static final String FORMAT_DATE="dd/MM/yyyy";
     TextInputLayout textInput_password, textInput_phone, textInput_email,
             textInput_address, textInput_confirmPassword, textInput_fullName, textInput_birthDay;
@@ -169,7 +168,7 @@ public class SignUpActivity extends AppCompatActivity {
         getDataFromForm();
 
         //Check email valid
-        Pattern patternEmail = Pattern.compile(VALID_EMAIL_ADDRESS_REGEX, Pattern.CASE_INSENSITIVE);
+        Pattern patternEmail = Pattern.compile(Common.VALID_EMAIL_ADDRESS_REGEX, Pattern.CASE_INSENSITIVE);
         Matcher matcherEmail = patternEmail.matcher(email);
         if(!matcherEmail.matches()){
             textInput_email.setError("Địa chỉ email không đúng định dạng. Xin vui lòng kiểm tra lại!");
@@ -310,6 +309,7 @@ public class SignUpActivity extends AppCompatActivity {
                         intent.putExtra("phone", edt_phone.getText().toString());
                         intent.putExtra("verificationId", verificationId);
                         intent.putExtra("token", forceResendingToken);
+                        intent.putExtra("password", password);
                         startActivity(intent);
                         finish();
                     }

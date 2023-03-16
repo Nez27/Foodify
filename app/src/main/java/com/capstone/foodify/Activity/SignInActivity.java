@@ -60,7 +60,7 @@ public class SignInActivity extends AppCompatActivity {
         //Init Paper
         Paper.init(this);
 
-        if(Common.TOKEN != null)
+        if(Common.CURRENT_USER != null)
             startActivity(new Intent(this, MainActivity.class));
 
         // Initialize Firebase Auth

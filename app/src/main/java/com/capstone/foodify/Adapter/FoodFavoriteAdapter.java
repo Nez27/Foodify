@@ -81,17 +81,17 @@ public class FoodFavoriteAdapter extends  RecyclerView.Adapter<FoodFavoriteAdapt
         listFavoriteFood.remove(index);
         notifyItemRemoved(index);
 
-        FoodApiToken.apiService.removeFoodFromFavorite(index).enqueue(new Callback<Food>() {
-            @Override
-            public void onResponse(Call<Food> call, Response<Food> response) {
-                Toast.makeText(context, "Remove successful!", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailure(Call<Food> call, Throwable t) {
-                Toast.makeText(context, "Error: " + t, Toast.LENGTH_SHORT).show();
-            }
-        });
+//        FoodApiToken.apiService.removeFoodFromFavorite(index).enqueue(new Callback<Food>() {
+//            @Override
+//            public void onResponse(Call<Food> call, Response<Food> response) {
+//                Toast.makeText(context, "Remove successful!", Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Food> call, Throwable t) {
+//                Toast.makeText(context, "Error: " + t, Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 
     public void undoItem(Food food, int index, Context context){

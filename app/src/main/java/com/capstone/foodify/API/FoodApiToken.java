@@ -5,6 +5,8 @@ import static com.capstone.foodify.Common.TOKEN;
 import androidx.annotation.NonNull;
 
 import com.capstone.foodify.Model.Food;
+import com.capstone.foodify.Model.Response.Foods;
+import com.capstone.foodify.Model.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -22,6 +24,7 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface FoodApiToken {
     Gson gson = new GsonBuilder().setDateFormat("HH:mm:ss dd-MM-yyyy").create();
@@ -42,12 +45,16 @@ public interface FoodApiToken {
             .build()
             .create(FoodApiToken.class);
 
-    @GET("wishlist")
-    Call<List<Food>> getListFavoriteFood();
 
     @POST("users/{userId}/loves/{productId}")
-    Call<Food> addFoodToFavorite(@Path("userId") String userId, @Path("productId") String productId);
+    Call<Food> addFoodToFavorite(@Path("userId") int userId, @Path("productId") int productId);
 
-    @DELETE("wishlist/{id}")
-    Call<Food> removeFoodFromFavorite(@Path("id") int id);
+    @DELETE("users/{userId}/loves/{productId}")
+    Call<Food> removeFoodFromFavorite(@Path("userId") int userId, @Path("productId") int productId);
+
+    @GET("users/email/{userEmail}")
+    Call<User> getUserFromEmail(@Path("userEmail") String userEmail);
+
+    @GET("users/{userId}/loves")
+    Call<Foods> getListFavoriteFood(@Path("userId") int userId, @Query("pageNo") int pageNo, @Query("pageSize") int pageSize, @Query("sortBy") String sortBy, @Query("sortDir") String sortDir);
 }

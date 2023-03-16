@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstone.foodify.API.FoodApi;
+import com.capstone.foodify.API.FoodApiToken;
 import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.Basket;
 import com.capstone.foodify.Model.Food;
@@ -50,7 +51,7 @@ public class FoodDetailActivity extends AppCompatActivity {
 
     private HorizontalQuantitizer horizontalQuantitizer;
     private ImageSlider imageSlider;
-    private ImageView back_image, favourite_icon;
+    private ImageView back_image, favorite_icon;
     private String foodId = "";
     private Food food;
     private TextView foodName_txt, shopName_txt, discount_txt, price_txt, total_txt, countRating_txt, description_content_txt;
@@ -77,7 +78,7 @@ public class FoodDetailActivity extends AppCompatActivity {
         discount_txt = findViewById(R.id.discount);
         price_txt = findViewById(R.id.price);
         add_to_basket_button = findViewById(R.id.add_to_basket_button);
-        favourite_icon = findViewById(R.id.favorite_icon);
+        favorite_icon = findViewById(R.id.favorite_icon);
         total_txt = findViewById(R.id.total_text_view);
         countRating_txt = findViewById(R.id.count_rating_text_view);
         description_content_txt = findViewById(R.id.content_description_text_view);
@@ -147,42 +148,7 @@ public class FoodDetailActivity extends AppCompatActivity {
         add_to_basket_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(horizontalQuantitizer.getValue() > 0){
-                    Basket foodInBasket = Common.getFoodExistInBasket(food.getId());
-                    if(foodInBasket == null){
-                        //If item is not exist in basket
-
-                        //Check food image is null or not
-                        String imageTemp = null;
-                        if(food.getImages().size() > 0)
-                            imageTemp = food.getImages().get(0).getImageUrl();
-
-                        Common.LIST_BASKET_FOOD.add(new Basket(food.getId(), imageTemp, food.getName(), food.getCost(), food.getShop().getName(),
-                                String.valueOf(horizontalQuantitizer.getValue()), food.getDiscountPercent()));
-                    } else {
-                        //If item is exist in basket
-
-                        for(int i = 0; i < Common.LIST_BASKET_FOOD.size(); i++){
-                            String foodId = Common.LIST_BASKET_FOOD.get(i).getId();
-                            //Find foodId exist
-                            if(foodId.equals(food.getId())){
-                                //Get quantity food from basket
-                                String quantity = Common.LIST_BASKET_FOOD.get(i).getQuantity();
-
-                                //Change quantity food from basket
-                                int quantityInt = Integer.parseInt(quantity) + horizontalQuantitizer.getValue();
-                                Common.LIST_BASKET_FOOD.get(i).setQuantity(String.valueOf(quantityInt));
-                                break;
-                            }
-                        }
-
-                    }
-                    Toast.makeText(FoodDetailActivity.this, "Đã thêm " + food.getName() + " vào giỏ hàng!", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(FoodDetailActivity.this, MainActivity.class));
-
-                } else {
-                    Toast.makeText(FoodDetailActivity.this, "Bạn chưa chọn số lượng đồ ăn cần đặt!", Toast.LENGTH_SHORT).show();
-                }
+                addFoodToBasket();
             }
         });
 
@@ -193,6 +159,83 @@ public class FoodDetailActivity extends AppCompatActivity {
                 startActivity(new Intent(FoodDetailActivity.this, ShopDetailActivity.class));
             }
         });
+
+        //Add food to favorite when user on click
+        favorite_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addFoodToFavorite();
+            }
+        });
+    }
+
+    private void addFoodToFavorite() {
+        FoodApiToken.apiService.addFoodToFavorite(Common.CURRENT_USER.getId(), Integer.parseInt(foodId)).enqueue(new Callback<Food>() {
+            @Override
+            public void onResponse(Call<Food> call, Response<Food> response) {
+                Toast.makeText(FoodDetailActivity.this, "Đã thêm " + food.getName() + " vào danh sách yêu thích!", Toast.LENGTH_SHORT).show();
+                favorite_icon.setImageResource(R.drawable.baseline_favorite_24);
+            }
+
+            @Override
+            public void onFailure(Call<Food> call, Throwable t) {
+                Toast.makeText(FoodDetailActivity.this, "Oops! Đã có lỗi, vui lòng thử lại sau!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void removeFavoriteFood(){
+        FoodApiToken.apiService.removeFoodFromFavorite(Common.CURRENT_USER.getId(), Integer.parseInt(foodId)).enqueue(new Callback<Food>() {
+            @Override
+            public void onResponse(Call<Food> call, Response<Food> response) {
+                Toast.makeText(FoodDetailActivity.this, "Đã xoá " + food.getName() + " khỏi danh sách yêu thích!", Toast.LENGTH_SHORT).show();
+                favorite_icon.setImageResource(R.drawable.baseline_favorite_border_24);
+            }
+
+            @Override
+            public void onFailure(Call<Food> call, Throwable t) {
+                Toast.makeText(FoodDetailActivity.this, "Oops! Đã có lỗi, vui lòng thử lại sau!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void addFoodToBasket(){
+        if(horizontalQuantitizer.getValue() > 0){
+            Basket foodInBasket = Common.getFoodExistInBasket(food.getId());
+            if(foodInBasket == null){
+                //If item is not exist in basket
+
+                //Check food image is null or not
+                String imageTemp = null;
+                if(food.getImages().size() > 0)
+                    imageTemp = food.getImages().get(0).getImageUrl();
+
+                Common.LIST_BASKET_FOOD.add(new Basket(food.getId(), imageTemp, food.getName(), food.getCost(), food.getShop().getName(),
+                        String.valueOf(horizontalQuantitizer.getValue()), food.getDiscountPercent()));
+            } else {
+                //If item is exist in basket
+
+                for(int i = 0; i < Common.LIST_BASKET_FOOD.size(); i++){
+                    String foodId = Common.LIST_BASKET_FOOD.get(i).getId();
+                    //Find foodId exist
+                    if(foodId.equals(food.getId())){
+                        //Get quantity food from basket
+                        String quantity = Common.LIST_BASKET_FOOD.get(i).getQuantity();
+
+                        //Change quantity food from basket
+                        int quantityInt = Integer.parseInt(quantity) + horizontalQuantitizer.getValue();
+                        Common.LIST_BASKET_FOOD.get(i).setQuantity(String.valueOf(quantityInt));
+                        break;
+                    }
+                }
+
+            }
+            Toast.makeText(FoodDetailActivity.this, "Đã thêm " + food.getName() + " vào giỏ hàng!", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(FoodDetailActivity.this, MainActivity.class));
+
+        } else {
+            Toast.makeText(FoodDetailActivity.this, "Bạn chưa chọn số lượng đồ ăn cần đặt!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private List<Review> getListReview() {

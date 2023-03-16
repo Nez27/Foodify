@@ -13,7 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.capstone.foodify.API.FoodApiToken;
 import com.capstone.foodify.Common;
+import com.capstone.foodify.Model.User;
 import com.capstone.foodify.R;
 import com.capstone.foodify.ViewPagerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -25,6 +27,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 
 import io.paperdb.Paper;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,14 +54,29 @@ public class MainActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<GetTokenResult> task) {
                             if(task.isSuccessful()){
                                 Common.TOKEN = task.getResult().getToken();
+
+                                //Get user from database
+                                FoodApiToken.apiService.getUserFromEmail(user.getEmail()).enqueue(new Callback<User>() {
+                                    @Override
+                                    public void onResponse(Call<User> call, Response<User> response) {
+                                        User userData = response.body();
+                                        if(userData != null){
+                                            Common.CURRENT_USER = userData;
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<User> call, Throwable t) {
+                                        System.out.println("ERROR: " + t);
+                                        Common.showErrorServerNotification(MainActivity.this);
+                                    }
+                                });
                             } else {
                                 Toast.makeText(MainActivity.this, "Error when taking token!", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
         }
-
-
     }
 
     @Override
@@ -100,16 +120,9 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.activity_basket:
                         viewPager2.setCurrentItem(2);
                         break;
-                    case R.id.activity_favorite:
-                        if(Common.TOKEN != null){
-                            viewPager2.setCurrentItem(3);
-                        } else {
-                            startActivity(new Intent(MainActivity.this, SignInActivity.class));
-                        }
-                        break;
                     case R.id.activity_profile:
-                        if(Common.TOKEN != null){
-                            viewPager2.setCurrentItem(4);
+                        if(Common.CURRENT_USER != null){
+                            viewPager2.setCurrentItem(3);
                         } else {
                             startActivity(new Intent(MainActivity.this, SignInActivity.class));
                         }
@@ -133,9 +146,6 @@ public class MainActivity extends AppCompatActivity {
                         bottomNavigationView.getMenu().findItem(R.id.activity_basket).setChecked(true);
                         break;
                     case 3:
-                        bottomNavigationView.getMenu().findItem(R.id.activity_favorite).setChecked(true);
-                        break;
-                    case 4:
                         bottomNavigationView.getMenu().findItem(R.id.activity_profile).setChecked(true);
                         break;
                 }
@@ -143,4 +153,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 }

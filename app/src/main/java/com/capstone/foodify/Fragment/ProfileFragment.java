@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 
 import com.capstone.foodify.Activity.AccountAndProfileActivity;
 import com.capstone.foodify.Activity.AddressManagerActivity;
+import com.capstone.foodify.Activity.FavoriteFoodActivity;
 import com.capstone.foodify.Activity.MainActivity;
 import com.capstone.foodify.Activity.OrderActivity;
 import com.capstone.foodify.Activity.SignInActivity;
@@ -28,7 +29,7 @@ import com.saadahmedsoft.popupdialog.listener.OnDialogButtonClickListener;
 import io.paperdb.Paper;
 
 public class ProfileFragment extends Fragment {
-    LinearLayout account_and_profile, manage_address, order_history, log_out;
+    LinearLayout account_and_profile, manage_address, favorite_food, order_history, log_out;
     PopupDialog popupDialog;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,6 +38,7 @@ public class ProfileFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
         account_and_profile = rootView.findViewById(R.id.account_and_profile);
         manage_address = rootView.findViewById(R.id.manage_address);
+        favorite_food = rootView.findViewById(R.id.favorite_food);
         order_history = rootView.findViewById(R.id.order_history);
         log_out = rootView.findViewById(R.id.log_out);
 
@@ -53,6 +55,13 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getActivity(), AddressManagerActivity.class));
+            }
+        });
+
+        favorite_food.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), FavoriteFoodActivity.class));
             }
         });
 

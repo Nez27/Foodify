@@ -1,59 +1,73 @@
-package com.capstone.foodify.Fragment;
+package com.capstone.foodify.Activity;
 
-import android.graphics.Color;
-import android.os.Bundle;
-
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.ImageView;
 
+import com.capstone.foodify.Adapter.FoodFavoriteAdapter;
+import com.capstone.foodify.Adapter.RecyclerViewItemTouchHelperFavoriteFood;
+import com.capstone.foodify.Common;
 import com.capstone.foodify.ItemTouchHelperListener;
 import com.capstone.foodify.Model.Food;
-import com.capstone.foodify.Adapter.FoodFavoriteAdapter;
 import com.capstone.foodify.R;
-import com.capstone.foodify.Adapter.RecyclerViewItemTouchHelperFavoriteFood;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FavoriteFragment extends Fragment implements ItemTouchHelperListener {
+public class FavoriteFoodActivity extends AppCompatActivity implements ItemTouchHelperListener {
 
     private RecyclerView recyclerView_favorite_food;
     private FoodFavoriteAdapter adapter;
     private final List<Food> listFavoriteFood = new ArrayList<>();
-
+    private ImageView back_image;
     private NestedScrollView listFavoriteFoodView;
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_favourite, container, false);
 
-        recyclerView_favorite_food = rootView.findViewById(R.id.recycler_view_favorite_food);
-        listFavoriteFoodView = rootView.findViewById(R.id.list_favorite_food_view);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_favorite_food);
+
+        //Init component
+        back_image = findViewById(R.id.back_image);
+
+        //Set event for back image
+        back_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
+        //If user not sign in yet, app will move to sign in screen
+        if(Common.CURRENT_USER == null)
+            startActivity(new Intent(FavoriteFoodActivity.this, SignInActivity.class));
+
+        recyclerView_favorite_food = findViewById(R.id.recycler_view_favorite_food);
+        listFavoriteFoodView = findViewById(R.id.list_favorite_food_view);
 
         //Get list favorite food
         getListFavoriteFood();
 
         //Set layout recyclerview
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView_favorite_food.setLayoutManager(linearLayoutManager);
         adapter = new FoodFavoriteAdapter();
 
-        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
+        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         recyclerView_favorite_food.addItemDecoration(itemDecoration);
 
         ItemTouchHelper.SimpleCallback simpleCallback = new RecyclerViewItemTouchHelperFavoriteFood(0, ItemTouchHelper.LEFT, this);
         new ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView_favorite_food);
-        return rootView;
     }
 
     private void getListFavoriteFood() {
@@ -97,14 +111,14 @@ public class FavoriteFragment extends Fragment implements ItemTouchHelperListene
             int indexDelete = viewHolder.getAdapterPosition();
 
             //Remove Item
-            adapter.removeItem(indexDelete, getContext());
+            adapter.removeItem(indexDelete, this);
 
             //Show notification food has been delete
             Snackbar snackbar = Snackbar.make(listFavoriteFoodView, foodNameDelete + " remove!", Snackbar.LENGTH_LONG);
             snackbar.setAction("Undo", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    adapter.undoItem(foodDelete, indexDelete, getContext());
+                    adapter.undoItem(foodDelete, indexDelete, FavoriteFoodActivity.this);
                 }
             });
             snackbar.setActionTextColor(Color.YELLOW);

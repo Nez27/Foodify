@@ -3,8 +3,10 @@ package com.capstone.foodify.Model;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class User implements Serializable {
+    private int id;
     @SerializedName("addressDto")
     private Address address;
     private String dateOfBirth;
@@ -15,8 +17,17 @@ public class User implements Serializable {
     private boolean isLocked;
     private String phoneNumber;
     private String roleName;
+    private List<Address> addresses;
 
     public User() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Address getAddress() {
@@ -97,5 +108,13 @@ public class User implements Serializable {
 
     public void setRoleName(String roleName) {
         this.roleName = roleName;
+    }
+
+    public List<Address> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<Address> addresses) {
+        this.addresses = addresses;
     }
 }

@@ -14,6 +14,8 @@ import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 
 import com.capstone.foodify.Model.Basket;
+import com.capstone.foodify.Model.Food;
+import com.capstone.foodify.Model.User;
 import com.saadahmedsoft.popupdialog.PopupDialog;
 import com.saadahmedsoft.popupdialog.Styles;
 import com.saadahmedsoft.popupdialog.listener.OnDialogButtonClickListener;
@@ -33,8 +35,9 @@ public class Common {
     public static final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!_])(?=\\S+$).{4,}$";
     public static final String PHONE_PATTERN = "^0[98753]{1}\\d{8}$";
     public static List<Basket> LIST_BASKET_FOOD = new ArrayList<>();
-
+    public static List<Food> LIST_FAVORITE_FOOD = new ArrayList<>();
     public static String TOKEN = null;
+    public static User CURRENT_USER = null;
 
     public static String changeCurrencyUnit(float price){
         Locale locale = new Locale("vi", "VN");

@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -58,7 +59,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
     public class AddressViewHolder extends RecyclerView.ViewHolder{
 
         private TextView text_view_address, default_text_view, blank_text_view;
-        private Button edit_btn, delete_btn;
+        private ImageView edit_btn, delete_btn;
 
         public AddressViewHolder(@NonNull View itemView) {
             super(itemView);

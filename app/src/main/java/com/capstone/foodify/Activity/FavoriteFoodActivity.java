@@ -50,7 +50,7 @@ public class FavoriteFoodActivity extends AppCompatActivity implements ItemTouch
     private FoodFavoriteAdapter adapter;
     private final List<Food> listFavoriteFood = new ArrayList<>();
     private ImageView back_image;
-    private ConstraintLayout listFavoriteFoodView, progressLayout;
+    private ConstraintLayout listFavoriteFoodView;
     private NestedScrollView nestedScrollView;
     private ProgressBar progressBar;
     private TextView endOfListText;
@@ -61,7 +61,6 @@ public class FavoriteFoodActivity extends AppCompatActivity implements ItemTouch
 
         //Init component
         back_image = findViewById(R.id.back_image);
-        progressLayout = findViewById(R.id.progress_layout);
         nestedScrollView = findViewById(R.id.nestedScrollView);
         progressBar = findViewById(R.id.progress_bar);
         endOfListText = findViewById(R.id.end_of_list_text);
@@ -124,8 +123,6 @@ public class FavoriteFoodActivity extends AppCompatActivity implements ItemTouch
         FoodApiToken.apiService.getListFavoriteFood(Common.CURRENT_USER.getId(), page, PAGE_SIZE, SORT_BY, SORT_DIR).enqueue(new Callback<Foods>() {
             @Override
             public void onResponse(Call<Foods> call, Response<Foods> response) {
-                //Dismiss progress
-                progressLayout.setVisibility(View.GONE);
 
                 Foods foodData = response.body();
 

@@ -56,7 +56,13 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         } else {
             holder.name.setText(foodName);
         }
-        Picasso.get().load(food.getImages().get(0).getImageUrl()).into(holder.image);
+
+        //When food does not have image
+        if(food.getImages().size() == 0){
+            holder.image.setImageResource(R.drawable.default_image_food);
+        } else {
+            Picasso.get().load(food.getImages().get(0).getImageUrl()).into(holder.image);
+        }
 
         //Check value discountPercent
         float cost = 0;

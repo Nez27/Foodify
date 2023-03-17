@@ -26,6 +26,7 @@ import com.capstone.foodify.API.FoodApi;
 import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.Address;
 import com.capstone.foodify.Model.DistrictWardResponse;
+import com.capstone.foodify.Model.Response.EmailOrPhoneExist;
 import com.capstone.foodify.Model.User;
 import com.capstone.foodify.R;
 import com.google.android.material.button.MaterialButton;
@@ -152,11 +153,49 @@ public class SignUpActivity extends AppCompatActivity {
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO Check user have exits in database before sign up
                 if(validateData()){
                     loading();
-                    signUp();
+                    checkEmailOrPhoneExist();
                 }
+            }
+        });
+    }
+
+    private void checkEmailOrPhoneExist(){
+        //Create user object
+        User user = new User();
+        user.setAddress(new Address(address, ward, district));
+        user.setDateOfBirth(dateOfBirth);
+        user.setEmail(email);
+        user.setFullName(name);
+        user.setIdentifiedCode("");
+        user.setImageUrl("");
+        user.setLocked(false);
+        user.setPhoneNumber(phone);
+        user.setRoleName("ROLE_USER");
+
+        FoodApi.apiService.checkEmailOrPhoneExist(user).enqueue(new Callback<EmailOrPhoneExist>() {
+            @Override
+            public void onResponse(Call<EmailOrPhoneExist> call, Response<EmailOrPhoneExist> response) {
+                EmailOrPhoneExist dataTemp = response.body();
+
+                boolean isExist = false;
+
+                if(dataTemp != null)
+                    isExist = dataTemp.isTrue();
+
+                if(!isExist){
+                    //If user not exist on database, the app will create account
+                    signUp(user);
+                } else {
+                    loadCompleted();
+                    Toast.makeText(SignUpActivity.this, "Email or Phone exist!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<EmailOrPhoneExist> call, Throwable t) {
+
             }
         });
     }
@@ -280,7 +319,7 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
-    private void signUp(){
+    private void signUp(User user){
         FirebaseAuth auth = FirebaseAuth.getInstance();
         PhoneAuthOptions options = PhoneAuthOptions.newBuilder(auth)
                 .setPhoneNumber(Common.PHONE_CODE + edt_phone.getText().toString())
@@ -291,18 +330,6 @@ public class SignUpActivity extends AppCompatActivity {
                     public void onCodeSent(@NonNull String verificationId,
                                            @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                         loadCompleted();
-
-                        //Create user object
-                        User user = new User();
-                        user.setAddress(new Address(address, ward, district));
-                        user.setDateOfBirth(dateOfBirth);
-                        user.setEmail(email);
-                        user.setFullName(name);
-                        user.setIdentifiedCode("");
-                        user.setImageUrl("");
-                        user.setLocked(false);
-                        user.setPhoneNumber(phone);
-                        user.setRoleName("ROLE_USER");
 
                         Intent intent = new Intent(SignUpActivity.this, VerifyAccountActivity.class);
                         intent.putExtra("user", user);

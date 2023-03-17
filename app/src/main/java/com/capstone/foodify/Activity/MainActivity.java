@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Check if user is signed in (non-null) and update UI accordingly.
         user = mAuth.getCurrentUser();
-        if(user != null){
+        if(user != null && Common.CURRENT_USER == null){
             user.getIdToken(true)
                     .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
                         @Override
@@ -96,10 +96,12 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigation();
     }
+
     private void initComponent() {
         bottomNavigationView = findViewById(R.id.bottom_nav);
         viewPager2 = findViewById(R.id.viewPager);
     }
+
     private void bottomNavigation() {
         viewPagerAdapter = new ViewPagerAdapter(this);
         viewPager2.setAdapter(viewPagerAdapter);

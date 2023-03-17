@@ -41,7 +41,7 @@ public interface FoodApiToken {
 
     FoodApiToken apiService = new Retrofit.Builder()
             .client(client)
-            .baseUrl("http://10.0.2.2:8080/api/").addConverterFactory(GsonConverterFactory.create(gson))
+            .baseUrl("http://192.168.1.183:8080/api/").addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(FoodApiToken.class);
 

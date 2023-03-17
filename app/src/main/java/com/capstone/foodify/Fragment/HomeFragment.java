@@ -60,7 +60,7 @@ public class HomeFragment extends Fragment {
         menuAdapter = new MenuAdapter(getContext());
         recyclerView_restaurant = view.findViewById(R.id.recycler_view_restaurant);
         shopAdapter = new ShopAdapter(getContext());
-        progressLayout = view.findViewById(R.id.progress_layout);
+        progressLayout = getActivity().findViewById(R.id.progress_layout);
 
 
         if(listFood.isEmpty() || recentFood.isEmpty()){

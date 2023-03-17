@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.capstone.foodify.API.FoodApi;
+import com.capstone.foodify.API.FoodApiToken;
 import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.User;
 import com.capstone.foodify.R;
@@ -167,6 +168,23 @@ public class SignInActivity extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<GetTokenResult> task) {
                                             if(task.isSuccessful()){
                                                 Common.TOKEN = task.getResult().getToken();
+
+                                                //Get user from database
+                                                FoodApiToken.apiService.getUserFromEmail(user.getEmail()).enqueue(new Callback<User>() {
+                                                    @Override
+                                                    public void onResponse(Call<User> call, Response<User> response) {
+                                                        User userData = response.body();
+                                                        if(userData != null){
+                                                            Common.CURRENT_USER = userData;
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<User> call, Throwable t) {
+                                                        System.out.println("ERROR: " + t);
+                                                        Common.showErrorServerNotification(SignInActivity.this);
+                                                    }
+                                                });
 
                                                 //Dismiss progress bar
                                                 progressLayout.setVisibility(View.GONE);

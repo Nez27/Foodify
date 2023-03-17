@@ -164,6 +164,8 @@ public class FoodDetailActivity extends AppCompatActivity {
         favorite_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //TODO Check food has been in favorite food or not
+
                 addFoodToFavorite();
             }
         });

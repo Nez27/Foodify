@@ -17,6 +17,7 @@ public class User implements Serializable {
     private boolean isLocked;
     private String phoneNumber;
     private String roleName;
+    private int defaultAddress;
     private List<Address> addresses;
 
     public User() {
@@ -112,6 +113,14 @@ public class User implements Serializable {
 
     public List<Address> getAddresses() {
         return addresses;
+    }
+
+    public int getDefaultAddress() {
+        return defaultAddress;
+    }
+
+    public void setDefaultAddress(int defaultAddress) {
+        this.defaultAddress = defaultAddress;
     }
 
     public void setAddresses(List<Address> addresses) {

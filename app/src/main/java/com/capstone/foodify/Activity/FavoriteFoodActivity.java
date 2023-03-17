@@ -131,6 +131,11 @@ public class FavoriteFoodActivity extends AppCompatActivity implements ItemTouch
                     LAST_PAGE = foodData.getPage().isLast();
                 }
 
+                if(LAST_PAGE){
+                    progressBar.setVisibility(View.GONE);
+                    endOfListText.setVisibility(View.VISIBLE);
+                }
+
 
                 Collections.sort(listFavoriteFood);
 

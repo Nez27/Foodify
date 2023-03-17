@@ -103,6 +103,7 @@ public class ProfileFragment extends Fragment {
                                 Paper.book().delete("user");
 
                                 Common.TOKEN = null;
+                                Common.CURRENT_USER = null;
                                 startActivity(new Intent(getContext(), MainActivity.class));
                             }
 
@@ -114,5 +115,13 @@ public class ProfileFragment extends Fragment {
             }
         });
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        //Update user name on textview
+        user_name.setText(Common.CURRENT_USER.getFullName());
     }
 }

@@ -53,7 +53,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SignUpActivity extends AppCompatActivity {
-    public static final String FORMAT_DATE="dd/MM/yyyy";
     TextInputLayout textInput_password, textInput_phone, textInput_email,
             textInput_address, textInput_confirmPassword, textInput_fullName, textInput_birthDay;
     final Calendar myCalendar= Calendar.getInstance();
@@ -210,7 +209,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         } else {
             //Calculate user age
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(FORMAT_DATE);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Common.FORMAT_DATE);
             LocalDate birthday = LocalDate.parse(edt_birthday.getText().toString(), formatter);
             if(calculateAge(birthday, LocalDate.now()) < 16){
                 textInput_birthDay.setError("Xin lỗi, bạn chưa đủ tuổi đề dùng app này!");
@@ -259,6 +258,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         return dataHasValidate;
     }
+
 
     private void getDataFromForm(){
         email = edt_email.getText().toString();
@@ -465,7 +465,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void updateLabel(){
-        SimpleDateFormat dateFormat=new SimpleDateFormat(FORMAT_DATE, Locale.US);
+        SimpleDateFormat dateFormat=new SimpleDateFormat(Common.FORMAT_DATE, Locale.US);
         edt_birthday.setText(dateFormat.format(myCalendar.getTime()));
     }
 

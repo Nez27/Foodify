@@ -30,12 +30,12 @@ import java.util.List;
 import java.util.Locale;
 
 public class Common {
+    public static final String FORMAT_DATE="dd-MM-yyyy";
     public static final String VALID_EMAIL_ADDRESS_REGEX = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
     public static final String PHONE_CODE = "+84";
     public static final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!_])(?=\\S+$).{4,}$";
     public static final String PHONE_PATTERN = "^0[98753]{1}\\d{8}$";
     public static List<Basket> LIST_BASKET_FOOD = new ArrayList<>();
-    public static List<Food> LIST_FAVORITE_FOOD = new ArrayList<>();
     public static String TOKEN = null;
     public static User CURRENT_USER = null;
 

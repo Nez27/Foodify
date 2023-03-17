@@ -5,6 +5,7 @@ import static com.capstone.foodify.Common.TOKEN;
 import androidx.annotation.NonNull;
 
 import com.capstone.foodify.Model.Food;
+import com.capstone.foodify.Model.Response.CustomResponse;
 import com.capstone.foodify.Model.Response.Foods;
 import com.capstone.foodify.Model.User;
 import com.google.gson.Gson;
@@ -29,7 +30,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface FoodApiToken {
-    Gson gson = new GsonBuilder().setDateFormat("HH:mm:ss dd-MM-yyyy").create();
+    Gson gson = new GsonBuilder().setDateFormat("HH:mm:ss dd-MM-yyyy").setLenient().create();
 
     OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
         @NonNull
@@ -43,7 +44,7 @@ public interface FoodApiToken {
 
     FoodApiToken apiService = new Retrofit.Builder()
             .client(client)
-            .baseUrl("http://192.168.1.88:8080/api/").addConverterFactory(GsonConverterFactory.create(gson))
+            .baseUrl("http://192.168.1.183:8080/api/").addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(FoodApiToken.class);
 
@@ -62,4 +63,7 @@ public interface FoodApiToken {
 
     @PUT("users/{userId}")
     Call<User> updateUser(@Path("userId") int userId, @Body User user);
+
+    @GET("users/{userId}/loves/{productId}")
+    Call<CustomResponse> checkFoodIsFavorite(@Path("userId") int userId, @Path("productId") int productId);
 }

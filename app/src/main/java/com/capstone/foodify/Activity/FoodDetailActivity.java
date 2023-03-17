@@ -27,6 +27,7 @@ import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.Basket;
 import com.capstone.foodify.Model.Food;
 import com.capstone.foodify.Model.Image;
+import com.capstone.foodify.Model.Response.CustomResponse;
 import com.capstone.foodify.Model.Review;
 import com.capstone.foodify.Adapter.ReviewAdapter;
 import com.capstone.foodify.R;
@@ -51,7 +52,7 @@ public class FoodDetailActivity extends AppCompatActivity {
 
     private HorizontalQuantitizer horizontalQuantitizer;
     private ImageSlider imageSlider;
-    private ImageView back_image, favorite_icon;
+    private ImageView back_image, not_favorite, is_favorite;
     private String foodId = "";
     private Food food;
     private TextView foodName_txt, shopName_txt, discount_txt, price_txt, total_txt, countRating_txt, description_content_txt;
@@ -78,7 +79,8 @@ public class FoodDetailActivity extends AppCompatActivity {
         discount_txt = findViewById(R.id.discount);
         price_txt = findViewById(R.id.price);
         add_to_basket_button = findViewById(R.id.add_to_basket_button);
-        favorite_icon = findViewById(R.id.favorite_icon);
+        not_favorite = findViewById(R.id.not_favorite);
+        is_favorite = findViewById(R.id.is_favorite);
         total_txt = findViewById(R.id.total_text_view);
         countRating_txt = findViewById(R.id.count_rating_text_view);
         description_content_txt = findViewById(R.id.content_description_text_view);
@@ -161,14 +163,30 @@ public class FoodDetailActivity extends AppCompatActivity {
         });
 
         //Add food to favorite when user on click
-        favorite_icon.setOnClickListener(new View.OnClickListener() {
+        not_favorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO Check food has been in favorite food or not
-
                 addFoodToFavorite();
             }
         });
+
+        //Remove food from favorite
+        is_favorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeFavoriteFood();
+            }
+        });
+    }
+
+    private void isFavoriteIcon(){
+        not_favorite.setVisibility(View.GONE);
+        is_favorite.setVisibility(View.VISIBLE);
+    }
+
+    private void notFavoriteIcon(){
+        not_favorite.setVisibility(View.VISIBLE);
+        is_favorite.setVisibility(View.GONE);
     }
 
     private void addFoodToFavorite() {
@@ -176,7 +194,7 @@ public class FoodDetailActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Food> call, Response<Food> response) {
                 Toast.makeText(FoodDetailActivity.this, "Đã thêm " + food.getName() + " vào danh sách yêu thích!", Toast.LENGTH_SHORT).show();
-                favorite_icon.setImageResource(R.drawable.baseline_favorite_24);
+                isFavoriteIcon();
             }
 
             @Override
@@ -191,7 +209,7 @@ public class FoodDetailActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Food> call, Response<Food> response) {
                 Toast.makeText(FoodDetailActivity.this, "Đã xoá " + food.getName() + " khỏi danh sách yêu thích!", Toast.LENGTH_SHORT).show();
-                favorite_icon.setImageResource(R.drawable.baseline_favorite_border_24);
+                notFavoriteIcon();
             }
 
             @Override
@@ -293,6 +311,32 @@ public class FoodDetailActivity extends AppCompatActivity {
         }
     }
 
+    private void checkFoodIsFavorite(int foodId){
+        FoodApiToken.apiService.checkFoodIsFavorite(Common.CURRENT_USER.getId(), foodId).enqueue(new Callback<CustomResponse>() {
+            @Override
+            public void onResponse(Call<CustomResponse> call, Response<CustomResponse> response) {
+                CustomResponse dataResponse = response.body();
+
+                boolean isFavorite = false;
+
+                if(dataResponse != null)
+                    isFavorite = dataResponse.isTrue();
+
+                if(isFavorite)
+                    isFavoriteIcon();
+                else
+                    notFavoriteIcon();
+
+                showUI();
+            }
+
+            @Override
+            public void onFailure(Call<CustomResponse> call, Throwable t) {
+                Toast.makeText(FoodDetailActivity.this, "Oops, đã có lỗi xảy ra! Vui lòng thử lại sau!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void getFoodById(String foodId) {
         FoodApi.apiService.detailFood(foodId).enqueue(new Callback<Food>() {
             @Override
@@ -302,7 +346,7 @@ public class FoodDetailActivity extends AppCompatActivity {
                     food = tempFood;
 
                 initData();
-                showUI();
+                checkFoodIsFavorite(Integer.parseInt(foodId));
             }
 
             @Override

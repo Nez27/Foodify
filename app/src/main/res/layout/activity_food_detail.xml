@@ -97,12 +97,21 @@
                         android:layout_gravity="right"
                         />
                     <ImageView
-                        android:id="@+id/favorite_icon"
+                        android:id="@+id/not_favorite"
                         android:src="@drawable/baseline_favorite_border_24"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginTop="10dp"
                         android:layout_gravity="right"
+                        />
+                    <ImageView
+                        android:id="@+id/is_favorite"
+                        android:src="@drawable/baseline_favorite_24"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_gravity="right"
+                        android:visibility="gone"
                         />
                 </LinearLayout>
 

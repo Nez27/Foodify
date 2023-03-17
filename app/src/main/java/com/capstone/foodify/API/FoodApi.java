@@ -3,7 +3,7 @@ package com.capstone.foodify.API;
 import com.capstone.foodify.Model.Category;
 import com.capstone.foodify.Model.DistrictWardResponse;
 import com.capstone.foodify.Model.Food;
-import com.capstone.foodify.Model.Response.EmailOrPhoneExist;
+import com.capstone.foodify.Model.Response.CustomResponse;
 import com.capstone.foodify.Model.Response.Foods;
 import com.capstone.foodify.Model.Response.Shops;
 import com.capstone.foodify.Model.Shop;
@@ -29,7 +29,7 @@ public interface FoodApi {
     Gson gson = new GsonBuilder().setDateFormat("HH:mm:ss dd-MM-yyyy").setLenient().create();
 
     FoodApi apiService = new Retrofit.Builder()
-            .baseUrl("http://192.168.1.88:8080/api/").addConverterFactory(GsonConverterFactory.create(gson))
+            .baseUrl("http://192.168.1.183:8080/api/").addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(FoodApi.class);
 
@@ -77,5 +77,5 @@ public interface FoodApi {
     Call<User> register(@Body User user);
 
     @POST("auth/check")
-    Call<EmailOrPhoneExist> checkEmailOrPhoneExist (@Body User user);
+    Call<CustomResponse> checkEmailOrPhoneExist (@Body User user);
 }

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
@@ -47,6 +48,7 @@ public class HomeFragment extends Fragment {
     private MenuAdapter menuAdapter;
     private ShopAdapter shopAdapter;
     private ConstraintLayout progressLayout;
+    private static TextView welcomeText;
 
 
     @Override
@@ -61,6 +63,7 @@ public class HomeFragment extends Fragment {
         recyclerView_restaurant = view.findViewById(R.id.recycler_view_restaurant);
         shopAdapter = new ShopAdapter(getContext());
         progressLayout = getActivity().findViewById(R.id.progress_layout);
+        welcomeText = view.findViewById(R.id.welcome_text);
 
 
         if(listFood.isEmpty() || recentFood.isEmpty()){
@@ -87,6 +90,14 @@ public class HomeFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         System.out.println("Main activity destroy!");
+    }
+
+    public static void setNameUser(String name){
+        //Set name user while user already login
+        if(Common.CURRENT_USER != null)
+            welcomeText.setText("Xin chào, " + Common.CURRENT_USER.getFullName() + "!");
+        else
+            welcomeText.setText("Xin chào, khách!");
     }
 
     private void showSlider(){

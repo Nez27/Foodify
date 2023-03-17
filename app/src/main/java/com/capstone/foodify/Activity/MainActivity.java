@@ -15,6 +15,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.capstone.foodify.API.FoodApiToken;
 import com.capstone.foodify.Common;
+import com.capstone.foodify.Fragment.HomeFragment;
 import com.capstone.foodify.Model.User;
 import com.capstone.foodify.R;
 import com.capstone.foodify.ViewPagerAdapter;
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
                                         User userData = response.body();
                                         if(userData != null){
                                             Common.CURRENT_USER = userData;
+                                            HomeFragment.setNameUser(Common.CURRENT_USER.getFullName());
                                         }
                                     }
 

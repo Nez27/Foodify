@@ -1,6 +1,6 @@
 package com.capstone.foodify.Model.Response;
 
-public class EmailOrPhoneExist {
+public class CustomResponse {
     private String title;
     private boolean isTrue;
 

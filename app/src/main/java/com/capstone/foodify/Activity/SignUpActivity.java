@@ -9,8 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -26,7 +24,7 @@ import com.capstone.foodify.API.FoodApi;
 import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.Address;
 import com.capstone.foodify.Model.DistrictWardResponse;
-import com.capstone.foodify.Model.Response.EmailOrPhoneExist;
+import com.capstone.foodify.Model.Response.CustomResponse;
 import com.capstone.foodify.Model.User;
 import com.capstone.foodify.R;
 import com.google.android.material.button.MaterialButton;
@@ -174,10 +172,10 @@ public class SignUpActivity extends AppCompatActivity {
         user.setPhoneNumber(phone);
         user.setRoleName("ROLE_USER");
 
-        FoodApi.apiService.checkEmailOrPhoneExist(user).enqueue(new Callback<EmailOrPhoneExist>() {
+        FoodApi.apiService.checkEmailOrPhoneExist(user).enqueue(new Callback<CustomResponse>() {
             @Override
-            public void onResponse(Call<EmailOrPhoneExist> call, Response<EmailOrPhoneExist> response) {
-                EmailOrPhoneExist dataTemp = response.body();
+            public void onResponse(Call<CustomResponse> call, Response<CustomResponse> response) {
+                CustomResponse dataTemp = response.body();
 
                 boolean isExist = false;
 
@@ -194,7 +192,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<EmailOrPhoneExist> call, Throwable t) {
+            public void onFailure(Call<CustomResponse> call, Throwable t) {
 
             }
         });

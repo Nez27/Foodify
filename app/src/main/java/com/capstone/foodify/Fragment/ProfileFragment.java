@@ -2,6 +2,7 @@ package com.capstone.foodify.Fragment;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,9 +24,11 @@ import com.capstone.foodify.Activity.SignUpActivity;
 import com.capstone.foodify.Common;
 import com.capstone.foodify.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.saadahmedsoft.popupdialog.PopupDialog;
 import com.saadahmedsoft.popupdialog.Styles;
 import com.saadahmedsoft.popupdialog.listener.OnDialogButtonClickListener;
+import com.squareup.picasso.Picasso;
 
 import io.paperdb.Paper;
 
@@ -33,6 +36,7 @@ public class ProfileFragment extends Fragment {
     LinearLayout account_and_profile, manage_address, favorite_food, order_history, log_out;
     PopupDialog popupDialog;
     TextView user_name;
+    RoundedImageView profile_avatar;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -46,11 +50,19 @@ public class ProfileFragment extends Fragment {
         order_history = rootView.findViewById(R.id.order_history);
         log_out = rootView.findViewById(R.id.log_out);
         user_name = rootView.findViewById(R.id.user_name);
+        profile_avatar = rootView.findViewById(R.id.profile_avatar);
 
         popupDialog = PopupDialog.getInstance(getContext());
 
         //Set user name on textview
         user_name.setText(Common.CURRENT_USER.getFullName());
+
+        //Set image for user
+        if(Common.CURRENT_USER.getImageUrl().isEmpty()){
+            profile_avatar.setImageResource(R.drawable.profile_avatar);
+        } else {
+            Picasso.get().load(Common.CURRENT_USER.getImageUrl()).into(profile_avatar);
+        }
 
         account_and_profile.setOnClickListener(new View.OnClickListener() {
             @Override

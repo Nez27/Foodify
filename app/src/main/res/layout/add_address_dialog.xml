@@ -54,7 +54,7 @@
                 android:gravity="end"
                 android:paddingEnd="25dp"
                 android:contentDescription="district"
-                android:layout_weight="0.4"
+                android:layout_weight="0.43"
                 />
 
             <Spinner
@@ -65,7 +65,7 @@
                 android:gravity="end"
                 android:paddingEnd="25dp"
                 android:contentDescription="ward"
-                android:layout_weight="0.6"
+                android:layout_weight="0.57"
                 />
 
         </LinearLayout>

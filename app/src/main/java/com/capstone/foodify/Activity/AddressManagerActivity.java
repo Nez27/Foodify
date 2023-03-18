@@ -87,7 +87,7 @@ public class AddressManagerActivity extends AppCompatActivity {
         add_address_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showAddAddressDialog();
+                showAddAddressDialog(null, null, null);
             }
         });
 
@@ -152,7 +152,7 @@ public class AddressManagerActivity extends AppCompatActivity {
         });
     }
 
-    private void showAddAddressDialog(){
+    public void showAddAddressDialog(String addressUser, String wardUser, String districtUser){
         View view = LayoutInflater.from(this).inflate(R.layout.add_address_dialog,null);
 
         //Init component
@@ -166,19 +166,31 @@ public class AddressManagerActivity extends AppCompatActivity {
         //Set font
         textInput_address.setTypeface(Common.setFontOpenSans(getAssets()));
 
-        //Load district and ward
-        if(districtList.size() == 0){
-            getListDistrict();
+        if(addressUser == null && wardUser == null && districtUser == null){
+            //Load district and ward
+            if(districtList.size() == 0){
+                getListDistrict("---Quận");
+            } else {
+                setAdapter(districtList, "---Quận", districtSpinner);
+            }
+            getListWard(0, "---Phường");
         } else {
-            setAdapter(districtList, "---Quận", districtSpinner);
+            //Set default value ward and district depend on information from user
+
+            edt_address.setText(addressUser);
+
+            if(districtList.size() == 0){
+                getListDistrict(districtUser);
+            } else {
+                setAdapter(districtList, districtUser, districtSpinner);
+            }
         }
-        getListWard(0);
 
         //Set event when click on district spinner
         districtSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                getListWard(i);
+                getListWard(i, wardUser);
             }
 
             @Override
@@ -191,8 +203,16 @@ public class AddressManagerActivity extends AppCompatActivity {
 
         //Create dialog
         customViewDialog.Builder(this);
+
         //Set title
-        customViewDialog.setTitle("Thêm địa chỉ");
+        if(addressUser == null && wardUser == null && districtUser == null){
+            //If this is the create address form
+            customViewDialog.setTitle("Thêm địa chỉ");
+        } else {
+            //If this is a edit form
+            customViewDialog.setTitle("Thay đổi địa chỉ");
+        }
+
         //Create dialog width two buttons
         customViewDialog.dialogWithTwoButtons();
         //Add custom view
@@ -211,14 +231,21 @@ public class AddressManagerActivity extends AppCompatActivity {
             @Override
             public void onLeftButtonClick() {
 
-                //Get data
-                address = edt_address.getText().toString();
-                ward = wardSpinner.getSelectedItem().toString();
-                district = districtSpinner.getSelectedItem().toString();
+                if(addressUser == null && wardUser == null && districtUser == null){
+                    //If this is the create address form
 
-                if(validData(address, ward, district)){
-                    addAddress(address, ward, district);
-                    customViewDialog.dismiss();
+                    //Get data
+                    address = edt_address.getText().toString();
+                    ward = wardSpinner.getSelectedItem().toString();
+                    district = districtSpinner.getSelectedItem().toString();
+
+                    if(validData(address, ward, district)){
+                        addAddress(address, ward, district);
+                        customViewDialog.dismiss();
+                    }
+                } else {
+                    //If this is a edit form
+                    //TODO Add edit address function
                 }
             }
 
@@ -255,7 +282,7 @@ public class AddressManagerActivity extends AppCompatActivity {
         return dataHasValidate;
     }
 
-    private void getListDistrict() {
+    private void getListDistrict(String defaultValue) {
 
         districtList.add("---Quận");
 
@@ -269,7 +296,7 @@ public class AddressManagerActivity extends AppCompatActivity {
                     }
                 }
 
-                setAdapter(districtList, "---Quận", districtSpinner);
+                setAdapter(districtList, defaultValue, districtSpinner);
             }
 
             @Override
@@ -279,7 +306,7 @@ public class AddressManagerActivity extends AppCompatActivity {
         });
     }
 
-    private void getListWard(int districtCode) {
+    private void getListWard(int districtCode, String defaultValue) {
 
         if(wardList.size() > 1)
             wardList.clear();
@@ -306,7 +333,7 @@ public class AddressManagerActivity extends AppCompatActivity {
                     } else {
                         wardSpinner.setEnabled(true);
                     }
-                    setAdapter(wardList, "---Phường", wardSpinner);
+                    setAdapter(wardList, defaultValue, wardSpinner);
                 }
 
                 @Override

@@ -3,6 +3,7 @@ package com.capstone.foodify;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
@@ -13,9 +14,11 @@ import android.os.Build;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 
+import com.capstone.foodify.Activity.MainActivity;
 import com.capstone.foodify.Model.Basket;
 import com.capstone.foodify.Model.Food;
 import com.capstone.foodify.Model.User;
+import com.google.firebase.auth.FirebaseAuth;
 import com.saadahmedsoft.popupdialog.PopupDialog;
 import com.saadahmedsoft.popupdialog.Styles;
 import com.saadahmedsoft.popupdialog.listener.OnDialogButtonClickListener;
@@ -28,6 +31,8 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import io.paperdb.Paper;
 
 public class Common {
     public static final String FORMAT_DATE="dd-MM-yyyy";

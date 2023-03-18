@@ -14,13 +14,6 @@ public class Address implements Serializable {
         this.district = district;
     }
 
-    public Address(int id, String address, String ward, String district) {
-        this.id = id;
-        this.address = address;
-        this.ward = ward;
-        this.district = district;
-    }
-
     public int getId() {
         return id;
     }

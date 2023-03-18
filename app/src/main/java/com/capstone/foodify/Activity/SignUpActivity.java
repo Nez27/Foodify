@@ -264,7 +264,7 @@ public class SignUpActivity extends AppCompatActivity {
             textInput_address.setErrorEnabled(false);
         }
 
-        //Check district
+        //Check district and ward
         if(district.equals("---Quận") || ward.equals("---Phường")){
             errorTextDistrictWard.setVisibility(View.VISIBLE);
 

@@ -4,7 +4,9 @@ import static com.capstone.foodify.Common.TOKEN;
 
 import androidx.annotation.NonNull;
 
+import com.capstone.foodify.Model.Address;
 import com.capstone.foodify.Model.Food;
+import com.capstone.foodify.Model.Response.Addresses;
 import com.capstone.foodify.Model.Response.CustomResponse;
 import com.capstone.foodify.Model.Response.Foods;
 import com.capstone.foodify.Model.User;
@@ -66,4 +68,7 @@ public interface FoodApiToken {
 
     @GET("users/{userId}/loves/{productId}")
     Call<CustomResponse> checkFoodIsFavorite(@Path("userId") int userId, @Path("productId") int productId);
+
+    @POST("users/{userId}/addresses")
+    Call<CustomResponse> createAddressUser(@Path("userId") int userId, @Body Address address);
 }

@@ -1,10 +1,12 @@
 package com.capstone.foodify.Fragment;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -15,6 +17,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.capstone.foodify.Activity.OrderCheckOutActivity;
 import com.capstone.foodify.Common;
 import com.capstone.foodify.ItemTouchHelperListener;
 import com.capstone.foodify.Model.Basket;
@@ -32,7 +35,7 @@ public class BasketFragment extends Fragment implements ItemTouchHelperListener 
     private BasketAdapter adapter;
     private List<Basket> listBasketFood = new ArrayList<>();
     private RelativeLayout listBasketFoodView;
-
+    private Button btnCheckOut;
     public ConstraintLayout empty_layout;
 
     public TextView total;
@@ -48,6 +51,7 @@ public class BasketFragment extends Fragment implements ItemTouchHelperListener 
         adapter = new BasketAdapter(this);
         total = view.findViewById(R.id.total_text_view);
         empty_layout = view.findViewById(R.id.empty_layout);
+        btnCheckOut = view.findViewById(R.id.btnCheckOut);
 
         //Init data
         total.setText(Common.changeCurrencyUnit(0));
@@ -67,6 +71,14 @@ public class BasketFragment extends Fragment implements ItemTouchHelperListener 
 
         ItemTouchHelper.SimpleCallback simpleCallback = new RecyclerViewItemTouchHelperBasketFood(0, ItemTouchHelper.LEFT, this);
         new ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView_basket_food);
+
+        //Set event for button check out
+        btnCheckOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), OrderCheckOutActivity.class));
+            }
+        });
 
         return view;
     }

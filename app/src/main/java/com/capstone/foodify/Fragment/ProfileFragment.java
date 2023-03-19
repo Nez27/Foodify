@@ -135,5 +135,12 @@ public class ProfileFragment extends Fragment {
 
         //Update user name on textview
         user_name.setText(Common.CURRENT_USER.getFullName());
+
+        //Set image for user
+        if(Common.CURRENT_USER.getImageUrl().isEmpty()){
+            profile_avatar.setImageResource(R.drawable.profile_avatar);
+        } else {
+            Picasso.get().load(Common.CURRENT_USER.getImageUrl()).into(profile_avatar);
+        }
     }
 }

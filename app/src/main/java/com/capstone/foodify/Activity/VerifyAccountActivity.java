@@ -1,25 +1,37 @@
 package com.capstone.foodify.Activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.capstone.foodify.API.FoodApi;
 import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.User;
 import com.capstone.foodify.R;
+import com.capstone.foodify.SmsBroadcastReceiver;
+import com.google.android.gms.auth.api.phone.SmsRetriever;
+import com.google.android.gms.auth.api.phone.SmsRetrieverClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
@@ -29,10 +41,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
-import com.saadahmedsoft.popupdialog.PopupDialog;
-import com.saadahmedsoft.popupdialog.Styles;
 
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,7 +52,8 @@ import retrofit2.Response;
 
 public class VerifyAccountActivity extends AppCompatActivity {
     private static final String PHONE_CODE = "+84";
-
+    ActivityResultLauncher<Intent> activityResultLauncher;
+    SmsBroadcastReceiver smsBroadcastReceiver;
     private EditText inputCode1, inputCode2, inputCode3, inputCode4, inputCode5, inputCode6;
     ImageView close_image;
     MaterialButton confirm_code;
@@ -56,6 +69,24 @@ public class VerifyAccountActivity extends AppCompatActivity {
         setContentView(R.layout.activity_verify_account);
 
         initComponent();
+
+        //Auto fill OTP Code
+        requestSMSPermission();
+        startSmartUserContent();
+        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if(result.getResultCode() == Activity.RESULT_OK){
+                            Intent data = result.getData();
+
+                            if(data != null){
+                                String message = data.getStringExtra(SmsRetriever.EXTRA_SMS_MESSAGE);
+                                getOtpFromMessage(message);
+                            }
+                        }
+                    }
+                });
 
         //Get code
         if(getIntent() != null){
@@ -85,6 +116,7 @@ public class VerifyAccountActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(VerifyAccountActivity.this, SignUpActivity.class));
+                finish();
             }
         });
 
@@ -111,6 +143,26 @@ public class VerifyAccountActivity extends AppCompatActivity {
                 count.start();
             }
         });
+    }
+
+    private void getOtpFromMessage(String message) {
+        Pattern otpPattern = Pattern.compile("(|^)\\d{6}");
+        Matcher matcher = otpPattern.matcher(message);
+        if (matcher.find()) {
+            Double otp = Double.parseDouble(matcher.group(0));
+
+            inputCode6.setText(String.valueOf(otp % 10));
+            otp = otp / 10;
+            inputCode5.setText(String.valueOf(otp % 10));
+            otp = otp / 10;
+            inputCode4.setText(String.valueOf(otp % 10));
+            otp = otp / 10;
+            inputCode3.setText(String.valueOf(otp % 10));
+            otp = otp / 10;
+            inputCode2.setText(String.valueOf(otp % 10));
+            otp = otp / 10;
+            inputCode1.setText(String.valueOf(otp % 10));
+        }
     }
 
     private void showResendCode(){
@@ -196,6 +248,7 @@ public class VerifyAccountActivity extends AppCompatActivity {
                                             //Create user success;
                                             Toast.makeText(VerifyAccountActivity.this, "Tạo tài khoản thành công!", Toast.LENGTH_SHORT).show();
                                             startActivity(new Intent(VerifyAccountActivity.this, SignInActivity.class));
+                                            finish();
                                         }
 
                                         @Override
@@ -323,6 +376,44 @@ public class VerifyAccountActivity extends AppCompatActivity {
         });
     }
 
+    private void requestSMSPermission()
+    {
+        String permission = Manifest.permission.RECEIVE_SMS;
+
+        int grant = ContextCompat.checkSelfPermission(this, permission);
+        if(grant != PackageManager.PERMISSION_GRANTED){
+            String[] permission_list = new String[1];
+            permission_list[0] = permission;
+
+            ActivityCompat.requestPermissions(this, permission_list, 1);
+        }
+    }
+
+    private void startSmartUserContent(){
+
+        SmsRetrieverClient client = SmsRetriever.getClient(this);
+        client.startSmsUserConsent(null);
+    }
+
+    private void registerBroadcastReceiver(){
+        smsBroadcastReceiver = new SmsBroadcastReceiver();
+
+        smsBroadcastReceiver.smsBroadcastReceiverListener = new SmsBroadcastReceiver.SmsBroadcastReceiverListener() {
+            @Override
+            public void onSuccess(Intent intent) {
+                activityResultLauncher.launch(intent);
+            }
+
+            @Override
+            public void onFailure() {
+
+            }
+        };
+
+        IntentFilter intentFilter = new IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION);
+        registerReceiver(smsBroadcastReceiver, intentFilter);
+    }
+
     private void initComponent() {
         confirm_code = (MaterialButton) findViewById(R.id.confirm_code);
         close_image = (ImageView) findViewById(R.id.close_image);
@@ -340,5 +431,17 @@ public class VerifyAccountActivity extends AppCompatActivity {
         resendCodeTextButton = findViewById(R.id.textview_resendCode_button);
         countDown = findViewById(R.id.textview_countdown);
         errorText = findViewById(R.id.errorText);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        registerBroadcastReceiver();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(smsBroadcastReceiver);
     }
 }

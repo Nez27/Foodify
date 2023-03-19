@@ -146,8 +146,6 @@ public class AccountAndProfileActivity extends AppCompatActivity {
                             deleteOldImage();
 
                         updateUser(uri.toString());
-
-                        Toast.makeText(AccountAndProfileActivity.this, "Upload ảnh thành công!", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -171,7 +169,7 @@ public class AccountAndProfileActivity extends AppCompatActivity {
         storageReference.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                Toast.makeText(AccountAndProfileActivity.this, "Delete old image successfully!", Toast.LENGTH_SHORT).show();
+
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

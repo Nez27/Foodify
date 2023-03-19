@@ -319,9 +319,10 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void signUp(User user){
         FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth.setLanguageCode("vi");
         PhoneAuthOptions options = PhoneAuthOptions.newBuilder(auth)
                 .setPhoneNumber(Common.PHONE_CODE + edt_phone.getText().toString())
-                .setTimeout(60L, TimeUnit.SECONDS)
+                .setTimeout(0L, TimeUnit.SECONDS)
                 .setActivity(this)
                 .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                     @Override

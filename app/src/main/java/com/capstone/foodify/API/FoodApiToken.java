@@ -71,4 +71,10 @@ public interface FoodApiToken {
 
     @POST("users/{userId}/addresses")
     Call<CustomResponse> createAddressUser(@Path("userId") int userId, @Body Address address);
+
+    @PUT("users/{userId}/addresses/{addressId}")
+    Call<CustomResponse> editAddressUser(@Path("userId") int userId, @Path("addressId") int addressId, @Body Address address);
+
+    @DELETE("users/{userId}/addresses/{addressId}")
+    Call<CustomResponse> deleteAddressUser(@Path("userId") int userId, @Path("addressId") int addressId);
 }

@@ -52,17 +52,35 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
         if(address == null)
             return;
 
-        //Create a full address string
-        String fullAddress = address.getAddress() + ", " + address.getWard() + ", " + address.getDistrict();
+
+        String fullAddress;
+        //If user choice "Huyện Hoàng Sa" District
+        if(address.getWard().equals("---Phường")){
+            //Create a full address string
+            fullAddress = address.getAddress()  + ", " + address.getDistrict();
+        } else {
+            fullAddress = address.getAddress() + ", " + address.getWard() + ", " + address.getDistrict();
+        }
 
         //Bind data to component
         holder.text_view_address.setText(fullAddress);
 
+        //Edit address
         holder.edit_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(context instanceof AddressManagerActivity){
-                    ((AddressManagerActivity)context).showAddAddressDialog(address.getAddress(), address.getWard(), address.getDistrict());
+                    ((AddressManagerActivity)context).showAddAndEditAddressDialog(address);
+                }
+            }
+        });
+
+        //Delete address
+        holder.delete_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(context instanceof AddressManagerActivity){
+                    ((AddressManagerActivity)context).showConfirmDeleteDialog(address.getId(), fullAddress);
                 }
             }
         });

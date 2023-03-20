@@ -12,21 +12,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstone.foodify.API.FoodApi;
+import com.capstone.foodify.Adapter.MenuAdapter;
+import com.capstone.foodify.Adapter.ShopAdapter;
 import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.Food;
 import com.capstone.foodify.Model.Menu;
-import com.capstone.foodify.Adapter.MenuAdapter;
 import com.capstone.foodify.Model.Response.Foods;
 import com.capstone.foodify.Model.Response.Shops;
 import com.capstone.foodify.Model.Shop;
-import com.capstone.foodify.Adapter.ShopAdapter;
 import com.capstone.foodify.Model.Slider;
 import com.capstone.foodify.R;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
-import com.saadahmedsoft.popupdialog.PopupDialog;
-import com.saadahmedsoft.popupdialog.Styles;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,9 +120,6 @@ public class HomeFragment extends Fragment {
             public void onFailure(Call<List<Slider>> call, Throwable t) {
                 //Dismiss progress bar
                 progressLayout.setVisibility(View.GONE);
-
-                if(getActivity() != null)
-                    Common.showNotificationError(getContext(), getActivity());
             }
         });
     }
@@ -157,6 +152,9 @@ public class HomeFragment extends Fragment {
                 //Check internet connection
                 if(getActivity() != null)
                     Common.showNotificationError(getContext(), getActivity());
+
+                //Dismiss progress bar
+                progressLayout.setVisibility(View.GONE);
             }
         });
     }
@@ -179,8 +177,6 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Foods> call, Throwable t) {
-                //Check internet connection
-                Common.showNotificationError(getContext(), getActivity());
             }
         });
     }
@@ -202,9 +198,6 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Shops> call, Throwable t) {
-                //Check internet connection
-                if(getActivity() != null)
-                    Common.showNotificationError(getContext(), getActivity());
             }
         });
     }

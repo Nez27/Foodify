@@ -69,8 +69,6 @@ public class MainActivity extends AppCompatActivity {
 
                                     @Override
                                     public void onFailure(Call<User> call, Throwable t) {
-                                        System.out.println("ERROR: " + t);
-                                        Common.showErrorServerNotification(MainActivity.this);
                                     }
                                 });
                             } else {

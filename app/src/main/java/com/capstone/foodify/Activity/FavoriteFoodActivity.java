@@ -1,15 +1,5 @@
 package com.capstone.foodify.Activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.widget.NestedScrollView;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -18,6 +8,15 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstone.foodify.API.FoodApiToken;
 import com.capstone.foodify.Adapter.FoodFavoriteAdapter;
@@ -28,9 +27,6 @@ import com.capstone.foodify.Model.Food;
 import com.capstone.foodify.Model.Response.Foods;
 import com.capstone.foodify.R;
 import com.google.android.material.snackbar.Snackbar;
-import com.saadahmedsoft.popupdialog.PopupDialog;
-import com.saadahmedsoft.popupdialog.Styles;
-import com.saadahmedsoft.popupdialog.listener.OnDialogButtonClickListener;
 
 import java.util.ArrayList;
 import java.util.Collections;

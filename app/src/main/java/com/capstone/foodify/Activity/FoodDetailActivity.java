@@ -23,13 +23,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstone.foodify.API.FoodApi;
 import com.capstone.foodify.API.FoodApiToken;
+import com.capstone.foodify.Adapter.ReviewAdapter;
 import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.Basket;
 import com.capstone.foodify.Model.Food;
 import com.capstone.foodify.Model.Image;
 import com.capstone.foodify.Model.Response.CustomResponse;
 import com.capstone.foodify.Model.Review;
-import com.capstone.foodify.Adapter.ReviewAdapter;
 import com.capstone.foodify.R;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
@@ -37,8 +37,6 @@ import com.denzcoskun.imageslider.models.SlideModel;
 import com.mcdev.quantitizerlibrary.AnimationStyle;
 import com.mcdev.quantitizerlibrary.HorizontalQuantitizer;
 import com.mcdev.quantitizerlibrary.QuantitizerListener;
-import com.saadahmedsoft.popupdialog.PopupDialog;
-import com.saadahmedsoft.popupdialog.Styles;
 import com.willy.ratingbar.RotationRatingBar;
 
 import java.util.ArrayList;

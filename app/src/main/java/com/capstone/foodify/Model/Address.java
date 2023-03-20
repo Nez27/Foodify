@@ -2,7 +2,7 @@ package com.capstone.foodify.Model;
 
 import java.io.Serializable;
 
-public class Address implements Serializable {
+public class Address implements Serializable{
     private int id;
     private String address;
     private String ward;
@@ -13,6 +13,8 @@ public class Address implements Serializable {
         this.ward = ward;
         this.district = district;
     }
+
+    public Address(){}
 
     public int getId() {
         return id;

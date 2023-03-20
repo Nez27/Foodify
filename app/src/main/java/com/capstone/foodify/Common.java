@@ -1,9 +1,7 @@
 package com.capstone.foodify;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
@@ -14,14 +12,10 @@ import android.os.Build;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 
-import com.capstone.foodify.Activity.MainActivity;
+import com.capstone.foodify.API.FoodApiToken;
+import com.capstone.foodify.Fragment.HomeFragment;
 import com.capstone.foodify.Model.Basket;
-import com.capstone.foodify.Model.Food;
 import com.capstone.foodify.Model.User;
-import com.google.firebase.auth.FirebaseAuth;
-import com.saadahmedsoft.popupdialog.PopupDialog;
-import com.saadahmedsoft.popupdialog.Styles;
-import com.saadahmedsoft.popupdialog.listener.OnDialogButtonClickListener;
 import com.thecode.aestheticdialogs.AestheticDialog;
 import com.thecode.aestheticdialogs.DialogStyle;
 import com.thecode.aestheticdialogs.DialogType;
@@ -32,7 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import io.paperdb.Paper;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Common {
     public static final String FORMAT_DATE="dd-MM-yyyy";
@@ -119,19 +115,17 @@ public class Common {
     }
 
     public static void showErrorServerNotification(Activity activity){
-        PopupDialog.getInstance(activity)
-                .setStyle(Styles.FAILED)
-                .setHeading("Lỗi")
-                .setDescription("Đã xuất hiện lỗi từ hệ thống. Vui lòng thử lại sau!")
+        new AestheticDialog.Builder(activity, DialogStyle.RAINBOW, DialogType.ERROR)
+                .setTitle("LỖI!")
+                .setMessage("Đã xuất hiện lỗi từ hệ thống! Vui lòng thử lại sau!")
                 .setCancelable(false)
-                .setDismissButtonText("Thoát")
-                .showDialog(new OnDialogButtonClickListener() {
+                .setOnClickListener(new OnDialogClickListener() {
                     @Override
-                    public void onDismissClicked(Dialog dialog) {
+                    public void onClick(@NonNull AestheticDialog.Builder builder) {
                         activity.finishAffinity();
                         System.exit(0);
                     }
-                });
+                }).show();
     }
 
     public static Basket getFoodExistInBasket(String foodId) {

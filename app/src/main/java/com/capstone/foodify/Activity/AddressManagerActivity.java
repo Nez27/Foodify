@@ -1,10 +1,5 @@
 package com.capstone.foodify.Activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -14,25 +9,36 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.capstone.foodify.API.FoodApi;
 import com.capstone.foodify.API.FoodApiToken;
+import com.capstone.foodify.Adapter.AddressAdapter;
 import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.Address;
-import com.capstone.foodify.Adapter.AddressAdapter;
 import com.capstone.foodify.Model.DistrictWardResponse;
 import com.capstone.foodify.Model.Response.CustomResponse;
+import com.capstone.foodify.Model.User;
 import com.capstone.foodify.R;
 import com.google.android.material.textfield.TextInputLayout;
+import com.sjapps.library.customdialog.BasicDialog;
 import com.sjapps.library.customdialog.CustomViewDialog;
 import com.sjapps.library.customdialog.DialogButtonEvents;
+import com.sjapps.library.customdialog.SJDialog;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import retrofit2.Call;
@@ -46,12 +52,13 @@ public class AddressManagerActivity extends AppCompatActivity {
     private AddressAdapter adapter;
     private Button add_address_button;
     private TextInputLayout textInput_address;
-    private ImageView back_image;
+    private ImageView back_image, edit_btn;
     private TextView txt_Address, errorTextDistrictWard;
     private List<Address> listAddress = new ArrayList<>();
     Spinner wardSpinner, districtSpinner;
     EditText edt_address;
     ConstraintLayout progressLayout, progressLayoutDialog;
+    CheckBox default_address_checkbox;
     private static final ArrayList<String> wardList = new ArrayList<>();
     private static final ArrayList<String> districtList = new ArrayList<>();
     String address, ward, district;
@@ -67,6 +74,7 @@ public class AddressManagerActivity extends AppCompatActivity {
         back_image = findViewById(R.id.back_image);
         txt_Address = findViewById(R.id.text_view_address);
         progressLayout = findViewById(R.id.progress_layout);
+        edit_btn = findViewById(R.id.edit_button);
 
         //Set layout recyclerview
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -87,14 +95,32 @@ public class AddressManagerActivity extends AppCompatActivity {
         add_address_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showAddAddressDialog(null, null, null);
+                showAddAndEditAddressDialog(null);
+            }
+        });
+
+        //Set event when user click on edit button
+        edit_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAddAndEditAddressDialog(defaultAddress);
             }
         });
 
     }
 
     private void getAddressList(){
+        listAddress.clear();
+
         listAddress.addAll(Common.CURRENT_USER.getAddresses());
+
+        //Remove default address in address list
+        for(Address tempAddress: Common.CURRENT_USER.getAddresses()){
+            if(Common.CURRENT_USER.getDefaultAddress() == tempAddress.getId()){
+                listAddress.remove(tempAddress);
+                break;
+            }
+        }
 
         adapter.setData(listAddress);
         recycler_view_address.setAdapter(adapter);
@@ -102,7 +128,7 @@ public class AddressManagerActivity extends AppCompatActivity {
         progressLayout.setVisibility(View.GONE);
     }
 
-    private void initData(){
+    private void initDefaultAddress(){
         //Create a full address string
         String fullAddress = defaultAddress.getAddress() + ", " + defaultAddress.getWard() + ", " + defaultAddress.getDistrict();
 
@@ -114,7 +140,7 @@ public class AddressManagerActivity extends AppCompatActivity {
         for(Address tempAddress: Common.CURRENT_USER.getAddresses()){
             if(Common.CURRENT_USER.getDefaultAddress() == tempAddress.getId()){
                 defaultAddress = tempAddress;
-                initData();
+                initDefaultAddress();
                 getAddressList();
                 break;
             }
@@ -122,12 +148,12 @@ public class AddressManagerActivity extends AppCompatActivity {
 
         if(defaultAddress == null){
             progressLayout.setVisibility(View.GONE);
-            Toast.makeText(this, "Đã có lỗi từ hệ thống, vui lòng thử lại sau!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Không lấy được default address!", Toast.LENGTH_SHORT).show();
         }
 
     }
 
-    private void addAddress(String address, String ward, String district){
+    private void addAddress(String address, String ward, String district, boolean isChecked){
         progressLayoutDialog.setVisibility(View.VISIBLE);
 
         //Create object address
@@ -135,14 +161,15 @@ public class AddressManagerActivity extends AppCompatActivity {
         FoodApiToken.apiService.createAddressUser(Common.CURRENT_USER.getId(), newAddress).enqueue(new Callback<CustomResponse>() {
             @Override
             public void onResponse(Call<CustomResponse> call, Response<CustomResponse> response) {
-                Toast.makeText(AddressManagerActivity.this, "Đã thêm địa chỉ thành công!", Toast.LENGTH_SHORT).show();
 
-                //Add address to list address at local storage
-                listAddress.add(newAddress);
+                CustomResponse responseData = response.body();
 
-                adapter.notifyDataSetChanged();
+                if(responseData.getTitle().equals("Create address")){
+                    Toast.makeText(AddressManagerActivity.this, "Đã thêm địa chỉ thành công!", Toast.LENGTH_SHORT).show();
 
-                progressLayoutDialog.setVisibility(View.GONE);
+                    //Update data user
+                    updateUser(isChecked);
+                }
             }
 
             @Override
@@ -152,7 +179,141 @@ public class AddressManagerActivity extends AppCompatActivity {
         });
     }
 
-    public void showAddAddressDialog(String addressUser, String wardUser, String districtUser){
+    public void deleteAddress(int addressId){
+
+        FoodApiToken.apiService.deleteAddressUser(Common.CURRENT_USER.getId(), addressId).enqueue(new Callback<CustomResponse>() {
+            @Override
+            public void onResponse(Call<CustomResponse> call, Response<CustomResponse> response) {
+                Toast.makeText(AddressManagerActivity.this, "Đã xoá địa chỉ thành công!", Toast.LENGTH_SHORT).show();
+
+                updateUser(false);
+            }
+
+            @Override
+            public void onFailure(Call<CustomResponse> call, Throwable t) {
+                Toast.makeText(AddressManagerActivity.this, "Đã có lỗi từ hệ thống! Vui lòng thử lại sau!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void changeDefaultAddress(int idAddress){
+
+        Common.CURRENT_USER.setDefaultAddress(idAddress);
+
+        FoodApiToken.apiService.updateUser(Common.CURRENT_USER.getId(), Common.CURRENT_USER).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                Toast.makeText(AddressManagerActivity.this, "Đã thay đổi địa chỉ mặc định thành công!", Toast.LENGTH_SHORT).show();
+
+                //Update default address
+                getDefaultAddress();
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Toast.makeText(AddressManagerActivity.this, "Đã có lỗi khi thay đổi địa chỉ mặc định, vui lòng thử lại sau!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void updateUser(boolean isChecked){
+        //Get user from database
+        FoodApiToken.apiService.getUserFromEmail(Common.CURRENT_USER.getEmail()).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                User userData = response.body();
+                if(userData != null){
+                    Common.CURRENT_USER = userData;
+                    getAddressList();
+
+                    if(isChecked){
+                        List<Address> tempListAddress = Common.CURRENT_USER.getAddresses();
+                        Collections.sort(tempListAddress, Comparator.comparingLong(Address::getId));
+
+                        Address newDefaultAddress = tempListAddress.get(tempListAddress.size() - 1);
+
+                        changeDefaultAddress(newDefaultAddress.getId());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+            }
+        });
+    }
+
+    public void showConfirmDeleteDialog(int addressId, String message){
+        BasicDialog basicDialog = new BasicDialog();
+
+        basicDialog.Builder(this)
+                .setTitle("Xác nhận xoá?")
+                .setMessage("Địa chỉ: \"" + message + "\"?")
+                .setMessageAlignment(SJDialog.TEXT_ALIGNMENT_CENTER)
+                .setLeftButtonText("Xoá")
+                .setRightButtonText("Không")
+                .setLeftButtonColor(getResources().getColor(R.color.primaryColor, null))
+                .setRightButtonColor(getResources().getColor(R.color.gray, null))
+                .setLeftButtonTextColor(getResources().getColor(R.color.white, null))
+                .setRightButtonTextColor(getResources().getColor(R.color.white, null))
+                .onButtonClick(new DialogButtonEvents() {
+                    @Override
+                    public void onLeftButtonClick() {
+                        deleteAddress(addressId);
+                        basicDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onRightButtonClick() {
+                        basicDialog.dismiss();
+                    }
+                }).show();
+    }
+
+    private void editAddress(int userId, Address address, int oldAddressId, boolean isChecked){
+
+        //Change id address to 0 to call api from back-end
+        address.setId(0);
+
+        FoodApiToken.apiService.editAddressUser(userId, oldAddressId, address).enqueue(new Callback<CustomResponse>() {
+            @Override
+            public void onResponse(Call<CustomResponse> call, Response<CustomResponse> response) {
+
+                if(response.code() == 200){
+                    //Back-end create another address with another id
+                    //Update user
+                    updateUser(isChecked);
+                    Toast.makeText(AddressManagerActivity.this, "Đã thay đổi địa chỉ thành công!", Toast.LENGTH_SHORT).show();
+                } else if(response.code() == 400){
+                    //Address is exist in user
+                    //Check if checkbox default address is has been checked
+                    if(isChecked){
+
+                        //Restore id old address
+                        for(Address tempAddress: Common.CURRENT_USER.getAddresses()){
+                            if(tempAddress.getId() == 0){
+                                tempAddress.setId(oldAddressId);
+                            }
+                        }
+
+                        //Change default address
+                        changeDefaultAddress(oldAddressId);
+                    } else {
+                        //Show notification address has been exist in user
+                        Toast.makeText(AddressManagerActivity.this, "Địa chỉ đã bị trùng trong tài khoản của bạn, vui lòng kiểm tra lại!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                    
+            }
+
+            @Override
+            public void onFailure(Call<CustomResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void showAddAndEditAddressDialog(Address oldAddress){
         View view = LayoutInflater.from(this).inflate(R.layout.add_address_dialog,null);
 
         //Init component
@@ -162,35 +323,22 @@ public class AddressManagerActivity extends AppCompatActivity {
         edt_address = view.findViewById(R.id.edt_address);
         errorTextDistrictWard = view.findViewById(R.id.errorTextDistrictWard);
         progressLayoutDialog = view.findViewById(R.id.progress_layout);
+        default_address_checkbox = view.findViewById(R.id.checkbox_default_address);
+
 
         //Set font
         textInput_address.setTypeface(Common.setFontOpenSans(getAssets()));
-
-        if(addressUser == null && wardUser == null && districtUser == null){
-            //Load district and ward
-            if(districtList.size() == 0){
-                getListDistrict("---Quận");
-            } else {
-                setAdapter(districtList, "---Quận", districtSpinner);
-            }
-            getListWard(0, "---Phường");
-        } else {
-            //Set default value ward and district depend on information from user
-
-            edt_address.setText(addressUser);
-
-            if(districtList.size() == 0){
-                getListDistrict(districtUser);
-            } else {
-                setAdapter(districtList, districtUser, districtSpinner);
-            }
-        }
 
         //Set event when click on district spinner
         districtSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                getListWard(i, wardUser);
+                if(oldAddress != null){
+                    getListWard(i, oldAddress.getWard());
+                } else {
+                    getListWard(i, null);
+                }
+
             }
 
             @Override
@@ -204,21 +352,48 @@ public class AddressManagerActivity extends AppCompatActivity {
         //Create dialog
         customViewDialog.Builder(this);
 
-        //Set title
-        if(addressUser == null && wardUser == null && districtUser == null){
+
+        if(oldAddress == null){
             //If this is the create address form
+
+            //Set title
             customViewDialog.setTitle("Thêm địa chỉ");
+            //Set left button text
+            customViewDialog.setLeftButtonText("Thêm");
+
+            //Load district and ward
+            if(districtList.size() == 0){
+                getListDistrict("---Quận");
+            } else {
+                setAdapter(districtList, "---Quận", districtSpinner);
+            }
+            getListWard(0, "---Phường");
         } else {
             //If this is a edit form
+
+            //Set title
             customViewDialog.setTitle("Thay đổi địa chỉ");
+            //Set left button text
+            customViewDialog.setLeftButtonText("Sửa");
+            //If this is a default address, hide checkbox default address
+            if(oldAddress.getId() == Common.CURRENT_USER.getDefaultAddress())
+                default_address_checkbox.setVisibility(View.GONE);
+
+            //Set default value ward and district depend on information from user
+            edt_address.setText(oldAddress.getAddress());
+
+            if(districtList.size() == 0){
+                getListDistrict(oldAddress.getDistrict());
+            } else {
+                setAdapter(districtList, oldAddress.getDistrict(), districtSpinner);
+            }
         }
 
         //Create dialog width two buttons
         customViewDialog.dialogWithTwoButtons();
         //Add custom view
         customViewDialog.addCustomView(view);
-        //Set left button text
-        customViewDialog.setLeftButtonText("Thêm");
+
         //Set right button text
         customViewDialog.setRightButtonText("Trở về");
         //Set color for left button
@@ -230,22 +405,32 @@ public class AddressManagerActivity extends AppCompatActivity {
         customViewDialog.onButtonClick(new DialogButtonEvents() {
             @Override
             public void onLeftButtonClick() {
+                //Get data
+                address = edt_address.getText().toString();
+                ward = wardSpinner.getSelectedItem().toString();
+                district = districtSpinner.getSelectedItem().toString();
 
-                if(addressUser == null && wardUser == null && districtUser == null){
+                if(oldAddress == null){
                     //If this is the create address form
 
-                    //Get data
-                    address = edt_address.getText().toString();
-                    ward = wardSpinner.getSelectedItem().toString();
-                    district = districtSpinner.getSelectedItem().toString();
-
                     if(validData(address, ward, district)){
-                        addAddress(address, ward, district);
+                        addAddress(address, ward, district, default_address_checkbox.isChecked());
                         customViewDialog.dismiss();
                     }
                 } else {
                     //If this is a edit form
-                    //TODO Add edit address function
+                    if(validData(oldAddress.getAddress(), oldAddress.getWard(), oldAddress.getDistrict())){
+
+                        //Change information address
+                        oldAddress.setAddress(address);
+                        oldAddress.setWard(ward);
+                        oldAddress.setDistrict(district);
+
+                        //Call api to change address
+                        editAddress(Common.CURRENT_USER.getId(), oldAddress, oldAddress.getId(), default_address_checkbox.isChecked());
+                    }
+
+                    customViewDialog.dismiss();
                 }
             }
 
@@ -272,9 +457,14 @@ public class AddressManagerActivity extends AppCompatActivity {
 
         //Check district and ward
         if(district.equals("---Quận") || ward.equals("---Phường")){
-            errorTextDistrictWard.setVisibility(View.VISIBLE);
 
-            dataHasValidate = false;
+            if(!district.equals("Huyện Hoàng Sa")){
+                errorTextDistrictWard.setVisibility(View.VISIBLE);
+                dataHasValidate = false;
+            } else{
+                errorTextDistrictWard.setVisibility(View.GONE);
+            }
+
         } else {
             errorTextDistrictWard.setVisibility(View.GONE);
         }

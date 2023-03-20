@@ -111,22 +111,12 @@
                         >
 
                         <ImageView
-                            android:src="@drawable/baseline_edit_24"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.5"
-                            android:layout_gravity="center_vertical"
                             android:id="@+id/edit_button"
-                            />
-
-                        <ImageView
-                            android:id="@+id/delete_button"
-                            android:src="@drawable/baseline_delete_24"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
                             android:layout_weight="0.5"
-                            />
-
+                            android:src="@drawable/baseline_edit_24" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

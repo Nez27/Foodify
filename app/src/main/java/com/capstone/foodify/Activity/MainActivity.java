@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
                                         User userData = response.body();
                                         if(userData != null){
                                             Common.CURRENT_USER = userData;
-                                            HomeFragment.setNameUser(Common.CURRENT_USER.getFullName());
+                                            HomeFragment.setNameUser();
                                         }
                                     }
 
@@ -78,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
                     });
         }
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
                             viewPager2.setCurrentItem(3);
                         } else {
                             startActivity(new Intent(MainActivity.this, SignInActivity.class));
+                            finish();
                         }
                         break;
                 }

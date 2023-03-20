@@ -90,7 +90,13 @@ public class HomeFragment extends Fragment {
         System.out.println("Main activity destroy!");
     }
 
-    public static void setNameUser(String name){
+    @Override
+    public void onResume() {
+        super.onResume();
+        setNameUser();
+    }
+
+    public static void setNameUser(){
         //Set name user while user already login
         if(Common.CURRENT_USER != null)
             welcomeText.setText("Xin chào, " + Common.CURRENT_USER.getFullName() + "!");

@@ -13,6 +13,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.capstone.foodify.API.FoodApiToken;
 import com.capstone.foodify.Common;
+import com.capstone.foodify.Fragment.HomeFragment;
 import com.capstone.foodify.Model.User;
 import com.capstone.foodify.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -163,6 +164,8 @@ public class SignInActivity extends AppCompatActivity {
                                             if(task.isSuccessful()){
                                                 Common.TOKEN = task.getResult().getToken();
 
+
+
                                                 //Get user from database
                                                 FoodApiToken.apiService.getUserFromEmail(user.getEmail()).enqueue(new Callback<User>() {
                                                     @Override
@@ -171,6 +174,11 @@ public class SignInActivity extends AppCompatActivity {
                                                         if(userData != null){
                                                             Common.CURRENT_USER = userData;
                                                         }
+
+                                                        //Dismiss progress bar
+                                                        progressLayout.setVisibility(View.GONE);
+
+                                                        startActivity(new Intent(SignInActivity.this, MainActivity.class));
                                                     }
 
                                                     @Override
@@ -179,11 +187,6 @@ public class SignInActivity extends AppCompatActivity {
                                                         Common.showErrorServerNotification(SignInActivity.this);
                                                     }
                                                 });
-
-                                                //Dismiss progress bar
-                                                progressLayout.setVisibility(View.GONE);
-
-                                                startActivity(new Intent(SignInActivity.this, MainActivity.class));
                                             } else {
                                                 Toast.makeText(SignInActivity.this, "Error when taking token!", Toast.LENGTH_SHORT).show();
                                             }

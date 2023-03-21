@@ -418,8 +418,16 @@ public class AddressManagerActivity extends AppCompatActivity {
                         customViewDialog.dismiss();
                     }
                 } else {
-                    //If this is a edit form
+                    //If this is a edit address form
                     if(validData(oldAddress.getAddress(), oldAddress.getWard(), oldAddress.getDistrict())){
+
+                        //Get value checkbox set default address
+                        boolean isChecked = default_address_checkbox.isChecked();
+
+                        //If this address is default address, set isChecked to true
+                        if(oldAddress.getId() == Common.CURRENT_USER.getDefaultAddress()){
+                            isChecked = true;
+                        }
 
                         //Change information address
                         oldAddress.setAddress(address);
@@ -427,7 +435,7 @@ public class AddressManagerActivity extends AppCompatActivity {
                         oldAddress.setDistrict(district);
 
                         //Call api to change address
-                        editAddress(Common.CURRENT_USER.getId(), oldAddress, oldAddress.getId(), default_address_checkbox.isChecked());
+                        editAddress(Common.CURRENT_USER.getId(), oldAddress, oldAddress.getId(), isChecked);
                     }
 
                     customViewDialog.dismiss();

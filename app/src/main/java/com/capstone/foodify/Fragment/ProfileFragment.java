@@ -49,9 +49,6 @@ public class ProfileFragment extends Fragment {
 
         popupDialog = PopupDialog.getInstance(getContext());
 
-        //Set user name on textview
-        user_name.setText(Common.CURRENT_USER.getFullName());
-
         //Set image for user
         if(Common.CURRENT_USER.getImageUrl().isEmpty()){
             profile_avatar.setImageResource(R.drawable.profile_avatar);

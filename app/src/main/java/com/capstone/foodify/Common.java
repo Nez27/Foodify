@@ -16,6 +16,7 @@ import com.capstone.foodify.API.FoodApiToken;
 import com.capstone.foodify.Fragment.HomeFragment;
 import com.capstone.foodify.Model.Basket;
 import com.capstone.foodify.Model.User;
+import com.google.firebase.auth.FirebaseUser;
 import com.thecode.aestheticdialogs.AestheticDialog;
 import com.thecode.aestheticdialogs.DialogStyle;
 import com.thecode.aestheticdialogs.DialogType;
@@ -31,6 +32,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class Common {
+    public static final String IS_FORGOT_PASSWORD = "isForgotPassword";
     public static final String FORMAT_DATE="dd-MM-yyyy";
     public static final String VALID_EMAIL_ADDRESS_REGEX = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
     public static final String PHONE_CODE = "+84";

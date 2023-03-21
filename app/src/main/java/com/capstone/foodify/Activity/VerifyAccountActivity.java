@@ -244,13 +244,15 @@ public class VerifyAccountActivity extends AppCompatActivity {
                                         @Override
                                         public void onResponse(Call<User> call, Response<User> response) {
 
-
-
-                                            progressLayout.setVisibility(View.GONE);
-                                            //Create user success;
-                                            Toast.makeText(VerifyAccountActivity.this, "Tạo tài khoản thành công!", Toast.LENGTH_SHORT).show();
-                                            startActivity(new Intent(VerifyAccountActivity.this, SignInActivity.class));
-                                            finish();
+                                            if(response.code() == 200){
+                                                progressLayout.setVisibility(View.GONE);
+                                                //Create user success;
+                                                Toast.makeText(VerifyAccountActivity.this, "Tạo tài khoản thành công!", Toast.LENGTH_SHORT).show();
+                                                startActivity(new Intent(VerifyAccountActivity.this, SignInActivity.class));
+                                                finish();
+                                            } else {
+                                                Toast.makeText(VerifyAccountActivity.this, "Lỗi hệ thống! Code: " + response.code(), Toast.LENGTH_SHORT).show();
+                                            }
                                         }
 
                                         @Override

@@ -32,17 +32,24 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
+import com.thecode.aestheticdialogs.AestheticDialog;
+import com.thecode.aestheticdialogs.DialogStyle;
+import com.thecode.aestheticdialogs.DialogType;
+import com.thecode.aestheticdialogs.OnDialogClickListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
+import io.paperdb.Paper;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -60,6 +67,8 @@ public class AccountAndProfileActivity extends AppCompatActivity {
     private Uri imageUri;
     final private StorageReference storageReference = FirebaseStorage.getInstance().getReference();
     ConstraintLayout progressLayout;
+    FirebaseAuth mAuth;
+    FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +80,15 @@ public class AccountAndProfileActivity extends AppCompatActivity {
 
         //Init data
         initData();
+
+        //Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
+
+        //Paper Init
+        Paper.init(this);
+
+        //Show notification about email verify for user
+        showNotificationEmailVerify();
 
         chooseDateOfBirth();
 
@@ -199,66 +217,42 @@ public class AccountAndProfileActivity extends AppCompatActivity {
         }
     }
 
-    private void initComponent() {
-        //Init Component
-        textInput_email= findViewById(R.id.textInput_email);
-        textInput_phone = findViewById(R.id.textInput_phone);
-        textInput_fullName = findViewById(R.id.textInput_fullName);
-        textInput_birthDay = findViewById(R.id.textInput_birthDay);
-        change_password = findViewById(R.id.change_password);
+    private void showNotificationEmailVerify(){
+        //Get firebase user from Paper
+        firebaseUser = Paper.book().read("user");
 
-        update_button = findViewById(R.id.updated_button);
-        update_image_button = findViewById(R.id.change_image_button);
+        // Check if user is signed in (non-null) and update UI accordingly.
+        firebaseUser = mAuth.getCurrentUser();
+        if(firebaseUser != null){
 
-        back_image = findViewById(R.id.back_image);
-
-        edt_birthday = findViewById(R.id.edt_birthDay);
-        edt_email = findViewById(R.id.edt_email);
-        edt_phone = findViewById(R.id.edt_phone);
-        edt_fullName = findViewById(R.id.edt_fullName);
-
-        profile_avatar = findViewById(R.id.profile_avatar);
-
-        progressLayout = findViewById(R.id.progress_layout);
-    }
-
-    private void setFontUI() {
-        textInput_email.setTypeface(Common.setFontBebas(getAssets()));
-        textInput_phone.setTypeface(Common.setFontBebas(getAssets()));
-        textInput_fullName.setTypeface(Common.setFontBebas(getAssets()));
-        textInput_birthDay.setTypeface(Common.setFontBebas(getAssets()));
-
-        edt_birthday.setTypeface(Common.setFontBebas(getAssets()));
-    }
-
-    private void chooseDateOfBirth() {
-        //Get date, month, year from user
-        String [] dateParts = edt_birthday.getText().toString().split("-");
-        String day = dateParts[0];
-        String month = dateParts[1];
-        String year = dateParts[2];
-
-        //Calendar date of birth
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener(){
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int day) {
-                myCalendar.set(Calendar.YEAR, year);
-                myCalendar.set(Calendar.MONTH,month);
-                myCalendar.set(Calendar.DAY_OF_MONTH,day);
-                updateLabel();
+            if(!firebaseUser.isEmailVerified()){
+                showDialogCaution();
+                textInput_email.setError("Nhấp vào đây để xác thực!");
+                textInput_email.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //When user click on the text
+                        firebaseUser.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Toast.makeText(AccountAndProfileActivity.this, "Email đã được gửi đi, vui lòng kiểm tra hộp thư của bạn!", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                });
+            } else {
+                textInput_email.setErrorEnabled(false);
             }
-        }, Integer.parseInt(year), Integer.parseInt(month) - 1, Integer.parseInt(day));
-        edt_birthday.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                datePickerDialog.show();
-            }
-        });
+
+        }
     }
 
-    private void updateLabel(){
-        SimpleDateFormat dateFormat=new SimpleDateFormat(Common.FORMAT_DATE, Locale.US);
-        edt_birthday.setText(dateFormat.format(myCalendar.getTime()));
+    private void showDialogCaution() {
+        new AestheticDialog.Builder(this, DialogStyle.RAINBOW, DialogType.WARNING)
+                .setTitle("Email chưa được xác thực!")
+                .setMessage("Vui lòng xác thực email để bạn có thể thực hiện việc lấy lại mật khẩu nếu quên!")
+                .setCancelable(true)
+                .show();
     }
 
     private void updateUser(String imageUrl) {
@@ -285,5 +279,63 @@ public class AccountAndProfileActivity extends AppCompatActivity {
                 progressLayout.setVisibility(View.GONE);
             }
         });
+    }
+    private void initComponent() {
+        //Init Component
+        textInput_email= findViewById(R.id.textInput_email);
+        textInput_phone = findViewById(R.id.textInput_phone);
+        textInput_fullName = findViewById(R.id.textInput_fullName);
+        textInput_birthDay = findViewById(R.id.textInput_birthDay);
+        change_password = findViewById(R.id.change_password);
+
+        update_button = findViewById(R.id.updated_button);
+        update_image_button = findViewById(R.id.change_image_button);
+
+        back_image = findViewById(R.id.back_image);
+
+        edt_birthday = findViewById(R.id.edt_birthDay);
+        edt_email = findViewById(R.id.edt_email);
+        edt_phone = findViewById(R.id.edt_phone);
+        edt_fullName = findViewById(R.id.edt_fullName);
+
+        profile_avatar = findViewById(R.id.profile_avatar);
+
+        progressLayout = findViewById(R.id.progress_layout);
+    }
+    private void setFontUI() {
+        textInput_email.setTypeface(Common.setFontBebas(getAssets()));
+        textInput_phone.setTypeface(Common.setFontBebas(getAssets()));
+        textInput_fullName.setTypeface(Common.setFontBebas(getAssets()));
+        textInput_birthDay.setTypeface(Common.setFontBebas(getAssets()));
+
+        edt_birthday.setTypeface(Common.setFontBebas(getAssets()));
+    }
+    private void chooseDateOfBirth() {
+        //Get date, month, year from user
+        String [] dateParts = edt_birthday.getText().toString().split("-");
+        String day = dateParts[0];
+        String month = dateParts[1];
+        String year = dateParts[2];
+
+        //Calendar date of birth
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener(){
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH,month);
+                myCalendar.set(Calendar.DAY_OF_MONTH,day);
+                updateLabel();
+            }
+        }, Integer.parseInt(year), Integer.parseInt(month) - 1, Integer.parseInt(day));
+        edt_birthday.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                datePickerDialog.show();
+            }
+        });
+    }
+    private void updateLabel(){
+        SimpleDateFormat dateFormat=new SimpleDateFormat(Common.FORMAT_DATE, Locale.US);
+        edt_birthday.setText(dateFormat.format(myCalendar.getTime()));
     }
 }

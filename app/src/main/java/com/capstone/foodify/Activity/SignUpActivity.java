@@ -52,16 +52,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SignUpActivity extends AppCompatActivity {
-    TextInputLayout textInput_password, textInput_phone, textInput_email,
+    TextInputLayout textInput_password, textInput_phone, textInput_email, textInput_id_card,
             textInput_address, textInput_confirmPassword, textInput_fullName, textInput_birthDay;
     final Calendar myCalendar= Calendar.getInstance();
-    private EditText edt_birthday, edt_phone, edt_passWord, edt_confirmPassword, edt_fullName, edt_address, edt_email;
+    private EditText edt_birthday, edt_phone, edt_passWord, edt_confirmPassword, edt_fullName, edt_address, edt_email, edt_id_card;
     private TextView signIn_textView, errorText, errorTextDistrictWard;
     private Spinner wardSpinner, districtSpinner;
     private ImageView back_image;
     private MaterialButton signUpButton;
     private ConstraintLayout progressLayout;
-    private String email, phone, name, dateOfBirth, address, district, ward, password = null;
+    private String email, phone, name, dateOfBirth, address, district, ward, password = null, identifiedCode;
 
     private static final ArrayList<String> wardList = new ArrayList<>();
     private static final ArrayList<String> districtList = new ArrayList<>();
@@ -74,6 +74,7 @@ public class SignUpActivity extends AppCompatActivity {
         textInput_fullName = (TextInputLayout) findViewById(R.id.textInput_fullName);
         textInput_birthDay = (TextInputLayout) findViewById(R.id.textInput_birthDay);
         textInput_email = findViewById(R.id.textInput_email);
+        textInput_id_card = findViewById(R.id.textInput_id_card);
 
         signUpButton = findViewById(R.id.sign_up_button);
 
@@ -84,6 +85,7 @@ public class SignUpActivity extends AppCompatActivity {
         edt_fullName = findViewById(R.id.edt_fullName);
         edt_address = findViewById(R.id.edt_address);
         edt_email = findViewById(R.id.edt_email);
+        edt_id_card = findViewById(R.id.edt_id_card);
 
         districtSpinner = (Spinner) findViewById(R.id.district);
         wardSpinner = (Spinner) findViewById(R.id.ward);
@@ -166,7 +168,7 @@ public class SignUpActivity extends AppCompatActivity {
         user.setDateOfBirth(dateOfBirth);
         user.setEmail(email);
         user.setFullName(name);
-        user.setIdentifiedCode("");
+        user.setIdentifiedCode(identifiedCode);
         user.setImageUrl("");
         user.setLocked(false);
         user.setPhoneNumber(phone);
@@ -239,6 +241,14 @@ public class SignUpActivity extends AppCompatActivity {
             textInput_fullName.setErrorEnabled(false);
         }
 
+        //Check identified Code
+        if(identifiedCode.length() < 9 && identifiedCode.length() > 10){
+            textInput_id_card.setError("CCCD / CMND không hợp lệ!");
+            dataHasValidate = false;
+        } else {
+            textInput_id_card.setErrorEnabled(false);
+        }
+
         //Check birthday
         if(dateOfBirth.isEmpty()){
             textInput_birthDay.setError("Ngày tháng năm sinh của bạn còn trống!");
@@ -306,6 +316,7 @@ public class SignUpActivity extends AppCompatActivity {
         district = districtSpinner.getSelectedItem().toString();
         ward = wardSpinner.getSelectedItem().toString();
         password = edt_confirmPassword.getText().toString();
+        identifiedCode = edt_id_card.getText().toString();
     }
 
 
@@ -503,7 +514,6 @@ public class SignUpActivity extends AppCompatActivity {
         textInput_fullName.setTypeface(Common.setFontBebas(getAssets()));
         textInput_birthDay.setTypeface(Common.setFontBebas(getAssets()));
         textInput_email.setTypeface(Common.setFontBebas(getAssets()));
-
-        edt_birthday.setTypeface(Common.setFontBebas(getAssets()));
+        textInput_id_card.setTypeface(Common.setFontBebas(getAssets()));
     }
 }

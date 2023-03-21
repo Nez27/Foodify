@@ -6,6 +6,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -13,6 +14,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
@@ -58,9 +60,10 @@ public class AccountAndProfileActivity extends AppCompatActivity {
 
     private static final String FOLDER_DIRECTORY = "UserImages/";
     TextInputLayout textInput_email, textInput_phone, textInput_fullName, textInput_birthDay;
+    TextView txt_countdown, txt_resend_code, txt_verify_email;
     EditText edt_birthday, edt_email, edt_phone, edt_fullName;
     final Calendar myCalendar= Calendar.getInstance();
-    LinearLayout change_password;
+    LinearLayout change_password, countdown_layout;
     Button update_button, update_image_button;
     ImageView back_image;
     RoundedImageView profile_avatar;
@@ -69,6 +72,19 @@ public class AccountAndProfileActivity extends AppCompatActivity {
     ConstraintLayout progressLayout;
     FirebaseAuth mAuth;
     FirebaseUser firebaseUser;
+    CountDownTimer count = new CountDownTimer(60000, 1000) {
+        @Override
+        public void onTick(long millisUntilFinished) {
+            txt_countdown.setText(millisUntilFinished / 1000 + " giây");
+        }
+
+        @Override
+        public void onFinish() {
+            countdown_layout.setVisibility(View.GONE);
+
+            txt_resend_code.setVisibility(View.VISIBLE);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,8 +161,21 @@ public class AccountAndProfileActivity extends AppCompatActivity {
             }
         });
 
-    }
+        //Set event resend_code button
+        txt_resend_code.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendEmailVerification();
 
+                countdown_layout.setVisibility(View.VISIBLE);
+
+                txt_resend_code.setVisibility(View.GONE);
+
+                count.start();
+            }
+        });
+
+    }
     private void uploadToFirebase(Uri uri){
 
         //Name of image user
@@ -217,34 +246,52 @@ public class AccountAndProfileActivity extends AppCompatActivity {
         }
     }
 
+    private void sendEmailVerification(){
+        firebaseUser.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Toast.makeText(AccountAndProfileActivity.this, "Email đã được gửi đi, vui lòng kiểm tra hộp thư của bạn!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
     private void showNotificationEmailVerify(){
-        //Get firebase user from Paper
-        firebaseUser = Paper.book().read("user");
-
         // Check if user is signed in (non-null) and update UI accordingly.
         firebaseUser = mAuth.getCurrentUser();
-        if(firebaseUser != null){
 
-            if(!firebaseUser.isEmailVerified()){
-                showDialogCaution();
-                textInput_email.setError("Nhấp vào đây để xác thực!");
-                textInput_email.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //When user click on the text
-                        firebaseUser.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                Toast.makeText(AccountAndProfileActivity.this, "Email đã được gửi đi, vui lòng kiểm tra hộp thư của bạn!", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-                });
-            } else {
-                textInput_email.setErrorEnabled(false);
+        //Reload firebase user data
+        firebaseUser.reload().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                progressLayout.setVisibility(View.GONE);
+                if(task.isSuccessful()){
+                    if(firebaseUser != null){
+                        
+                        //If user don't verify email yet
+                        if(!firebaseUser.isEmailVerified()){
+                            showDialogCaution();
+                            txt_verify_email.setVisibility(View.VISIBLE);
+                            txt_verify_email.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    //When user click on the text
+
+                                    //Count down resend code
+                                    countdown_layout.setVisibility(View.VISIBLE);
+                                    count.start();
+
+                                    sendEmailVerification();
+                                    txt_verify_email.setVisibility(View.GONE);
+                                }
+                            });
+                        } else {
+                            txt_verify_email.setVisibility(View.GONE);
+                        }
+                    }   
+                } else {
+                    Common.showErrorServerNotification(AccountAndProfileActivity.this, "Đã có lỗi từ hệ thống! Vui lòng thử lại sau!");
+                }
             }
-
-        }
+        });
     }
 
     private void showDialogCaution() {
@@ -275,7 +322,7 @@ public class AccountAndProfileActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                Common.showErrorServerNotification(AccountAndProfileActivity.this);
+                Common.showErrorServerNotification(AccountAndProfileActivity.this, "Không thể cập nhật thông tin, vui lòng thử lại sau!");
                 progressLayout.setVisibility(View.GONE);
             }
         });
@@ -301,6 +348,11 @@ public class AccountAndProfileActivity extends AppCompatActivity {
         profile_avatar = findViewById(R.id.profile_avatar);
 
         progressLayout = findViewById(R.id.progress_layout);
+        countdown_layout = findViewById(R.id.countdown_layout);
+
+        txt_countdown = findViewById(R.id.textview_countdown);
+        txt_resend_code = findViewById(R.id.textview_resendCode_button);
+        txt_verify_email = findViewById(R.id.textview_verify_email);
     }
     private void setFontUI() {
         textInput_email.setTypeface(Common.setFontBebas(getAssets()));

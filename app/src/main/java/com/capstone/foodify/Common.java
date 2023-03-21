@@ -109,17 +109,17 @@ public class Common {
     public static void showNotificationError(Context context, Activity activity) {
         if(getConnectionType(context) != 0){
             //Has internet connection
-            showErrorServerNotification(activity);
+            showErrorServerNotification(activity, "Đã có lỗi từ hệ thống! Xin vui lòng thử lại sau!");
         } else {
             //No internet, show notification
             showErrorInternetConnectionNotification(activity);
         }
     }
 
-    public static void showErrorServerNotification(Activity activity){
+    public static void showErrorServerNotification(Activity activity, String message){
         new AestheticDialog.Builder(activity, DialogStyle.RAINBOW, DialogType.ERROR)
                 .setTitle("LỖI!")
-                .setMessage("Đã xuất hiện lỗi từ hệ thống! Vui lòng thử lại sau!")
+                .setMessage(message)
                 .setCancelable(false)
                 .setOnClickListener(new OnDialogClickListener() {
                     @Override

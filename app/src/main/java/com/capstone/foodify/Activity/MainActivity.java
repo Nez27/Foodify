@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Check if user is signed in (non-null) and update UI accordingly.
         user = mAuth.getCurrentUser();
+
         if(user != null && Common.CURRENT_USER == null){
             user.getIdToken(true)
                     .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {

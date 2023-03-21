@@ -184,7 +184,7 @@ public class SignInActivity extends AppCompatActivity {
                                                     @Override
                                                     public void onFailure(Call<User> call, Throwable t) {
                                                         System.out.println("ERROR: " + t);
-                                                        Common.showErrorServerNotification(SignInActivity.this);
+                                                        Common.showErrorServerNotification(SignInActivity.this, "Không thể đăng nhập tài khoản! Vui lòng thử lại sau!");
                                                     }
                                                 });
                                             } else {

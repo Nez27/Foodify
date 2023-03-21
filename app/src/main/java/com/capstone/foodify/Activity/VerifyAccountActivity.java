@@ -259,12 +259,12 @@ public class VerifyAccountActivity extends AppCompatActivity {
                                         public void onFailure(Call<User> call, Throwable t) {
                                             progressLayout.setVisibility(View.GONE);
                                             showErrorText(t.toString());
-                                            Common.showErrorServerNotification(VerifyAccountActivity.this);
+                                            Common.showErrorServerNotification(VerifyAccountActivity.this, "Không thể tạo tài khoản! Vui lòng thử lại sau!");
                                         }
                                     });
                                 } else {
                                     progressLayout.setVisibility(View.GONE);
-                                    Common.showErrorServerNotification(VerifyAccountActivity.this);
+                                    Common.showErrorServerNotification(VerifyAccountActivity.this, "Đã có lỗi kết nối! Vui lòng thử lại sau!");
                                 }
                             }
                         });

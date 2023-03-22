@@ -13,7 +13,7 @@ public class Order {
     private float total;
     private String status;
     private int address_id;
-    private List<OrderDetail> listOrderDetail;
+    private List<OrderDetail> orderDetails;
 
     public Order(String orderTrackingNumber) {
         this.orderTrackingNumber = orderTrackingNumber;
@@ -100,10 +100,10 @@ public class Order {
     }
 
     public List<OrderDetail> getListOrderDetail() {
-        return listOrderDetail;
+        return orderDetails;
     }
 
     public void setListOrderDetail(List<OrderDetail> listOrderDetail) {
-        this.listOrderDetail = listOrderDetail;
+        this.orderDetails = listOrderDetail;
     }
 }

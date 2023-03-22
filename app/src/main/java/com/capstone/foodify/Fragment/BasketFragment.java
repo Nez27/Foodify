@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
@@ -37,8 +38,10 @@ public class BasketFragment extends Fragment implements ItemTouchHelperListener 
     private RelativeLayout listBasketFoodView;
     private Button btnCheckOut;
     public ConstraintLayout empty_layout;
-
     public TextView total;
+    public float totalFloat;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -76,7 +79,14 @@ public class BasketFragment extends Fragment implements ItemTouchHelperListener 
         btnCheckOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getContext(), OrderCheckOutActivity.class));
+                if(Common.LIST_BASKET_FOOD.size() == 0){
+                    Toast.makeText(getContext(), "Giỏ hàng của bạn hiện đang trống!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent(getContext(), OrderCheckOutActivity.class);
+                    intent.putExtra("total", totalFloat);
+                    startActivity(intent);
+                }
+
             }
         });
 

@@ -53,7 +53,7 @@ public class FoodDetailActivity extends AppCompatActivity {
     private ImageView back_image, not_favorite, is_favorite;
     private String foodId = "";
     private Food food;
-    private TextView foodName_txt, shopName_txt, discount_txt, price_txt, total_txt, countRating_txt, description_content_txt;
+    private TextView foodName_txt, shopName_txt, discount_txt, price_txt, countRating_txt, description_content_txt;
     private ConstraintLayout content_view;
     private Button add_to_basket_button;
     private float totalPrice, price;
@@ -79,7 +79,6 @@ public class FoodDetailActivity extends AppCompatActivity {
         add_to_basket_button = findViewById(R.id.add_to_basket_button);
         not_favorite = findViewById(R.id.not_favorite);
         is_favorite = findViewById(R.id.is_favorite);
-        total_txt = findViewById(R.id.total_text_view);
         countRating_txt = findViewById(R.id.count_rating_text_view);
         description_content_txt = findViewById(R.id.content_description_text_view);
         recyclerView_review = findViewById(R.id.recycler_view_review);
@@ -279,12 +278,9 @@ public class FoodDetailActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        //Set data price to calculate
-        price = food.getCost();
 
         foodName_txt.setText(food.getName());
         shopName_txt.setText(food.getShop().getName());
-        price_txt.setText(Common.changeCurrencyUnit(food.getCost()));
         description_content_txt.setText(food.getDescription());
         countRating_txt.setText(food.getReviewCount() + " rating");
 
@@ -301,11 +297,22 @@ public class FoodDetailActivity extends AppCompatActivity {
         }
         imageSlider.setImageList(slideModels, ScaleTypes.FIT);
 
-        //Show discount percent when value greater than 0
+        //Show discount percent when value greater than 0 and show the final cost after discount!
         if (food.getDiscountPercent() > 0) {
             discount_txt.setText("-" + food.getDiscountPercent() + "%");
+
+            float finalCost = food.getCost() - (food.getCost() * food.getDiscountPercent() / 100);
+            price_txt.setText(Common.changeCurrencyUnit(finalCost));
+
+            //Set data price to calculate
+            price = finalCost;
         } else {
             discount_txt.setVisibility(View.GONE);
+
+            price_txt.setText(Common.changeCurrencyUnit(food.getCost()));
+
+            //Set data price to calculate
+            price = food.getCost();
         }
     }
 

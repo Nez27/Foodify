@@ -61,7 +61,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        adapter.setData(listOrderDetails);
+//        adapter.setData(listOrderDetails);
         recyclerView.setAdapter(adapter);
 
         back_image.setOnClickListener(new View.OnClickListener() {

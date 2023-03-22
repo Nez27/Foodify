@@ -54,8 +54,23 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketView
         //Init data
         holder.foodName.setText(foodBasket.getName());
         holder.shopName.setText(foodBasket.getShopName());
-        holder.price.setText(Common.changeCurrencyUnit(foodBasket.getCost()));
         holder.quantity.setNumber(foodBasket.getQuantity());
+
+        //Check value discountPercent
+        float cost = 0;
+        if(foodBasket.getDiscountPercent() > 0){
+
+            //Calculate final cost when apply discountPercent
+            cost = foodBasket.getCost() - (foodBasket.getCost() * foodBasket.getDiscountPercent()/100);
+
+            //Show discountPercent value on screen
+            holder.discount.setVisibility(View.VISIBLE);
+            holder.discount.setText("-" + foodBasket.getDiscountPercent()+ "%");
+        } else {
+            cost = foodBasket.getCost();
+        }
+
+        holder.price.setText(Common.changeCurrencyUnit(cost));
 
         //Check food image is null or not null
         if(foodBasket.getImg() == null){
@@ -88,9 +103,10 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketView
         float total = 0;
 
         for(Basket foodTemp: listBasketFood){
-            total += (foodTemp.getCost()) * (Float.parseFloat(foodTemp.getQuantity())) * (100 - foodTemp.getDiscount())/100;
+            total += (foodTemp.getCost()) * (Float.parseFloat(foodTemp.getQuantity())) * (100 - foodTemp.getDiscountPercent())/100;
         }
         basketFragment.total.setText(Common.changeCurrencyUnit(total));
+        basketFragment.totalFloat = total;
     }
 
     @Override
@@ -102,7 +118,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketView
 
     public static class BasketViewHolder extends RecyclerView.ViewHolder{
 
-        TextView foodName, shopName, price, total;
+        TextView foodName, shopName, price, total, discount;
         public LinearLayout layoutForeGround;
         ImageView imageView;
         ElegantNumberButton quantity;
@@ -117,6 +133,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketView
             imageView = itemView.findViewById(R.id.image_view);
             quantity = itemView.findViewById(R.id.quantity);
             total = itemView.findViewById(R.id.total_text_view);
+            discount = itemView.findViewById(R.id.discount);
 
             layoutForeGround = itemView.findViewById(R.id.layout_foreground);
         }

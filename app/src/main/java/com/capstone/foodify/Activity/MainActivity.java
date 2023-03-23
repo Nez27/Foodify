@@ -120,14 +120,17 @@ public class MainActivity extends AppCompatActivity {
                         viewPager2.setCurrentItem(1);
                         break;
                     case R.id.activity_basket:
-                        viewPager2.setCurrentItem(2);
+                        if(Common.CURRENT_USER != null){
+                            viewPager2.setCurrentItem(2);
+                        } else {
+                            startActivity(new Intent(MainActivity.this, SignInActivity.class));
+                        }
                         break;
                     case R.id.activity_profile:
                         if(Common.CURRENT_USER != null){
                             viewPager2.setCurrentItem(3);
                         } else {
                             startActivity(new Intent(MainActivity.this, SignInActivity.class));
-                            finish();
                         }
                         break;
                 }

@@ -1,10 +1,5 @@
 package com.capstone.foodify.Activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -22,16 +17,24 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.capstone.foodify.API.FoodApi;
+import com.capstone.foodify.API.GoogleMapApi;
 import com.capstone.foodify.Adapter.OrderDetailAdapter;
 import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.Address;
-import com.capstone.foodify.Model.Basket;
 import com.capstone.foodify.Model.DistrictWardResponse;
-import com.capstone.foodify.Model.OrderDetail;
+import com.capstone.foodify.Model.GoogleMap.GoogleMapResponse;
 import com.capstone.foodify.R;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,18 +43,21 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class OrderCheckOutActivity extends AppCompatActivity {
+    private static final Double LAT_SHOP = 16.0500622;
+    private static final Double LNG_SHOP = 108.2351611;
     private static String finalAddress = null;
     ImageView back_image;
     OrderDetailAdapter adapter;
     RecyclerView recyclerView;
-    TextView txt_userName, txt_phone, edt_address_detect, errorTextDistrictWard, txt_total;
+    TextView txt_userName, txt_phone, edt_address_detect, errorTextDistrictWard, txt_total, txt_distance, txt_ship_cost;
     TextInputLayout textInput_address;
     EditText edt_address;
     Spinner spn_list_address, spn_district, spn_ward;
     ConstraintLayout manual_input_address_layout;
     Button change_address_button, confirm_address_button;
-    RadioButton list_address_input, auto_detect_location, manual_input_address, radio_button_selected;
+    RadioButton list_address_input, auto_detect_location, manual_input_address, radio_button_selected, take_food_from_shop;
     RadioGroup address_option;
+    ConstraintLayout progress_layout;
     float total;
     private static final ArrayList<String> wardList = new ArrayList<>();
     private static final ArrayList<String> districtList = new ArrayList<>();
@@ -87,6 +93,11 @@ public class OrderCheckOutActivity extends AppCompatActivity {
         errorTextDistrictWard = findViewById(R.id.errorTextDistrictWard);
         textInput_address = findViewById(R.id.textInput_address);
         txt_total = findViewById(R.id.txt_total);
+        take_food_from_shop = findViewById(R.id.take_food_from_shop);
+        progress_layout = findViewById(R.id.progress_layout);
+        txt_distance = findViewById(R.id.txt_distance);
+        txt_ship_cost = findViewById(R.id.txt_ship_cost);
+
 
         if(getIntent() != null){
             total = getIntent().getFloatExtra("total", 0);
@@ -152,12 +163,13 @@ public class OrderCheckOutActivity extends AppCompatActivity {
                 if(finalAddress == null){
                     Toast.makeText(OrderCheckOutActivity.this, "Bạn chưa chọn địa chỉ!", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(OrderCheckOutActivity.this, finalAddress, Toast.LENGTH_SHORT).show();
-
+                    progress_layout.setVisibility(View.VISIBLE);
                     confirm_address_button.setEnabled(false);
                     change_address_button.setVisibility(View.VISIBLE);
 
                     disableAllInputAddressOption();
+
+                    getDistanceAndCalculateShipCost(finalAddress);
                 }
             }
         });
@@ -169,6 +181,76 @@ public class OrderCheckOutActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+    }
+
+    private void getDistanceAndCalculateShipCost(String address) {
+        //Get location from address
+
+        GoogleMapApi.apiService.getGeoCode(address, Common.MAP_API).enqueue(new Callback<GoogleMapResponse>() {
+            @Override
+            public void onResponse(Call<GoogleMapResponse> call, Response<GoogleMapResponse> response) {
+                GoogleMapResponse jsonResponse = response.body();
+
+                Double lat = jsonResponse.getResults().get(0).getGeometry().getLocation().getLat();
+                Double lng = jsonResponse.getResults().get(0).getGeometry().getLocation().getLng();
+
+                LatLng addressFrom = new LatLng(lat, lng);
+                LatLng addressTo = new LatLng(LAT_SHOP, LNG_SHOP);
+
+                double distance = CalculationByDistance(addressFrom, addressTo);
+
+                double roundDistance = Math.round(distance * 100.0) / 100.0;
+
+                //Show distance to user
+                txt_distance.setText(roundDistance + " km");
+
+                //Calculate ship cost
+                float shipCost = 0;
+                if(roundDistance <= 3){
+                    shipCost = 15000;
+                } else if(roundDistance > 3 && roundDistance <= 10){
+                    shipCost = 5000 * (float) roundDistance;
+                } else {
+                    shipCost = 3000 * (float) roundDistance;
+                }
+
+                txt_ship_cost.setText(Common.changeCurrencyUnit(shipCost));
+
+                //Update total order
+                total = total + shipCost;
+                txt_total.setText(Common.changeCurrencyUnit(total));
+
+                progress_layout.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onFailure(Call<GoogleMapResponse> call, Throwable t) {
+                Toast.makeText(OrderCheckOutActivity.this, "Error: "  + t, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public double CalculationByDistance(LatLng from, LatLng to) {
+        int Radius = 6371;// radius of earth in Km
+        double lat1 = from.latitude;
+        double lat2 = to.latitude;
+        double lon1 = from.longitude;
+        double lon2 = to.longitude;
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + Math.cos(Math.toRadians(lat1))
+                * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2)
+                * Math.sin(dLon / 2);
+        double c = 2 * Math.asin(Math.sqrt(a));
+        double valueResult = Radius * c;
+        double km = valueResult / 1;
+        DecimalFormat newFormat = new DecimalFormat("####");
+        int kmInDec = Integer.valueOf(newFormat.format(km));
+        double meter = valueResult % 1000;
+        int meterInDec = Integer.valueOf(newFormat.format(meter));
+
+        return Radius * c;
     }
 
     private boolean validForm(){
@@ -226,6 +308,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
         list_address_input.setEnabled(false);
         auto_detect_location.setEnabled(false);
         manual_input_address.setEnabled(false);
+        take_food_from_shop.setEnabled(false);
 
         spn_list_address.setEnabled(false);
         edt_address.setEnabled(false);
@@ -237,6 +320,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
         list_address_input.setEnabled(true);
         auto_detect_location.setEnabled(true);
         manual_input_address.setEnabled(true);
+        take_food_from_shop.setEnabled(true);
 
         spn_list_address.setEnabled(true);
         edt_address.setEnabled(true);
@@ -317,6 +401,13 @@ public class OrderCheckOutActivity extends AppCompatActivity {
                     finalAddress = null;
                 }
                 break;
+
+            case R.id.take_food_from_shop:
+                if(checked){
+                    manual_input_address_layout.setVisibility(View.GONE);
+                    spn_list_address.setVisibility(View.GONE);
+                    edt_address_detect.setVisibility(View.GONE);
+                }
         }
     }
 

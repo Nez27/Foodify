@@ -32,6 +32,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class Common {
+    public static final String MAP_API = "AIzaSyCR46ZE1kbE7zkTehhflB9jZgDjDT_2944";
     public static final String IS_FORGOT_PASSWORD = "isForgotPassword";
     public static final String FORMAT_DATE="dd-MM-yyyy";
     public static final String VALID_EMAIL_ADDRESS_REGEX = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";

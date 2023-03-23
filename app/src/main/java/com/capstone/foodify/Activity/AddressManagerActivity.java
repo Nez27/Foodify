@@ -130,7 +130,15 @@ public class AddressManagerActivity extends AppCompatActivity {
 
     private void initDefaultAddress(){
         //Create a full address string
-        String fullAddress = defaultAddress.getAddress() + ", " + defaultAddress.getWard() + ", " + defaultAddress.getDistrict();
+
+        String fullAddress;
+        //If user choice "Huyện Hoàng Sa" District
+        if(defaultAddress.getWard().equals("---Phường")){
+            //Create a full address string
+            fullAddress = defaultAddress.getAddress()  + ", " + defaultAddress.getDistrict();
+        } else {
+            fullAddress = defaultAddress.getAddress() + ", " + defaultAddress.getWard() + ", " + defaultAddress.getDistrict();
+        }
 
         //Bind data to component
         txt_Address.setText(fullAddress);
@@ -164,11 +172,13 @@ public class AddressManagerActivity extends AppCompatActivity {
 
                 CustomResponse responseData = response.body();
 
-                if(responseData.getTitle().equals("Create address")){
+                if(response.code() == 200){
                     Toast.makeText(AddressManagerActivity.this, "Đã thêm địa chỉ thành công!", Toast.LENGTH_SHORT).show();
 
                     //Update data user
                     updateUser(isChecked);
+                } else {
+                    Toast.makeText(AddressManagerActivity.this, "Đã có lỗi từ hệ thống, vui lòng thử lại sau!", Toast.LENGTH_SHORT).show();
                 }
             }
 

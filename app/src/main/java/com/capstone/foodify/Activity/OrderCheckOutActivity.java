@@ -1,9 +1,15 @@
 package com.capstone.foodify.Activity;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -17,6 +23,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.widget.NestedScrollView;
@@ -31,8 +39,15 @@ import com.capstone.foodify.Model.Address;
 import com.capstone.foodify.Model.DistrictWardResponse;
 import com.capstone.foodify.Model.GoogleMap.GoogleMapResponse;
 import com.capstone.foodify.R;
+import com.capstone.foodify.ZaloPay.Api.CreateOrder;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.textfield.TextInputLayout;
+import com.thecode.aestheticdialogs.AestheticDialog;
+import com.thecode.aestheticdialogs.DialogStyle;
+import com.thecode.aestheticdialogs.DialogType;
+import com.thecode.aestheticdialogs.OnDialogClickListener;
+
+import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -41,6 +56,10 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import vn.zalopay.sdk.Environment;
+import vn.zalopay.sdk.ZaloPayError;
+import vn.zalopay.sdk.ZaloPaySDK;
+import vn.zalopay.sdk.listeners.PayOrderListener;
 
 public class OrderCheckOutActivity extends AppCompatActivity {
     private static final Double LAT_SHOP = 16.0500622;
@@ -54,7 +73,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
     EditText edt_address;
     Spinner spn_list_address, spn_district, spn_ward;
     ConstraintLayout manual_input_address_layout;
-    Button change_address_button, confirm_address_button;
+    Button change_address_button, confirm_address_button, btn_ZaloPay;
     RadioButton list_address_input, auto_detect_location, manual_input_address, radio_button_selected, take_food_from_shop;
     RadioGroup address_option;
     ConstraintLayout progress_layout;
@@ -97,12 +116,20 @@ public class OrderCheckOutActivity extends AppCompatActivity {
         progress_layout = findViewById(R.id.progress_layout);
         txt_distance = findViewById(R.id.txt_distance);
         txt_ship_cost = findViewById(R.id.txt_ship_cost);
+        btn_ZaloPay = findViewById(R.id.btnZaloPay);
 
 
         if(getIntent() != null){
             total = getIntent().getFloatExtra("total", 0);
             txt_total.setText(Common.changeCurrencyUnit(total));
         }
+
+        StrictMode.ThreadPolicy policy = new
+                StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        // ZaloPay SDK Init
+        ZaloPaySDK.init(2553, Environment.SANDBOX);
 
         //Show list food in basket
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
@@ -170,6 +197,8 @@ public class OrderCheckOutActivity extends AppCompatActivity {
                     disableAllInputAddressOption();
 
                     getDistanceAndCalculateShipCost(finalAddress);
+
+                    progress_layout.setVisibility(View.GONE);
                 }
             }
         });
@@ -179,6 +208,92 @@ public class OrderCheckOutActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 onBackPressed();
+            }
+        });
+
+        initZaloPaymentMethod();
+    }
+
+    private void initZaloPaymentMethod(){
+        // handle CreateOrder
+        btn_ZaloPay.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onClick(View v) {
+
+                //Check address is null or not
+                if(finalAddress != null){
+
+                    CreateOrder orderApi = new CreateOrder();
+
+                    try {
+                        JSONObject data = orderApi.createOrder(String.valueOf((int) total));
+                        String code = data.getString("return_code");
+
+
+                        if (code.equals("1")) {
+                            //Success create order
+                            String token = data.getString("zp_trans_token");
+
+                            ZaloPaySDK.getInstance().payOrder(OrderCheckOutActivity.this, token, "demozpdk://app", new PayOrderListener() {
+                                @Override
+                                public void onPaymentSucceeded(final String transactionId, final String transToken, final String appTransID) {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            new AestheticDialog.Builder(OrderCheckOutActivity.this, DialogStyle.FLAT, DialogType.SUCCESS)
+                                                    .setTitle("Thành công!")
+                                                    .setMessage("Bạn đã thanh toán thành công cho đơn hàng #" + transactionId)
+                                                    .setCancelable(true)
+                                                    .setOnClickListener(new OnDialogClickListener() {
+                                                        @Override
+                                                        public void onClick(@NonNull AestheticDialog.Builder builder) {
+                                                            Common.LIST_BASKET_FOOD.clear();
+                                                            startActivity(new Intent(OrderCheckOutActivity.this, MainActivity.class));
+                                                            finish();
+                                                        }
+                                                    })
+                                                    .show();
+                                        }
+
+                                    });
+                                }
+
+                                @Override
+                                public void onPaymentCanceled(String zpTransToken, String appTransID) {
+                                    new AestheticDialog.Builder(OrderCheckOutActivity.this, DialogStyle.RAINBOW, DialogType.INFO)
+                                            .setTitle("Thông báo!")
+                                            .setMessage("Huỷ thanh toán thành công!")
+                                            .setCancelable(true)
+                                            .show();
+                                }
+
+                                @Override
+                                public void onPaymentError(ZaloPayError zaloPayError, String zpTransToken, String appTransID) {
+                                    new AestheticDialog.Builder(OrderCheckOutActivity.this, DialogStyle.FLAT, DialogType.ERROR)
+                                            .setTitle("Thanh toán chưa thành công!")
+                                            .setMessage("Xin vui lòng thử lại!")
+                                            .setCancelable(true)
+                                            .setOnClickListener(new OnDialogClickListener() {
+                                                @Override
+                                                public void onClick(@NonNull AestheticDialog.Builder builder) {
+                                                    Common.LIST_BASKET_FOOD.clear();
+                                                    startActivity(new Intent(OrderCheckOutActivity.this, MainActivity.class));
+                                                    finish();
+                                                }
+                                            })
+                                            .show();
+                                }
+                            });
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Toast.makeText(OrderCheckOutActivity.this, "Bạn chưa chọn địa chỉ!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -509,5 +624,11 @@ public class OrderCheckOutActivity extends AppCompatActivity {
             view.setTypeface(font);
             return view;
         }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        ZaloPaySDK.getInstance().onResult(intent);
     }
 }

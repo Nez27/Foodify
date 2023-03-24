@@ -197,8 +197,6 @@ public class OrderCheckOutActivity extends AppCompatActivity {
                     disableAllInputAddressOption();
 
                     getDistanceAndCalculateShipCost(finalAddress);
-
-                    progress_layout.setVisibility(View.GONE);
                 }
             }
         });
@@ -221,6 +219,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
+                progress_layout.setVisibility(View.VISIBLE);
 
                 //Check address is null or not
                 if(finalAddress != null){
@@ -255,6 +254,8 @@ public class OrderCheckOutActivity extends AppCompatActivity {
                                                         }
                                                     })
                                                     .show();
+
+                                            progress_layout.setVisibility(View.GONE);
                                         }
 
                                     });
@@ -267,6 +268,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
                                             .setMessage("Huỷ thanh toán thành công!")
                                             .setCancelable(true)
                                             .show();
+                                    progress_layout.setVisibility(View.GONE);
                                 }
 
                                 @Override
@@ -284,6 +286,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
                                                 }
                                             })
                                             .show();
+                                    progress_layout.setVisibility(View.GONE);
                                 }
                             });
                         }
@@ -293,6 +296,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
                     }
                 } else {
                     Toast.makeText(OrderCheckOutActivity.this, "Bạn chưa chọn địa chỉ!", Toast.LENGTH_SHORT).show();
+                    progress_layout.setVisibility(View.GONE);
                 }
             }
         });

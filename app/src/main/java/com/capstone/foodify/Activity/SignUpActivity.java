@@ -357,29 +357,27 @@ public class SignUpActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onVerificationFailed(@NonNull FirebaseException e) {
-                        // ...
-                        loadCompleted();
-                        showError(e.toString());
-                    }
-                })
-                .build();
+    public void onVerificationFailed(@NonNull FirebaseException e) {
+        // ...
+        loadCompleted();
+        showError(e.toString());
+    }
+})
+        .build();
         PhoneAuthProvider.verifyPhoneNumber(options);
         // [END auth_test_phone_verify]
-    }
+        }
 
-    private void showError(String msg){
+private void showError(String msg){
         errorText.setText(msg);
-    }
+        }
 
     private void loading(){
         progressLayout.setVisibility(View.VISIBLE);
-        signUpButton.setEnabled(false);
     }
 
     private void loadCompleted() {
         progressLayout.setVisibility(View.GONE);
-        signUpButton.setEnabled(true);
     }
 
     private void getListDistrict() {

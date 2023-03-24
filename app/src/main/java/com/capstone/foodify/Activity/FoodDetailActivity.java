@@ -97,6 +97,12 @@ public class FoodDetailActivity extends AppCompatActivity {
 
         hideUI();
 
+        if(Common.CURRENT_USER == null){
+            is_favorite.setVisibility(View.GONE);
+            not_favorite.setVisibility(View.GONE);
+        }
+
+
         //Customize UI Horizontal Quantitizer
         horizontalQuantitizer.setTextAnimationStyle(AnimationStyle.SLIDE_IN_REVERSE);
         horizontalQuantitizer.setPlusIconBackgroundColor(R.color.white);
@@ -351,7 +357,11 @@ public class FoodDetailActivity extends AppCompatActivity {
                     food = tempFood;
 
                 initData();
-                checkFoodIsFavorite(Integer.parseInt(foodId));
+
+                if(Common.CURRENT_USER != null)
+                    checkFoodIsFavorite(Integer.parseInt(foodId));
+                else
+                    showUI();
             }
 
             @Override

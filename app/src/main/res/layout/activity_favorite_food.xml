@@ -42,41 +42,81 @@
                 app:layout_constraintStart_toStartOf="parent"
                 />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_view_favorite_food"
-                tools:listitem="@layout/item_food_favorite"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/list_favorite_food_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/text_view_1"
-                />
-
-            <ProgressBar
-                android:id="@+id/progress_bar"
-                android:indeterminateTint="@color/primaryColor"
-                app:layout_constraintTop_toBottomOf="@id/recycler_view_favorite_food"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
-
-            <TextView
-                android:id="@+id/end_of_list_text"
-                android:text="End of list"
-                android:fontFamily="@font/opensans"
-                android:textColor="@color/grayLight"
                 android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/progress_bar"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
+                >
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view_favorite_food"
+                    tools:listitem="@layout/item_food_favorite"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
+
+                <ProgressBar
+                    android:id="@+id/progress_bar"
+                    android:indeterminateTint="@color/primaryColor"
+                    app:layout_constraintTop_toBottomOf="@id/recycler_view_favorite_food"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
+                <TextView
+                    android:id="@+id/end_of_list_text"
+                    android:text="End of list"
+                    android:fontFamily="@font/opensans"
+                    android:textColor="@color/grayLight"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toBottomOf="@id/progress_bar"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/no_food_favorite_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="vertical"
+        >
+
+        <ImageView
+            android:src="@drawable/icon_favorite_food"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            />
+
+        <TextView
+            android:fontFamily="@font/opensans"
+            android:textColor="@color/grayLight"
+            android:layout_marginTop="10dp"
+            android:text="Oops! Bạn chưa có món ăn yêu thích nào ở đây cả!"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            />
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

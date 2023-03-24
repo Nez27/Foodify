@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,10 +47,11 @@ public class FavoriteFoodActivity extends AppCompatActivity implements ItemTouch
     private FoodFavoriteAdapter adapter;
     private final List<Food> listFavoriteFood = new ArrayList<>();
     private ImageView back_image;
-    private ConstraintLayout listFavoriteFoodView;
+    private ConstraintLayout listFavoriteFoodView, listFavoriteFoodLayout;
     private NestedScrollView nestedScrollView;
     private ProgressBar progressBar;
     private TextView endOfListText;
+    private LinearLayout no_food_favorite_layout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +62,8 @@ public class FavoriteFoodActivity extends AppCompatActivity implements ItemTouch
         nestedScrollView = findViewById(R.id.nestedScrollView);
         progressBar = findViewById(R.id.progress_bar);
         endOfListText = findViewById(R.id.end_of_list_text);
+        no_food_favorite_layout = findViewById(R.id.no_food_favorite_layout);
+        listFavoriteFoodLayout = findViewById(R.id.list_favorite_food_layout);
 
         //Set event when user scroll down
         if (nestedScrollView != null) {
@@ -127,6 +131,14 @@ public class FavoriteFoodActivity extends AppCompatActivity implements ItemTouch
                     LAST_PAGE = foodData.getPage().isLast();
                 }
 
+                if(listFavoriteFood.size() == 0){
+                    listFavoriteFoodLayout.setVisibility(View.GONE);
+                    no_food_favorite_layout.setVisibility(View.VISIBLE);
+                } else {
+                    listFavoriteFoodLayout.setVisibility(View.VISIBLE);
+                    no_food_favorite_layout.setVisibility(View.GONE);
+                }
+
                 if(LAST_PAGE){
                     progressBar.setVisibility(View.GONE);
                     endOfListText.setVisibility(View.VISIBLE);
@@ -160,12 +172,20 @@ public class FavoriteFoodActivity extends AppCompatActivity implements ItemTouch
             //Remove Item
             adapter.removeItem(foodDelete, indexDelete, this);
 
+            if(listFavoriteFood.size() == 0){
+                listFavoriteFoodLayout.setVisibility(View.GONE);
+                no_food_favorite_layout.setVisibility(View.VISIBLE);
+            }
+
             //Show notification food has been delete
             Snackbar snackbar = Snackbar.make(listFavoriteFoodView, foodNameDelete + " remove!", Snackbar.LENGTH_LONG);
             snackbar.setAction("Undo", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     adapter.undoItem(foodDelete, indexDelete, FavoriteFoodActivity.this);
+
+                    listFavoriteFoodLayout.setVisibility(View.VISIBLE);
+                    no_food_favorite_layout.setVisibility(View.GONE);
                 }
             });
             snackbar.setActionTextColor(Color.YELLOW);

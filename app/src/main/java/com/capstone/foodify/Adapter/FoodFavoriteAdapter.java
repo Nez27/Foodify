@@ -179,7 +179,7 @@ public class FoodFavoriteAdapter extends  RecyclerView.Adapter<FoodFavoriteAdapt
         FoodApiToken.apiService.addFoodToFavorite(Common.CURRENT_USER.getId(), Integer.parseInt(food.getId())).enqueue(new Callback<Food>() {
             @Override
             public void onResponse(Call<Food> call, Response<Food> response) {
-                Toast.makeText(context, "Đã thêm " + food.getName() + " vào danh sách yêu thích!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Đã hoàn tác thành công!", Toast.LENGTH_SHORT).show();
             }
 
             @Override

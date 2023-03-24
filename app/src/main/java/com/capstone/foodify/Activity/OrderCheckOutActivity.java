@@ -280,7 +280,6 @@ public class OrderCheckOutActivity extends AppCompatActivity {
                                             .setOnClickListener(new OnDialogClickListener() {
                                                 @Override
                                                 public void onClick(@NonNull AestheticDialog.Builder builder) {
-                                                    Common.LIST_BASKET_FOOD.clear();
                                                     startActivity(new Intent(OrderCheckOutActivity.this, MainActivity.class));
                                                     finish();
                                                 }

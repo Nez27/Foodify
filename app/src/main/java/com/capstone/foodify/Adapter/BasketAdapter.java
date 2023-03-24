@@ -23,6 +23,8 @@ import java.util.List;
 
 public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketViewHolder> {
 
+    private static int quantity = 0;
+
     public List<Basket> listBasketFood;
 
     private final BasketFragment basketFragment;
@@ -46,6 +48,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketView
 
     @Override
     public void onBindViewHolder(@NonNull BasketViewHolder holder, int position) {
+
         Basket foodBasket = listBasketFood.get(position);
 
         if(foodBasket == null)
@@ -54,7 +57,8 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketView
         //Init data
         holder.foodName.setText(foodBasket.getName());
         holder.shopName.setText(foodBasket.getShopName());
-        holder.quantity.setNumber(foodBasket.getQuantity());
+        holder.value.setText(foodBasket.getQuantity());
+        quantity = Integer.parseInt(foodBasket.getQuantity());
 
         //Check value discountPercent
         float cost = 0;
@@ -82,18 +86,30 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketView
         //Calculate total price
         calculateTotalPrice();
 
-        //Update quantity food when change quantity number
-        holder.quantity.setOnValueChangeListener(new ElegantNumberButton.OnValueChangeListener() {
+        holder.increment.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onValueChange(ElegantNumberButton view, int oldValue, int newValue) {
-                foodBasket.setQuantity(String.valueOf(newValue));
+            public void onClick(View v) {
+                quantity++;
+                foodBasket.setQuantity(String.valueOf(quantity));
+                holder.value.setText(String.valueOf(quantity));
 
                 //Update total price
                 calculateTotalPrice();
+            }
+        });
 
-                //Auto delete food when quantity is 0
-                if(newValue == 0){
+        holder.decrement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                quantity--;
+                if(quantity == 0){
                     listBasketFood.remove(holder.getAdapterPosition());
+                } else {
+                    foodBasket.setQuantity(String.valueOf(quantity));
+                    holder.value.setText(String.valueOf(quantity));
+
+                    //Update total price
+                    calculateTotalPrice();
                 }
             }
         });
@@ -118,10 +134,9 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketView
 
     public static class BasketViewHolder extends RecyclerView.ViewHolder{
 
-        TextView foodName, shopName, price, total, discount;
+        TextView foodName, shopName, price, total, discount, increment, value, decrement;
         public LinearLayout layoutForeGround;
         ImageView imageView;
-        ElegantNumberButton quantity;
 
         public BasketViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -131,9 +146,12 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketView
             shopName = itemView.findViewById(R.id.shop_name_text_view);
             price = itemView.findViewById(R.id.price_text_view);
             imageView = itemView.findViewById(R.id.image_view);
-            quantity = itemView.findViewById(R.id.quantity);
+
             total = itemView.findViewById(R.id.total_text_view);
             discount = itemView.findViewById(R.id.discount);
+            increment = itemView.findViewById(R.id.txt_increment);
+            decrement = itemView.findViewById(R.id.txt_decrement);
+            value = itemView.findViewById(R.id.value);
 
             layoutForeGround = itemView.findViewById(R.id.layout_foreground);
         }

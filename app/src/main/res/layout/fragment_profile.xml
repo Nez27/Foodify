@@ -64,7 +64,7 @@
                 />
 
             <TextView
-                android:text="Account and Profile"
+                android:text="Thông tin tài khoản"
                 android:textSize="18sp"
                 android:fontFamily="@font/opensans"
                 android:textColor="@color/black"
@@ -109,7 +109,7 @@
                 />
 
             <TextView
-                android:text="Manage Address"
+                android:text="Quản lý địa chỉ"
                 android:textSize="18sp"
                 android:fontFamily="@font/opensans"
                 android:textColor="@color/black"
@@ -154,7 +154,7 @@
                 />
 
             <TextView
-                android:text="Favorite Food"
+                android:text="Món ăn yêu thích"
                 android:textSize="18sp"
                 android:fontFamily="@font/opensans"
                 android:textColor="@color/black"
@@ -205,7 +205,7 @@
                 android:layout_marginStart="12dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/opensans"
-                android:text="Order"
+                android:text="Đơn hàng"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 tools:ignore="HardcodedText" />
@@ -243,7 +243,7 @@
                 />
 
             <TextView
-                android:text="Log out"
+                android:text="Đăng xuất"
                 android:textSize="18sp"
                 android:fontFamily="@font/opensans"
                 android:textColor="@color/black"

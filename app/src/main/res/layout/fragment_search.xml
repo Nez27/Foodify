@@ -31,7 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:queryBackground="@android:color/transparent"
-                app:queryHint="Search here..."
+                app:queryHint="Tìm kiếm tại đây..."
                 android:background="@color/white"
                 app:iconifiedByDefault="false"
                 />

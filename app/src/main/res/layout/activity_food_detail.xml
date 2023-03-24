@@ -131,7 +131,7 @@
 
             <TextView
                 android:id="@+id/description_text_view"
-                android:text="Description"
+                android:text="Mô tả"
                 android:textSize="18sp"
                 android:fontFamily="@font/bebas"
                 android:textColor="@color/black"
@@ -144,7 +144,6 @@
 
             <TextView
                 android:id="@+id/content_description_text_view"
-                android:text="@string/text_description"
                 android:fontFamily="@font/opensans"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -171,7 +170,7 @@
                     android:orientation="vertical"
                     >
                     <TextView
-                        android:text="Quantity"
+                        android:text="Số lượng"
                         android:fontFamily="@font/bebas"
                         android:textColor="@color/primaryColor"
                         android:textSize="15sp"
@@ -200,7 +199,7 @@
 
                     <TextView
                         android:id="@+id/total_text_view"
-                        android:text="Price"
+                        android:text="Giá"
                         android:fontFamily="@font/bebas"
                         android:textColor="@color/black"
                         android:textSize="15sp"
@@ -257,7 +256,7 @@
 
                 <Button
                     android:id="@+id/rating_button"
-                    android:text="Rating"
+                    android:text="Đánh giá"
                     android:backgroundTint="@color/yellow"
                     android:textColor="@color/black"
                     android:fontFamily="@font/opensans"

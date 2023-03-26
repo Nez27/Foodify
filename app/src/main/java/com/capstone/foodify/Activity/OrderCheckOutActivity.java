@@ -32,16 +32,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstone.foodify.API.FoodApi;
+import com.capstone.foodify.API.FoodApiToken;
 import com.capstone.foodify.API.GoogleMapApi;
 import com.capstone.foodify.Adapter.OrderDetailAdapter;
 import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.Address;
 import com.capstone.foodify.Model.DistrictWardResponse;
 import com.capstone.foodify.Model.GoogleMap.GoogleMapResponse;
+import com.capstone.foodify.Model.Order;
 import com.capstone.foodify.R;
 import com.capstone.foodify.ZaloPay.Api.CreateOrder;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.thecode.aestheticdialogs.AestheticDialog;
 import com.thecode.aestheticdialogs.DialogStyle;
 import com.thecode.aestheticdialogs.DialogType;
@@ -118,6 +121,9 @@ public class OrderCheckOutActivity extends AppCompatActivity {
         txt_ship_cost = findViewById(R.id.txt_ship_cost);
         btn_ZaloPay = findViewById(R.id.btnZaloPay);
 
+        //Reload user data
+        Common.reloadUser(this);
+
 
         if(getIntent() != null){
             total = getIntent().getFloatExtra("total", 0);
@@ -187,6 +193,11 @@ public class OrderCheckOutActivity extends AppCompatActivity {
                     }
                 }
 
+                if(radio_button_selected == take_food_from_shop){
+                    //Action 4
+                    finalAddress = "Đến shop lấy";
+                }
+
                 if(finalAddress == null){
                     Toast.makeText(OrderCheckOutActivity.this, "Bạn chưa chọn địa chỉ!", Toast.LENGTH_SHORT).show();
                 } else {
@@ -221,84 +232,116 @@ public class OrderCheckOutActivity extends AppCompatActivity {
             public void onClick(View v) {
                 progress_layout.setVisibility(View.VISIBLE);
 
-                //Check address is null or not
-                if(finalAddress != null){
 
-                    CreateOrder orderApi = new CreateOrder();
+                if(!Common.CURRENT_USER.isLocked()){
+                    //Create order
 
-                    try {
-                        JSONObject data = orderApi.createOrder(String.valueOf((int) total));
-                        String code = data.getString("return_code");
+                    //Check address is null or not
+                    if(finalAddress != null){
+
+                        CreateOrder orderApi = new CreateOrder();
+
+                        try {
+                            JSONObject data = orderApi.createOrder(String.valueOf((int) total));
+                            String code = data.getString("return_code");
 
 
-                        if (code.equals("1")) {
-                            //Success create order
-                            String token = data.getString("zp_trans_token");
+                            if (code.equals("1")) {
+                                //Success create order
+                                String token = data.getString("zp_trans_token");
 
-                            ZaloPaySDK.getInstance().payOrder(OrderCheckOutActivity.this, token, "demozpdk://app", new PayOrderListener() {
-                                @Override
-                                public void onPaymentSucceeded(final String transactionId, final String transToken, final String appTransID) {
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            new AestheticDialog.Builder(OrderCheckOutActivity.this, DialogStyle.FLAT, DialogType.SUCCESS)
-                                                    .setTitle("Thành công!")
-                                                    .setMessage("Bạn đã thanh toán thành công cho đơn hàng #" + transactionId)
-                                                    .setCancelable(true)
-                                                    .setOnClickListener(new OnDialogClickListener() {
-                                                        @Override
-                                                        public void onClick(@NonNull AestheticDialog.Builder builder) {
-                                                            Common.LIST_BASKET_FOOD.clear();
-                                                            startActivity(new Intent(OrderCheckOutActivity.this, MainActivity.class));
-                                                            finish();
-                                                        }
-                                                    })
-                                                    .show();
+                                ZaloPaySDK.getInstance().payOrder(OrderCheckOutActivity.this, token, "demozpdk://app", new PayOrderListener() {
+                                    @Override
+                                    public void onPaymentSucceeded(final String transactionId, final String transToken, final String appTransID) {
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                new AestheticDialog.Builder(OrderCheckOutActivity.this, DialogStyle.FLAT, DialogType.SUCCESS)
+                                                        .setTitle("Thành công!")
+                                                        .setMessage("Bạn đã thanh toán thành công cho đơn hàng #" + transactionId)
+                                                        .setCancelable(true)
+                                                        .setOnClickListener(new OnDialogClickListener() {
+                                                            @Override
+                                                            public void onClick(@NonNull AestheticDialog.Builder builder) {
 
-                                            progress_layout.setVisibility(View.GONE);
-                                        }
+                                                                createOrderFood(transactionId);
 
-                                    });
-                                }
+                                                                Common.LIST_BASKET_FOOD.clear();
+                                                                startActivity(new Intent(OrderCheckOutActivity.this, MainActivity.class));
+                                                                finish();
+                                                            }
+                                                        })
+                                                        .show();
 
-                                @Override
-                                public void onPaymentCanceled(String zpTransToken, String appTransID) {
-                                    new AestheticDialog.Builder(OrderCheckOutActivity.this, DialogStyle.RAINBOW, DialogType.INFO)
-                                            .setTitle("Thông báo!")
-                                            .setMessage("Huỷ thanh toán thành công!")
-                                            .setCancelable(true)
-                                            .show();
-                                    progress_layout.setVisibility(View.GONE);
-                                }
+                                                progress_layout.setVisibility(View.GONE);
+                                            }
 
-                                @Override
-                                public void onPaymentError(ZaloPayError zaloPayError, String zpTransToken, String appTransID) {
-                                    new AestheticDialog.Builder(OrderCheckOutActivity.this, DialogStyle.FLAT, DialogType.ERROR)
-                                            .setTitle("Thanh toán chưa thành công!")
-                                            .setMessage("Xin vui lòng thử lại!")
-                                            .setCancelable(true)
-                                            .setOnClickListener(new OnDialogClickListener() {
-                                                @Override
-                                                public void onClick(@NonNull AestheticDialog.Builder builder) {
-                                                    startActivity(new Intent(OrderCheckOutActivity.this, MainActivity.class));
-                                                    finish();
-                                                }
-                                            })
-                                            .show();
-                                    progress_layout.setVisibility(View.GONE);
-                                }
-                            });
+                                        });
+                                    }
+
+                                    @Override
+                                    public void onPaymentCanceled(String zpTransToken, String appTransID) {
+                                        new AestheticDialog.Builder(OrderCheckOutActivity.this, DialogStyle.RAINBOW, DialogType.INFO)
+                                                .setTitle("Thông báo!")
+                                                .setMessage("Huỷ thanh toán thành công!")
+                                                .setCancelable(true)
+                                                .show();
+                                        progress_layout.setVisibility(View.GONE);
+                                    }
+
+                                    @Override
+                                    public void onPaymentError(ZaloPayError zaloPayError, String zpTransToken, String appTransID) {
+                                        new AestheticDialog.Builder(OrderCheckOutActivity.this, DialogStyle.FLAT, DialogType.ERROR)
+                                                .setTitle("Thanh toán chưa thành công!")
+                                                .setMessage("Xin vui lòng thử lại!")
+                                                .setCancelable(true)
+                                                .setOnClickListener(new OnDialogClickListener() {
+                                                    @Override
+                                                    public void onClick(@NonNull AestheticDialog.Builder builder) {
+                                                        startActivity(new Intent(OrderCheckOutActivity.this, MainActivity.class));
+                                                        finish();
+                                                    }
+                                                })
+                                                .show();
+                                        progress_layout.setVisibility(View.GONE);
+                                    }
+                                });
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } else {
+                        Toast.makeText(OrderCheckOutActivity.this, "Bạn chưa chọn địa chỉ!", Toast.LENGTH_SHORT).show();
+                        progress_layout.setVisibility(View.GONE);
                     }
+
                 } else {
-                    Toast.makeText(OrderCheckOutActivity.this, "Bạn chưa chọn địa chỉ!", Toast.LENGTH_SHORT).show();
-                    progress_layout.setVisibility(View.GONE);
+                    //Show notification account locked
+                    FirebaseAuth.getInstance().signOut();
+                    Common.showErrorServerNotification(OrderCheckOutActivity.this, "Tài khoản của bạn đã bị khoá!");
                 }
+
             }
         });
+    }
+
+    private void createOrderFood(String transactionId) {
+
+//        //Create order object
+//        Order order = new Order(transactionId, "");
+//
+//        FoodApiToken.apiService.createOrder(Common.CURRENT_USER.getId()).enqueue(new Callback<Order>() {
+//            @Override
+//            public void onResponse(Call<Order> call, Response<Order> response) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Order> call, Throwable t) {
+//
+//            }
+//        });
     }
 
     private void getDistanceAndCalculateShipCost(String address) {
@@ -525,6 +568,9 @@ public class OrderCheckOutActivity extends AppCompatActivity {
                     manual_input_address_layout.setVisibility(View.GONE);
                     spn_list_address.setVisibility(View.GONE);
                     edt_address_detect.setVisibility(View.GONE);
+
+                    //Reset address;
+                    finalAddress = null;
                 }
         }
     }

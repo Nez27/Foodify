@@ -163,16 +163,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void checkEmailOrPhoneExist(){
         //Create user object
-        User user = new User();
-        user.setAddress(new Address(address, ward, district));
-        user.setDateOfBirth(dateOfBirth);
-        user.setEmail(email);
-        user.setFullName(name);
-        user.setIdentifiedCode(identifiedCode);
-        user.setImageUrl("");
-        user.setLocked(false);
-        user.setPhoneNumber(phone);
-        user.setRoleName("ROLE_USER");
+        User user = new User(new Address(address, ward, district), dateOfBirth, email, name, identifiedCode, phone);
 
         FoodApi.apiService.checkEmailOrPhoneExist(user).enqueue(new Callback<CustomResponse>() {
             @Override

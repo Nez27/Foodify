@@ -2,20 +2,26 @@ package com.capstone.foodify;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 
 import com.capstone.foodify.API.FoodApiToken;
+import com.capstone.foodify.Activity.MainActivity;
+import com.capstone.foodify.Activity.SignInActivity;
 import com.capstone.foodify.Fragment.HomeFragment;
 import com.capstone.foodify.Model.Basket;
 import com.capstone.foodify.Model.User;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.thecode.aestheticdialogs.AestheticDialog;
 import com.thecode.aestheticdialogs.DialogStyle;
@@ -55,6 +61,26 @@ public class Common {
 
     public static Typeface setFontOpenSans(AssetManager assetManager){
         return Typeface.createFromAsset(assetManager, "font/opensans.ttf");
+    }
+
+    public static void reloadUser(Activity activity){
+        FoodApiToken.apiService.getUserFromEmail(Common.CURRENT_USER.getEmail()).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if(response.code() == 200){
+                    User userData = response.body();
+                    if(userData != null){
+                        Common.CURRENT_USER =  userData;
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                System.out.println("ERROR: " + t);
+                Common.showErrorServerNotification(activity, "Lỗi kết nối hệ thống!");
+            }
+        });
     }
 
     @IntRange(from = 0, to = 3)
@@ -125,6 +151,7 @@ public class Common {
                 .setOnClickListener(new OnDialogClickListener() {
                     @Override
                     public void onClick(@NonNull AestheticDialog.Builder builder) {
+
                         activity.finishAffinity();
                         System.exit(0);
                     }

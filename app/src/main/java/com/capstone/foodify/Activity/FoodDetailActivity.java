@@ -13,23 +13,27 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstone.foodify.API.FoodApi;
 import com.capstone.foodify.API.FoodApiToken;
-import com.capstone.foodify.Adapter.ReviewAdapter;
+import com.capstone.foodify.Adapter.CommentAdapter;
 import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.Basket;
 import com.capstone.foodify.Model.Food;
 import com.capstone.foodify.Model.Image;
+import com.capstone.foodify.Model.Response.Comments;
 import com.capstone.foodify.Model.Response.CustomResponse;
-import com.capstone.foodify.Model.Review;
+import com.capstone.foodify.Model.Comment;
 import com.capstone.foodify.R;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
@@ -38,6 +42,7 @@ import com.mcdev.quantitizerlibrary.AnimationStyle;
 import com.mcdev.quantitizerlibrary.HorizontalQuantitizer;
 import com.mcdev.quantitizerlibrary.QuantitizerListener;
 import com.willy.ratingbar.RotationRatingBar;
+import com.willy.ratingbar.ScaleRatingBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,20 +52,27 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class FoodDetailActivity extends AppCompatActivity {
-
+    private static int CURRENT_PAGE = 0;
+    private static final int PAGE_SIZE = 8;
+    private static final String SORT_BY = "id";
+    private static final String SORT_DIR = "asc";
+    private static boolean LAST_PAGE;
     private HorizontalQuantitizer horizontalQuantitizer;
     private ImageSlider imageSlider;
     private ImageView back_image, not_favorite, is_favorite;
     private String foodId = "";
     private Food food;
-    private TextView foodName_txt, shopName_txt, discount_txt, price_txt, countRating_txt, description_content_txt;
+    private TextView foodName_txt, shopName_txt, discount_txt, price_txt, countRating_txt, description_content_txt, endOfListText;
     private ConstraintLayout content_view;
     private Button add_to_basket_button;
     private float totalPrice, price;
-    private RecyclerView recyclerView_review;
-    private ReviewAdapter reviewAdapter;
+    private RecyclerView recyclerView_comment;
+    private CommentAdapter commentAdapter;
     private Button rating_button;
+    private ScaleRatingBar ratingBar;
     private ConstraintLayout progressLayout;
+    private NestedScrollView nestedScrollView;
+    private ProgressBar progressBar;
 
 
     @Override
@@ -81,18 +93,26 @@ public class FoodDetailActivity extends AppCompatActivity {
         is_favorite = findViewById(R.id.is_favorite);
         countRating_txt = findViewById(R.id.count_rating_text_view);
         description_content_txt = findViewById(R.id.content_description_text_view);
-        recyclerView_review = findViewById(R.id.recycler_view_review);
+        recyclerView_comment = findViewById(R.id.recycler_view_comment);
         rating_button = findViewById(R.id.rating_button);
         content_view = findViewById(R.id.content_view);
         progressLayout = findViewById(R.id.progress_layout);
+        nestedScrollView = findViewById(R.id.food_detail);
+        endOfListText = findViewById(R.id.end_of_list_text);
+        progressBar = findViewById(R.id.progress_bar);
+        ratingBar = findViewById(R.id.rating_bar);
 
-        reviewAdapter = new ReviewAdapter(this);
+        commentAdapter = new CommentAdapter(this);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
-        recyclerView_review.setLayoutManager(linearLayoutManager);
+        recyclerView_comment.setLayoutManager(linearLayoutManager);
 
-        reviewAdapter.setData(getListReview());
-        recyclerView_review.setAdapter(reviewAdapter);
+        //Get data
+        if (getIntent() != null)
+            foodId = getIntent().getStringExtra("FoodId");
+
+        commentAdapter.setData(getListComment(0));
+        recyclerView_comment.setAdapter(commentAdapter);
 
 
         hideUI();
@@ -127,10 +147,6 @@ public class FoodDetailActivity extends AppCompatActivity {
             }
         });
 
-        //Get data
-        if (getIntent() != null)
-            foodId = getIntent().getStringExtra("FoodId");
-
         getFoodById(foodId);
 
         //Turn previous action when click
@@ -141,11 +157,11 @@ public class FoodDetailActivity extends AppCompatActivity {
             }
         });
 
-        //Open dialog review
+        //Open dialog comment
         rating_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openReviewDialog(Gravity.CENTER);
+                openCommentDialog(Gravity.CENTER);
             }
         });
 
@@ -180,6 +196,19 @@ public class FoodDetailActivity extends AppCompatActivity {
                 removeFavoriteFood();
             }
         });
+
+        //Set event when user scroll down
+        if (nestedScrollView != null) {
+            nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+                @Override
+                public void onScrollChange(@NonNull NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                    if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
+                        //When user scroll to bottom, load more data
+                        dataLoadMore();
+                    }
+                }
+            });
+        }
     }
 
     private void isFavoriteIcon(){
@@ -261,16 +290,40 @@ public class FoodDetailActivity extends AppCompatActivity {
         }
     }
 
-    private List<Review> getListReview() {
-        ArrayList<Review> listReview = new ArrayList<>();
+    private List<Comment> getListComment(int page) {
+        ArrayList<Comment> listComment = new ArrayList<>();
 
-        listReview.add(new Review("User A", 5, "Very Good!"));
-        listReview.add(new Review("User B", 1, "Bad!"));
-        listReview.add(new Review("User C", 4, "Delicious!"));
-        listReview.add(new Review("User D", 3, "OK!"));
-        listReview.add(new Review("User E", 5, "Awesome!"));
+        FoodApi.apiService.getCommentByProductId(Integer.parseInt(foodId), page, PAGE_SIZE, SORT_BY, SORT_DIR).enqueue(new Callback<Comments>() {
+            @Override
+            public void onResponse(Call<Comments> call, Response<Comments> response) {
+                if(response.code() == 200){
+                    List<Comment> tempCommentList = response.body().getComments();
 
-        return listReview;
+                    //Init data
+                    listComment.addAll(tempCommentList);
+                    LAST_PAGE = response.body().getPage().isLast();
+
+                    if(LAST_PAGE){
+                        progressBar.setVisibility(View.GONE);
+                        endOfListText.setVisibility(View.VISIBLE);
+                    }
+
+                    if(listComment.size() == 0)
+                        endOfListText.setVisibility(View.GONE);
+
+                    commentAdapter.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(FoodDetailActivity.this, "Mã lỗi: " + response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Comments> call, Throwable t) {
+                Toast.makeText(FoodDetailActivity.this, "Đã có lỗi từ hệ thống!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        return listComment;
     }
 
     private void hideUI() {
@@ -288,7 +341,14 @@ public class FoodDetailActivity extends AppCompatActivity {
         foodName_txt.setText(food.getName());
         shopName_txt.setText(food.getShop().getName());
         description_content_txt.setText(food.getDescription());
-        countRating_txt.setText(food.getReviewCount() + " rating");
+        ratingBar.setRating(food.getAverageRating());
+
+        if(food.getCommentCount() == null || Integer.parseInt(food.getCommentCount()) == 0){
+            countRating_txt.setText("Chưa có bình luận nào!");
+        } else {
+            countRating_txt.setText(food.getCommentCount() + " rating");
+        }
+
 
         add_to_basket_button.setText("ADD TO BASKET - " + Common.changeCurrencyUnit(0));
 
@@ -371,10 +431,10 @@ public class FoodDetailActivity extends AppCompatActivity {
         });
     }
 
-    private void openReviewDialog(int gravity){
+    private void openCommentDialog(int gravity){
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_review);
+        dialog.setContentView(R.layout.dialog_comment);
 
         Window window = dialog.getWindow();
         if(window == null)
@@ -393,7 +453,7 @@ public class FoodDetailActivity extends AppCompatActivity {
             dialog.setCancelable(false);
         }
 
-        EditText review_content = dialog.findViewById(R.id.edit_text_review);
+        EditText comment_content = dialog.findViewById(R.id.edit_text_comment);
         RotationRatingBar ratingBar = dialog.findViewById(R.id.rating_bar);
         Button confirm = dialog.findViewById(R.id.confirm_button);
         Button cancel = dialog.findViewById(R.id.cancel_button);
@@ -405,8 +465,17 @@ public class FoodDetailActivity extends AppCompatActivity {
             }
         });
 
-        //TODO: Update review dialog
+        //TODO: Update comment dialog
 
         dialog.show();
+    }
+
+    private void dataLoadMore() {
+        if(!LAST_PAGE){
+            getListComment(++CURRENT_PAGE);
+        } else {
+            progressBar.setVisibility(View.GONE);
+            endOfListText.setVisibility(View.VISIBLE);
+        }
     }
 }

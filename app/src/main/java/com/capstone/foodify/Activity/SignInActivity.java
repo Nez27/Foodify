@@ -164,21 +164,33 @@ public class SignInActivity extends AppCompatActivity {
                                             if(task.isSuccessful()){
                                                 Common.TOKEN = task.getResult().getToken();
 
-
-
                                                 //Get user from database
                                                 FoodApiToken.apiService.getUserFromEmail(user.getEmail()).enqueue(new Callback<User>() {
                                                     @Override
                                                     public void onResponse(Call<User> call, Response<User> response) {
-                                                        User userData = response.body();
-                                                        if(userData != null){
-                                                            Common.CURRENT_USER = userData;
+                                                        if(response.code() == 200){
+                                                            User userData = response.body();
+                                                            if(userData != null){
+
+                                                                //Check user is lock or not
+                                                                if(!userData.isLocked()){
+
+                                                                    Common.CURRENT_USER = userData;
+
+                                                                    //Dismiss progress bar
+                                                                    progressLayout.setVisibility(View.GONE);
+
+                                                                    startActivity(new Intent(SignInActivity.this, MainActivity.class));
+                                                                }
+                                                                else{
+                                                                    Toast.makeText(SignInActivity.this, "Tài khoản của bạn đã bị khoá!", Toast.LENGTH_SHORT).show();
+                                                                    FirebaseAuth.getInstance().signOut();
+
+                                                                    //Dismiss progress bar
+                                                                    progressLayout.setVisibility(View.GONE);
+                                                                }
+                                                            }
                                                         }
-
-                                                        //Dismiss progress bar
-                                                        progressLayout.setVisibility(View.GONE);
-
-                                                        startActivity(new Intent(SignInActivity.this, MainActivity.class));
                                                     }
 
                                                     @Override

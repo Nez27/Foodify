@@ -3,6 +3,7 @@ package com.capstone.foodify.API;
 import com.capstone.foodify.Model.Category;
 import com.capstone.foodify.Model.DistrictWardResponse;
 import com.capstone.foodify.Model.Food;
+import com.capstone.foodify.Model.Response.Comments;
 import com.capstone.foodify.Model.Response.CustomResponse;
 import com.capstone.foodify.Model.Response.Foods;
 import com.capstone.foodify.Model.Response.Shops;
@@ -29,7 +30,7 @@ public interface FoodApi {
     Gson gson = new GsonBuilder().setDateFormat("HH:mm:ss dd-MM-yyyy").setLenient().create();
 
     FoodApi apiService = new Retrofit.Builder()
-            .baseUrl("https://foodify-backend-production.up.railway.app/api/").addConverterFactory(GsonConverterFactory.create(gson))
+            .baseUrl("http://192.168.1.183:8080/api/").addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(FoodApi.class);
 
@@ -78,4 +79,7 @@ public interface FoodApi {
 
     @POST("auth/check")
     Call<CustomResponse> checkEmailOrPhoneExist (@Body User user);
+
+    @GET("products/{productId}/comments")
+    Call<Comments> getCommentByProductId(@Path("productId") int productId, @Query("pageNo") int pageNo, @Query("pageSize") int pageSize, @Query("sortBy") String sortBy, @Query("sortDir") String sortDir);
 }

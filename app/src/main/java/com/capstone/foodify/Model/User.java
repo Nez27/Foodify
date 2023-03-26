@@ -20,9 +20,19 @@ public class User implements Serializable {
     private int defaultAddress;
     private List<Address> addresses;
 
-    public User() {
+    public User(Address address, String dateOfBirth, String email, String fullName, String identifiedCode, String phoneNumber) {
+        this.address = address;
+        this.dateOfBirth = dateOfBirth;
+        this.email = email;
+        this.fullName = fullName;
+        this.identifiedCode = identifiedCode;
+        this.imageUrl = "";
+        this.phoneNumber = phoneNumber;
+        this.roleName = "ROLE_USER";
+        this.isLocked = false;
     }
 
+    public User(){}
     public int getId() {
         return id;
     }
@@ -85,14 +95,6 @@ public class User implements Serializable {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public boolean getIsLocked() {
-        return isLocked;
-    }
-
-    public void setIsLocked(boolean isLocked) {
-        this.isLocked = isLocked;
     }
 
     public String getPhoneNumber() {

@@ -6,7 +6,9 @@ import androidx.annotation.NonNull;
 
 import com.capstone.foodify.Model.Address;
 import com.capstone.foodify.Model.Food;
+import com.capstone.foodify.Model.Order;
 import com.capstone.foodify.Model.Response.Addresses;
+import com.capstone.foodify.Model.Response.Comments;
 import com.capstone.foodify.Model.Response.CustomResponse;
 import com.capstone.foodify.Model.Response.Foods;
 import com.capstone.foodify.Model.User;
@@ -46,7 +48,7 @@ public interface FoodApiToken {
 
     FoodApiToken apiService = new Retrofit.Builder()
             .client(client)
-            .baseUrl("https://foodify-backend-production.up.railway.app/api/").addConverterFactory(GsonConverterFactory.create(gson))
+            .baseUrl("http://192.168.1.183:8080/api/").addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(FoodApiToken.class);
 
@@ -77,4 +79,7 @@ public interface FoodApiToken {
 
     @DELETE("users/{userId}/addresses/{addressId}")
     Call<CustomResponse> deleteAddressUser(@Path("userId") int userId, @Path("addressId") int addressId);
+
+    @POST("user/{userId}/orders")
+    Call<Order> createOrder(@Path("userId") int userId, @Body Order order);
 }

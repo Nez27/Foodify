@@ -5,18 +5,21 @@ import java.util.List;
 public class Order {
     private int id;
     private String orderTrackingNumber;
-    private int userId;
     private int shipperId;
     private String paymentMethod;
-    private float productCost;
     private float shippingCost;
-    private float total;
     private String status;
-    private int address_id;
+    private String address;
     private List<OrderDetail> orderDetails;
 
-    public Order(String orderTrackingNumber) {
+    public Order(String orderTrackingNumber, int shipperId, String paymentMethod, float shippingCost, String status, String address, List<OrderDetail> orderDetails) {
         this.orderTrackingNumber = orderTrackingNumber;
+        this.shipperId = shipperId;
+        this.paymentMethod = paymentMethod;
+        this.shippingCost = shippingCost;
+        this.status = status;
+        this.address = address;
+        this.orderDetails = orderDetails;
     }
 
     public int getId() {
@@ -27,20 +30,15 @@ public class Order {
         this.id = id;
     }
 
+    public Order(String orderTrackingNumber) {
+        this.orderTrackingNumber = orderTrackingNumber;
+    }
     public String getOrderTrackingNumber() {
         return orderTrackingNumber;
     }
 
     public void setOrderTrackingNumber(String orderTrackingNumber) {
         this.orderTrackingNumber = orderTrackingNumber;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
     }
 
     public int getShipperId() {
@@ -59,28 +57,12 @@ public class Order {
         this.paymentMethod = paymentMethod;
     }
 
-    public float getProductCost() {
-        return productCost;
-    }
-
-    public void setProductCost(float productCost) {
-        this.productCost = productCost;
-    }
-
     public float getShippingCost() {
         return shippingCost;
     }
 
     public void setShippingCost(float shippingCost) {
         this.shippingCost = shippingCost;
-    }
-
-    public float getTotal() {
-        return total;
-    }
-
-    public void setTotal(float total) {
-        this.total = total;
     }
 
     public String getStatus() {
@@ -91,12 +73,20 @@ public class Order {
         this.status = status;
     }
 
-    public int getAddress_id() {
-        return address_id;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAddress_id(int address_id) {
-        this.address_id = address_id;
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public List<OrderDetail> getOrderDetails() {
+        return orderDetails;
+    }
+
+    public void setOrderDetails(List<OrderDetail> orderDetails) {
+        this.orderDetails = orderDetails;
     }
 
     public List<OrderDetail> getListOrderDetail() {

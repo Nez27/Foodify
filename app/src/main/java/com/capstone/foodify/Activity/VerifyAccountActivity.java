@@ -251,6 +251,7 @@ public class VerifyAccountActivity extends AppCompatActivity {
                                                 startActivity(new Intent(VerifyAccountActivity.this, SignInActivity.class));
                                                 finish();
                                             } else {
+                                                progressLayout.setVisibility(View.GONE);
                                                 Toast.makeText(VerifyAccountActivity.this, "Lỗi hệ thống! Code: " + response.code(), Toast.LENGTH_SHORT).show();
                                             }
                                         }

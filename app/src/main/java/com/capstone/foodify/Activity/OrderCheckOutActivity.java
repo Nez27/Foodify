@@ -177,8 +177,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
 
                 if(radio_button_selected == auto_detect_location){
                     //Action 2
-                    if(Common.CURRENT_LOCATION != null)
-                        finalAddress = getAddress();
+
                 }
 
                 if(radio_button_selected == manual_input_address){
@@ -222,20 +221,27 @@ public class OrderCheckOutActivity extends AppCompatActivity {
         initZaloPaymentMethod();
     }
 
-    private String getAddress() {
-        Geocoder geocoder = new Geocoder(OrderCheckOutActivity.this, Locale.getDefault());
-        android.location.Address tempAddress;
+    private void getAddress() {
+        GoogleMapApi.apiService.getAddress(Common.CURRENT_LOCATION.getLatitude() + "," + Common.CURRENT_LOCATION.getLongitude(), Common.MAP_API).enqueue(new Callback<GoogleMapResponse>() {
+            @Override
+            public void onResponse(Call<GoogleMapResponse> call, Response<GoogleMapResponse> response) {
+                if(response.code() == 200){
+                    GoogleMapResponse responseData = response.body();
 
-        try {
-            List<android.location.Address> addresses = geocoder.getFromLocation(Common.CURRENT_LOCATION.getLatitude(), Common.CURRENT_LOCATION.getLongitude(), 1);
-            tempAddress = addresses.get(0);
-            edt_address_detect.setText(tempAddress.getAddressLine(0));
+                    String address = responseData.getResults().get(0).getFormattedAddress();
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+                    edt_address_detect.setText(address);
+                    
+                    finalAddress = address;
+                    progress_layout.setVisibility(View.GONE);
+                }
+            }
 
-        return tempAddress.getAddressLine(0);
+            @Override
+            public void onFailure(Call<GoogleMapResponse> call, Throwable t) {
+                Toast.makeText(OrderCheckOutActivity.this, "Lỗi kết nối!", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
@@ -562,7 +568,9 @@ public class OrderCheckOutActivity extends AppCompatActivity {
                     manual_input_address_layout.setVisibility(View.GONE);
 
                     //Reset address;
-                    finalAddress = null;
+                    progress_layout.setVisibility(View.VISIBLE);
+                    if(Common.CURRENT_LOCATION != null)
+                        getAddress();
                 }
                 break;
             case R.id.manual_input_address:

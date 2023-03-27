@@ -21,4 +21,7 @@ public interface GoogleMapApi {
 
     @GET("maps/api/geocode/json")
     Call<GoogleMapResponse> getGeoCode(@Query("address") String address, @Query("key") String key);
+
+    @GET("maps/api/geocode/json")
+    Call<GoogleMapResponse> getAddress(@Query("latlng") String LatLng, @Query("key") String key);
 }

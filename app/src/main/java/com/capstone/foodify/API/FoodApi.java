@@ -34,10 +34,10 @@ public interface FoodApi {
             .build()
             .create(FoodApi.class);
 
-    @GET("products?pageNo=0&pageSize=10&sortBy=id&sortDir=asc")
+    @GET("products/enable?pageNo=0&pageSize=10&sortBy=id&sortDir=asc")
     Call<Foods> recommendFood();
 
-    @GET("products?pageNo=0&pageSize=10&sortBy=createdTime&sortDir=desc")
+    @GET("products/enable?pageNo=0&pageSize=10&sortBy=createdTime&sortDir=desc")
     Call<Foods> recentFood();
 
     @GET("shops?pageNo=0&pageSize=10&sortBy=id&sortDir=asc")

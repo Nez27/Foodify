@@ -14,6 +14,7 @@ public class Food implements Comparable<Food>{
     private Shop shop;
     private List<Category> categories;
     private List<Image> images;
+    private List<Comment> comments;
     public Food() {
     }
 
@@ -103,6 +104,14 @@ public class Food implements Comparable<Food>{
 
     public void setImages(List<Image> images) {
         this.images = images;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 
     @Override

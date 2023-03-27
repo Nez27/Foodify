@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
+import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
@@ -38,6 +39,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class Common {
+    public static Location CURRENT_LOCATION = null;
     public static final String MAP_API = "AIzaSyCR46ZE1kbE7zkTehhflB9jZgDjDT_2944";
     public static final String IS_FORGOT_PASSWORD = "isForgotPassword";
     public static final String FORMAT_DATE="dd-MM-yyyy";

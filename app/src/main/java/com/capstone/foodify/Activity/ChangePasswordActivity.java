@@ -67,6 +67,13 @@ public class ChangePasswordActivity extends AppCompatActivity {
                 }
             }
         });
+
+        textInput_password.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                textInput_password.setErrorEnabled(false);
+            }
+        });
     }
 
     private boolean validateData(){

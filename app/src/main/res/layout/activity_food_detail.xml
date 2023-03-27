@@ -177,11 +177,20 @@
                     android:layout_height="wrap_content"
                     app:srb_starPadding="5dp"
                     app:srb_clickable="false"
+                    android:layout_marginEnd="10dp"
                     app:srb_starWidth="22dp"
                     app:srb_starHeight="22dp"
                     app:srb_numStars="5"
                     app:srb_scrollable="false"
                     />
+
+                <TextView
+                    android:id="@+id/count_rating_text_view"
+                    android:textSize="13sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="235 đánh giá" />
 
             </LinearLayout>
 
@@ -299,23 +308,115 @@
                     android:layout_marginTop="20dp"
                     android:drawableLeft="@drawable/pencil"
                     />
-
-                <TextView
-                    android:id="@+id/count_rating_text_view"
-                    android:text="235 rating"
-                    android:layout_marginStart="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    />
             </LinearLayout>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardElevation="5dp"
+                app:cardUseCompatPadding="true"
+                android:layout_marginTop="10dp"
+                app:layout_constraintTop_toBottomOf="@id/linear_layout_2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:id="@+id/user_comment_layout"
+                >
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    >
+                    <TextView
+                        android:id="@+id/user_name_text_view"
+                        android:text="User A"
+                        android:fontFamily="@font/opensans"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        />
+
+                    <com.willy.ratingbar.ScaleRatingBar
+                        android:id="@+id/rating_bar_comment"
+                        android:layout_width="110dp"
+                        android:layout_height="26dp"
+                        app:srb_starPadding="5dp"
+                        app:srb_clickable="false"
+                        app:srb_starWidth="12dp"
+                        app:srb_starHeight="12dp"
+                        app:srb_numStars="5"
+                        app:srb_scrollable="false"
+                        app:layout_constraintTop_toBottomOf="@id/user_name_text_view"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:layout_marginStart="-5dp"
+                        />
+
+                    <TextView
+                        android:id="@+id/comment_user"
+                        android:text="Food is good!"
+                        android:fontFamily="@font/opensans"
+                        android:textSize="15sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        app:layout_constraintTop_toBottomOf="@id/rating_bar_comment"
+                        app:layout_constraintStart_toStartOf="parent"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="30dp"
+                        android:layout_height="match_parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:orientation="vertical"
+                        >
+
+                        <ImageView
+                            android:src="@drawable/baseline_edit_24"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="0.5"
+                            android:layout_gravity="center_vertical"
+                            android:id="@+id/edit_button"
+                            android:layout_marginBottom="10dp"
+                            />
+
+                        <ImageView
+                            android:id="@+id/delete_button"
+                            android:src="@drawable/baseline_delete_24"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="0.5"
+                            />
+
+
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+            <View
+                android:id="@+id/line2"
+                android:layout_width="200dp"
+                android:layout_height="2dp"
+                android:background="#c0c0c0"
+                android:layout_marginTop="5dp"
+                app:layout_constraintTop_toBottomOf="@id/user_comment_layout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_comment"
                 tools:listitem="@layout/item_comment"
+                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/linear_layout_2"
+                app:layout_constraintTop_toBottomOf="@id/line2"
                 app:layout_constraintStart_toStartOf="parent"
                 />
 
@@ -352,6 +453,7 @@
         android:layout_height="match_parent"
         android:background="#80000000"
         android:id="@+id/progress_layout"
+        android:visibility="gone"
         >
 
         <ProgressBar

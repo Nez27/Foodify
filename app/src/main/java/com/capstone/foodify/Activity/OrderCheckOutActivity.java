@@ -1,15 +1,13 @@
 package com.capstone.foodify.Activity;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.location.Geocoder;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -27,19 +25,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstone.foodify.API.FoodApi;
-import com.capstone.foodify.API.FoodApiToken;
 import com.capstone.foodify.API.GoogleMapApi;
 import com.capstone.foodify.Adapter.OrderDetailAdapter;
 import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.Address;
 import com.capstone.foodify.Model.DistrictWardResponse;
 import com.capstone.foodify.Model.GoogleMap.GoogleMapResponse;
-import com.capstone.foodify.Model.Order;
+import com.capstone.foodify.Model.GoogleMap.Location;
 import com.capstone.foodify.R;
 import com.capstone.foodify.ZaloPay.Api.CreateOrder;
 import com.google.android.gms.maps.model.LatLng;
@@ -52,9 +48,11 @@ import com.thecode.aestheticdialogs.OnDialogClickListener;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -179,7 +177,8 @@ public class OrderCheckOutActivity extends AppCompatActivity {
 
                 if(radio_button_selected == auto_detect_location){
                     //Action 2
-
+                    if(Common.CURRENT_LOCATION != null)
+                        finalAddress = getAddress();
                 }
 
                 if(radio_button_selected == manual_input_address){
@@ -221,6 +220,23 @@ public class OrderCheckOutActivity extends AppCompatActivity {
         });
 
         initZaloPaymentMethod();
+    }
+
+    private String getAddress() {
+        Geocoder geocoder = new Geocoder(OrderCheckOutActivity.this, Locale.getDefault());
+        android.location.Address tempAddress;
+
+        try {
+            List<android.location.Address> addresses = geocoder.getFromLocation(Common.CURRENT_LOCATION.getLatitude(), Common.CURRENT_LOCATION.getLongitude(), 1);
+            tempAddress = addresses.get(0);
+            edt_address_detect.setText(tempAddress.getAddressLine(0));
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return tempAddress.getAddressLine(0);
+
     }
 
     private void initZaloPaymentMethod(){

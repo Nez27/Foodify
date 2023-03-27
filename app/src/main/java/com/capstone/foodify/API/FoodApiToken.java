@@ -5,6 +5,7 @@ import static com.capstone.foodify.Common.TOKEN;
 import androidx.annotation.NonNull;
 
 import com.capstone.foodify.Model.Address;
+import com.capstone.foodify.Model.Comment;
 import com.capstone.foodify.Model.Food;
 import com.capstone.foodify.Model.Order;
 import com.capstone.foodify.Model.Response.Addresses;
@@ -82,4 +83,10 @@ public interface FoodApiToken {
 
     @POST("user/{userId}/orders")
     Call<Order> createOrder(@Path("userId") int userId, @Body Order order);
+
+    @POST("products/{productId}/comments")
+    Call<Comment> createComment(@Path("productId") int productId, @Body Comment comment);
+
+    @DELETE("products/{productId}/comments/{commentId}")
+    Call<CustomResponse> deleteComment(@Path("productId") int productId, @Path("commentId") int commentId);
 }

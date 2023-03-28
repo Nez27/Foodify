@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -41,6 +42,9 @@ import com.denzcoskun.imageslider.models.SlideModel;
 import com.mcdev.quantitizerlibrary.AnimationStyle;
 import com.mcdev.quantitizerlibrary.HorizontalQuantitizer;
 import com.mcdev.quantitizerlibrary.QuantitizerListener;
+import com.sjapps.library.customdialog.BasicDialog;
+import com.sjapps.library.customdialog.DialogButtonEvent;
+import com.sjapps.library.customdialog.DialogButtonEvents;
 import com.willy.ratingbar.RotationRatingBar;
 import com.willy.ratingbar.ScaleRatingBar;
 
@@ -52,6 +56,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class FoodDetailActivity extends AppCompatActivity {
+    ArrayList<Comment> listComment = new ArrayList<>();
     private static final int ACTION_CODE = 0;
     private static final int CREATE_COMMENT = 1;
     private static final int EDIT_COMMENT = 2;
@@ -62,7 +67,7 @@ public class FoodDetailActivity extends AppCompatActivity {
     private static boolean LAST_PAGE;
     private HorizontalQuantitizer horizontalQuantitizer;
     private ImageSlider imageSlider;
-    private ImageView back_image, not_favorite, is_favorite, delete_button;
+    private ImageView back_image, not_favorite, is_favorite, delete_button, edt_button;
     private String foodId = "";
     private Food food;
     private TextView foodName_txt, shopName_txt, discount_txt, price_txt, countRating_txt, description_content_txt, endOfListText,
@@ -77,14 +82,10 @@ public class FoodDetailActivity extends AppCompatActivity {
     private ConstraintLayout progressLayout;
     private NestedScrollView nestedScrollView;
     private ProgressBar progressBar;
+    private CardView user_comment_layout;
+    private Comment commentUser = null;
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_food_detail);
-
-        //Init Component
+    private void initComponent() {
         horizontalQuantitizer = findViewById(R.id.quantity_option);
         imageSlider = findViewById(R.id.slider);
         back_image = findViewById(R.id.back_image);
@@ -109,7 +110,17 @@ public class FoodDetailActivity extends AppCompatActivity {
         contentComment = findViewById(R.id.comment_user);
         ratingBarComment = findViewById(R.id.rating_bar_comment);
         delete_button = findViewById(R.id.delete_button);
+        user_comment_layout = findViewById(R.id.user_comment_layout);
+        edt_button = findViewById(R.id.edit_button);
+    }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_food_detail);
 
+        //Init Component
+
+        initComponent();
 
         commentAdapter = new CommentAdapter(this);
 
@@ -125,6 +136,8 @@ public class FoodDetailActivity extends AppCompatActivity {
 
 
         hideUI();
+
+
 
         if(Common.CURRENT_USER == null){
             is_favorite.setVisibility(View.GONE);
@@ -219,11 +232,20 @@ public class FoodDetailActivity extends AppCompatActivity {
             });
         }
 
+        //Edit button
+        edt_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openCommentDialog(Gravity.CENTER, EDIT_COMMENT);
+            }
+        });
+
         //Delete comment
         delete_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(commentUser != null)
+                    showDeleteDialogConfirm();
             }
         });
     }
@@ -307,13 +329,48 @@ public class FoodDetailActivity extends AppCompatActivity {
         }
     }
 
-    private List<Comment> getListComment(int page) {
-        ArrayList<Comment> listComment = new ArrayList<>();
+    private void getCommentUser(){
+        FoodApi.apiService.getUserComment(Integer.parseInt(foodId), Common.CURRENT_USER.getId()).enqueue(new Callback<Comment>() {
+            @Override
+            public void onResponse(Call<Comment> call, Response<Comment> response) {
+                if(response.code() == 200){
+                    //Have user comment
+                    Comment commentData = response.body();
 
+                    if(commentData != null){
+                        //Init data
+                        commentUser = commentData;
+                        userNameComment.setText(Common.CURRENT_USER.getFullName());
+                        ratingBarComment.setRating(commentData.getRating());
+                        contentComment.setText(commentData.getContent());
+
+                        showUI();
+
+                        rating_button.setVisibility(View.GONE);
+                    }
+                } else if(response.code() == 404){
+                    //Don't have user comment
+                    user_comment_layout.setVisibility(View.GONE);
+                    showUI();
+                } else {
+                    Toast.makeText(FoodDetailActivity.this, "Có lỗi từ hệ thống! Mã lỗi: " + response.code(), Toast.LENGTH_SHORT).show();
+                    showUI();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Comment> call, Throwable t) {
+                showUI();
+                Common.showErrorServerNotification(FoodDetailActivity.this, "Lỗi kết nối!");
+            }
+        });
+    }
+    private List<Comment> getListComment(int page) {
         FoodApi.apiService.getCommentByProductId(Integer.parseInt(foodId), page, PAGE_SIZE, SORT_BY, SORT_DIR).enqueue(new Callback<Comments>() {
             @Override
             public void onResponse(Call<Comments> call, Response<Comments> response) {
                 if(response.code() == 200){
+
                     List<Comment> tempCommentList = response.body().getComments();
 
                     //Init data
@@ -326,21 +383,19 @@ public class FoodDetailActivity extends AppCompatActivity {
                     }
 
                     //Get user's comment
-                    for(Comment tempComment: listComment){
-                        if(tempComment.getUser().getEmail().equals(Common.CURRENT_USER.getEmail())){
-                            //Init data comment
-                            userNameComment.setText(Common.CURRENT_USER.getFullName());
-                            ratingBarComment.setRating(tempComment.getRating());
-                            contentComment.setText(tempComment.getContent());
+                    if(Common.CURRENT_USER != null){
+                        for(Comment tempComment: listComment){
+                            if(tempComment.getUser().getEmail().equals(Common.CURRENT_USER.getEmail())){
+                                //Remove comment from list
+                                listComment.remove(tempComment);
 
-                            //Remove comment from list
-                            listComment.remove(tempComment);
-
-                            //Remove button comment
-                            rating_button.setVisibility(View.GONE);
-                            break;
+                                //Remove button comment
+                                rating_button.setVisibility(View.GONE);
+                                break;
+                            }
                         }
                     }
+
 
                     if(listComment.size() == 0)
                         endOfListText.setVisibility(View.GONE);
@@ -359,7 +414,6 @@ public class FoodDetailActivity extends AppCompatActivity {
 
         return listComment;
     }
-
     private void hideUI() {
         content_view.setVisibility(View.GONE);
     }
@@ -377,10 +431,10 @@ public class FoodDetailActivity extends AppCompatActivity {
         description_content_txt.setText(food.getDescription());
         ratingBar.setRating(food.getAverageRating());
 
-        if(food.getCommentCount() == null || Integer.parseInt(food.getCommentCount()) == 0){
+        if(food.getReviewCount() == null || Integer.parseInt(food.getReviewCount()) == 0){
             countRating_txt.setText("Chưa có bình luận nào!");
         } else {
-            countRating_txt.setText(food.getCommentCount() + " rating");
+            countRating_txt.setText(food.getReviewCount() + " đánh giá");
         }
 
 
@@ -432,7 +486,9 @@ public class FoodDetailActivity extends AppCompatActivity {
                 else
                     notFavoriteIcon();
 
-                showUI();
+                getCommentUser();
+
+
             }
 
             @Override
@@ -497,9 +553,11 @@ public class FoodDetailActivity extends AppCompatActivity {
         Button cancel = dialog.findViewById(R.id.cancel_button);
 
         if(actionCode == EDIT_COMMENT){
-            //TODO Edit comment
             //Init data
-
+            if(commentUser != null){
+                ratingBar.setRating(commentUser.getRating());
+                comment_content.setText(commentUser.getContent());
+            }
 
         }
 
@@ -515,6 +573,7 @@ public class FoodDetailActivity extends AppCompatActivity {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressLayout.setVisibility(View.VISIBLE);
 
                 if(actionCode == CREATE_COMMENT){
                     //Create comment
@@ -524,6 +583,18 @@ public class FoodDetailActivity extends AppCompatActivity {
                         public void onResponse(Call<Comment> call, Response<Comment> response) {
                             if(response.code() == 201){
                                 Toast.makeText(FoodDetailActivity.this, "Đã thêm bình luận thành công!", Toast.LENGTH_SHORT).show();
+
+                                //Init data
+                                getCommentUser();
+
+                                //Show comment layout and hide rating button when comment completed!
+                                user_comment_layout.setVisibility(View.VISIBLE);
+                                rating_button.setVisibility(View.GONE);
+
+
+                                dialog.dismiss();
+                            } else {
+                                Toast.makeText(FoodDetailActivity.this, "Lỗi hệ thống! Mã lỗi: " + response.code(), Toast.LENGTH_SHORT).show();
                             }
                         }
 
@@ -534,6 +605,34 @@ public class FoodDetailActivity extends AppCompatActivity {
                     });
                 } else if(actionCode == EDIT_COMMENT){
                     //Edit comment
+                    if(commentUser != null){
+
+                        //Create object comment
+                        Comment newComment = new Comment(comment_content.getText().toString(), ratingBar.getRating(), Common.CURRENT_USER.getId());
+
+                        FoodApiToken.apiService.updateComment(Integer.parseInt(foodId), commentUser.getId(), newComment).enqueue(new Callback<CustomResponse>() {
+                            @Override
+                            public void onResponse(Call<CustomResponse> call, Response<CustomResponse> response) {
+                                if(response.code() == 200){
+                                    Toast.makeText(FoodDetailActivity.this, "Đã cập nhật bình luận thành công!", Toast.LENGTH_SHORT).show();
+
+                                    ratingBarComment.setRating(ratingBar.getRating());
+                                    contentComment.setText(comment_content.getText().toString());
+
+                                    dialog.dismiss();
+
+                                    progressLayout.setVisibility(View.GONE);
+                                } else {
+                                    Toast.makeText(FoodDetailActivity.this, "Đã có lỗi hệ thống! Mã lỗi: " + response.code(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<CustomResponse> call, Throwable t) {
+                                Toast.makeText(FoodDetailActivity.this, "Đã có lỗi kết nối đến hệ thống!", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
 
                 }
 
@@ -542,9 +641,58 @@ public class FoodDetailActivity extends AppCompatActivity {
 
         dialog.show();
     }
-
     private void deleteComment(){
-        //TODO Delete comment
+        FoodApiToken.apiService.deleteComment(Integer.parseInt(foodId), commentUser.getId()).enqueue(new Callback<CustomResponse>() {
+            @Override
+            public void onResponse(Call<CustomResponse> call, Response<CustomResponse> response) {
+                if(response.code() == 200){
+                    CustomResponse responseData = response.body();
+                    
+                    if(responseData != null){
+                        if(responseData.isTrue()){
+                            Toast.makeText(FoodDetailActivity.this, "Đã xoá bình luận thành công!", Toast.LENGTH_SHORT).show();
+
+                            //Remove layout comment
+                            rating_button.setVisibility(View.VISIBLE);
+                            user_comment_layout.setVisibility(View.GONE);
+
+                            commentUser = null;
+                        }
+                    }
+                } else {
+                    Toast.makeText(FoodDetailActivity.this, "Lỗi hệ thống! Mã lỗi: " + response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CustomResponse> call, Throwable t) {
+                Toast.makeText(FoodDetailActivity.this, "Đã có lỗi kết nối tới hệ thống!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void showDeleteDialogConfirm(){
+        BasicDialog dialog = new BasicDialog();
+
+        dialog.Builder(this)
+                .setTitle("Xác nhận xoá bình luận?")
+                .setLeftButtonText("Có")
+                .setRightButtonText("Không")
+                .setDialogBackgroundColor(getResources().getColor(R.color.white, null))
+                .setLeftButtonColor(getResources().getColor(R.color.primaryColor, null))
+                .setRightButtonColor(getResources().getColor(R.color.gray, null))
+                .onButtonClick(new DialogButtonEvents() {
+                    @Override
+                    public void onLeftButtonClick() {
+                        deleteComment();
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public void onRightButtonClick() {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
     }
     private void dataLoadMore() {
         if(!LAST_PAGE){

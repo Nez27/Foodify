@@ -1,6 +1,7 @@
 package com.capstone.foodify.API;
 
 import com.capstone.foodify.Model.Category;
+import com.capstone.foodify.Model.Comment;
 import com.capstone.foodify.Model.DistrictWardResponse;
 import com.capstone.foodify.Model.Food;
 import com.capstone.foodify.Model.Response.Comments;
@@ -82,4 +83,7 @@ public interface FoodApi {
 
     @GET("products/{productId}/comments")
     Call<Comments> getCommentByProductId(@Path("productId") int productId, @Query("pageNo") int pageNo, @Query("pageSize") int pageSize, @Query("sortBy") String sortBy, @Query("sortDir") String sortDir);
+
+    @GET("products/{productId}/users/{userId}")
+    Call<Comment> getUserComment(@Path("productId") int productId, @Path("userId") int userId);
 }

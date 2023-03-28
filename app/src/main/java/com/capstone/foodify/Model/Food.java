@@ -10,7 +10,7 @@ public class Food implements Comparable<Food>{
     private float discountPercent;
     private float cost;
     private float averageRating;
-    private String commentCount;
+    private String reviewCount;
     private Shop shop;
     private List<Category> categories;
     private List<Image> images;
@@ -74,12 +74,12 @@ public class Food implements Comparable<Food>{
         this.averageRating = averageRating;
     }
 
-    public String getCommentCount() {
-        return commentCount;
+    public String getReviewCount() {
+        return reviewCount;
     }
 
-    public void setCommentCount(String commentCount) {
-        this.commentCount = commentCount;
+    public void setReviewCount(String reviewCount) {
+        this.reviewCount = reviewCount;
     }
 
     public Shop getShop() {
@@ -132,7 +132,7 @@ public class Food implements Comparable<Food>{
                 ", discountPercent=" + discountPercent +
                 ", cost=" + cost +
                 ", averageRating=" + averageRating +
-                ", commentCount='" + commentCount + '\'' +
+                ", commentCount='" + reviewCount + '\'' +
                 ", shop=" + shop +
                 ", categories=" + categories +
                 ", images=" + images +

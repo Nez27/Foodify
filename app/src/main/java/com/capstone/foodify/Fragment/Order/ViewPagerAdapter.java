@@ -21,6 +21,8 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
                 return new ShipOrderFragment();
             case 3:
                 return new CompleteOrderFragment();
+            case 4:
+                return new CancelOrderFragment();
             default:
                 return new ProcessOderFragment();
         }
@@ -28,6 +30,6 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 4;
+        return 5;
     }
 }

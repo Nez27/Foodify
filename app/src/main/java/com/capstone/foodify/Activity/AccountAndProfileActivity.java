@@ -43,6 +43,7 @@ import com.google.firebase.storage.UploadTask;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 import com.thecode.aestheticdialogs.AestheticDialog;
+import com.thecode.aestheticdialogs.DialogAnimation;
 import com.thecode.aestheticdialogs.DialogStyle;
 import com.thecode.aestheticdialogs.DialogType;
 import com.thecode.aestheticdialogs.OnDialogClickListener;
@@ -295,9 +296,10 @@ public class AccountAndProfileActivity extends AppCompatActivity {
     }
 
     private void showDialogCaution() {
-        new AestheticDialog.Builder(this, DialogStyle.RAINBOW, DialogType.WARNING)
+        new AestheticDialog.Builder(this, DialogStyle.FLAT, DialogType.WARNING)
                 .setTitle("Email chưa được xác thực!")
                 .setMessage("Vui lòng xác thực email để bạn có thể thực hiện việc lấy lại mật khẩu nếu quên!")
+                .setAnimation(DialogAnimation.SHRINK)
                 .setCancelable(true)
                 .show();
     }

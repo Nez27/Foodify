@@ -89,4 +89,7 @@ public interface FoodApiToken {
 
     @DELETE("products/{productId}/comments/{commentId}")
     Call<CustomResponse> deleteComment(@Path("productId") int productId, @Path("commentId") int commentId);
+
+    @PUT("products/{productId}/comments/{commentId}")
+    Call<CustomResponse> updateComment(@Path("productId") int productId, @Path("commentId") int commentId, @Body Comment comment);
 }

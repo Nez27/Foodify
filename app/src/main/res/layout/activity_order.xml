@@ -42,7 +42,9 @@
         android:id="@+id/tab_layout"
         style="@style/MyCustomTabLayout"
         android:layout_below="@id/header"
+        app:tabGravity="center"
         app:tabIndicatorColor="@color/primaryColor"
+        app:tabMode="scrollable"
         >
 
         <com.google.android.material.tabs.TabItem
@@ -62,6 +64,11 @@
             />
         <com.google.android.material.tabs.TabItem
             android:text="Đã giao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+        <com.google.android.material.tabs.TabItem
+            android:text="Đã huỷ"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             />

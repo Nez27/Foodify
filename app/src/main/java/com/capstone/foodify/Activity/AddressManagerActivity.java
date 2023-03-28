@@ -362,6 +362,8 @@ public class AddressManagerActivity extends AppCompatActivity {
         //Create dialog
         customViewDialog.Builder(this);
 
+        customViewDialog.setDialogBackgroundColor(getResources().getColor(R.color.white, null));
+
 
         if(oldAddress == null){
             //If this is the create address form

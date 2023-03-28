@@ -373,6 +373,11 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         if (mRequestingLocationUpdates) {
             stopLocationUpdates();
+
+            if(Common.CURRENT_LOCATION == null){
+                if(mCurrentLocation != null)
+                    Common.CURRENT_LOCATION = mCurrentLocation;
+            }
         }
     }
 

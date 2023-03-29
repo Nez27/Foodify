@@ -350,7 +350,7 @@ public class FoodDetailActivity extends AppCompatActivity {
                     }
                 } else if(response.code() == 404){
                     //Don't have user comment
-                    user_comment_layout.setVisibility(View.GONE);
+                    user_comment_layout.setVisibility(View.INVISIBLE);
                     showUI();
                 } else {
                     Toast.makeText(FoodDetailActivity.this, "Có lỗi từ hệ thống! Mã lỗi: " + response.code(), Toast.LENGTH_SHORT).show();
@@ -548,14 +548,14 @@ public class FoodDetailActivity extends AppCompatActivity {
         }
 
         EditText comment_content = dialog.findViewById(R.id.edit_text_comment);
-        RotationRatingBar ratingBar = dialog.findViewById(R.id.rating_bar);
+        RotationRatingBar ratingBarDialog = dialog.findViewById(R.id.rating_bar);
         Button confirm = dialog.findViewById(R.id.confirm_button);
         Button cancel = dialog.findViewById(R.id.cancel_button);
 
         if(actionCode == EDIT_COMMENT){
             //Init data
             if(commentUser != null){
-                ratingBar.setRating(commentUser.getRating());
+                ratingBarDialog.setRating(commentUser.getRating());
                 comment_content.setText(commentUser.getContent());
             }
 
@@ -568,8 +568,6 @@ public class FoodDetailActivity extends AppCompatActivity {
             }
         });
 
-
-        
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -577,61 +575,18 @@ public class FoodDetailActivity extends AppCompatActivity {
 
                 if(actionCode == CREATE_COMMENT){
                     //Create comment
-                    Comment comment = new Comment(comment_content.getText().toString(), ratingBar.getRating(), Common.CURRENT_USER.getId());
-                    FoodApiToken.apiService.createComment(Integer.parseInt(foodId), comment).enqueue(new Callback<Comment>() {
-                        @Override
-                        public void onResponse(Call<Comment> call, Response<Comment> response) {
-                            if(response.code() == 201){
-                                Toast.makeText(FoodDetailActivity.this, "Đã thêm bình luận thành công!", Toast.LENGTH_SHORT).show();
 
-                                //Init data
-                                getCommentUser();
+                    createComment(comment_content.getText().toString(), ratingBarDialog);
 
-                                //Show comment layout and hide rating button when comment completed!
-                                user_comment_layout.setVisibility(View.VISIBLE);
-                                rating_button.setVisibility(View.GONE);
+                    dialog.dismiss();
 
-
-                                dialog.dismiss();
-                            } else {
-                                Toast.makeText(FoodDetailActivity.this, "Lỗi hệ thống! Mã lỗi: " + response.code(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<Comment> call, Throwable t) {
-                            Toast.makeText(FoodDetailActivity.this, "Đã xuất hiện lỗi hệ thống!", Toast.LENGTH_SHORT).show();
-                        }
-                    });
                 } else if(actionCode == EDIT_COMMENT){
                     //Edit comment
                     if(commentUser != null){
 
-                        //Create object comment
-                        Comment newComment = new Comment(comment_content.getText().toString(), ratingBar.getRating(), Common.CURRENT_USER.getId());
+                        editComment(comment_content.getText().toString(), ratingBarDialog);
 
-                        FoodApiToken.apiService.updateComment(Integer.parseInt(foodId), commentUser.getId(), newComment).enqueue(new Callback<CustomResponse>() {
-                            @Override
-                            public void onResponse(Call<CustomResponse> call, Response<CustomResponse> response) {
-                                if(response.code() == 200){
-                                    Toast.makeText(FoodDetailActivity.this, "Đã cập nhật bình luận thành công!", Toast.LENGTH_SHORT).show();
-
-                                    ratingBarComment.setRating(ratingBar.getRating());
-                                    contentComment.setText(comment_content.getText().toString());
-
-                                    dialog.dismiss();
-
-                                    progressLayout.setVisibility(View.GONE);
-                                } else {
-                                    Toast.makeText(FoodDetailActivity.this, "Đã có lỗi hệ thống! Mã lỗi: " + response.code(), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<CustomResponse> call, Throwable t) {
-                                Toast.makeText(FoodDetailActivity.this, "Đã có lỗi kết nối đến hệ thống!", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                        dialog.dismiss();
                     }
 
                 }
@@ -640,6 +595,67 @@ public class FoodDetailActivity extends AppCompatActivity {
         });
 
         dialog.show();
+    }
+
+    private void editComment(String content, RotationRatingBar ratingBarDialog) {
+        //Create object comment
+        Comment newComment = new Comment(content, ratingBarDialog.getRating(), Common.CURRENT_USER.getId());
+
+        FoodApiToken.apiService.updateComment(Integer.parseInt(foodId), commentUser.getId(), newComment).enqueue(new Callback<CustomResponse>() {
+            @Override
+            public void onResponse(Call<CustomResponse> call, Response<CustomResponse> response) {
+                if(response.code() == 200){
+                    Toast.makeText(FoodDetailActivity.this, "Đã cập nhật bình luận thành công!", Toast.LENGTH_SHORT).show();
+
+                    ratingBarComment.setRating(ratingBarDialog.getRating());
+                    contentComment.setText(content);
+
+                    //Update information food
+                    progressLayout.setVisibility(View.VISIBLE);
+                    getFoodById(foodId);
+
+
+                } else {
+                    Toast.makeText(FoodDetailActivity.this, "Đã có lỗi hệ thống! Mã lỗi: " + response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CustomResponse> call, Throwable t) {
+                Toast.makeText(FoodDetailActivity.this, "Đã có lỗi kết nối đến hệ thống!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void createComment(String content, RotationRatingBar ratingBarDialog){
+        Comment comment = new Comment(content, ratingBarDialog.getRating(), Common.CURRENT_USER.getId());
+        FoodApiToken.apiService.createComment(Integer.parseInt(foodId), comment).enqueue(new Callback<Comment>() {
+            @Override
+            public void onResponse(Call<Comment> call, Response<Comment> response) {
+                if(response.code() == 201){
+                    Toast.makeText(FoodDetailActivity.this, "Đã thêm bình luận thành công!", Toast.LENGTH_SHORT).show();
+
+                    //Init data
+                    getCommentUser();
+
+                    //Show comment layout and hide rating button when comment completed!
+                    user_comment_layout.setVisibility(View.VISIBLE);
+                    rating_button.setVisibility(View.GONE);
+
+                    //Update information food
+                    progressLayout.setVisibility(View.VISIBLE);
+                    getFoodById(foodId);
+
+                } else {
+                    Toast.makeText(FoodDetailActivity.this, "Lỗi hệ thống! Mã lỗi: " + response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Comment> call, Throwable t) {
+                Toast.makeText(FoodDetailActivity.this, "Đã xuất hiện lỗi hệ thống!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
     private void deleteComment(){
         FoodApiToken.apiService.deleteComment(Integer.parseInt(foodId), commentUser.getId()).enqueue(new Callback<CustomResponse>() {
@@ -654,7 +670,11 @@ public class FoodDetailActivity extends AppCompatActivity {
 
                             //Remove layout comment
                             rating_button.setVisibility(View.VISIBLE);
-                            user_comment_layout.setVisibility(View.GONE);
+                            user_comment_layout.setVisibility(View.INVISIBLE);
+
+                            //Update information food
+                            progressLayout.setVisibility(View.VISIBLE);
+                            getFoodById(foodId);
 
                             commentUser = null;
                         }

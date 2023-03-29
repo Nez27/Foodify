@@ -23,7 +23,6 @@ import java.util.List;
 
 public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketViewHolder> {
 
-    private static int quantity = 0;
 
     public List<Basket> listBasketFood;
 
@@ -58,7 +57,6 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketView
         holder.foodName.setText(foodBasket.getName());
         holder.shopName.setText(foodBasket.getShopName());
         holder.value.setText(foodBasket.getQuantity());
-        quantity = Integer.parseInt(foodBasket.getQuantity());
 
         //Check value discountPercent
         float cost = 0;
@@ -89,6 +87,9 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketView
         holder.increment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                int quantity = Integer.parseInt(foodBasket.getQuantity());
+
                 quantity++;
                 foodBasket.setQuantity(String.valueOf(quantity));
                 holder.value.setText(String.valueOf(quantity));
@@ -101,9 +102,16 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketView
         holder.decrement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                int quantity = Integer.parseInt(foodBasket.getQuantity());
+
                 quantity--;
                 if(quantity == 0){
                     listBasketFood.remove(holder.getAdapterPosition());
+                    notifyDataSetChanged();
+
+                    //Update total price
+                    calculateTotalPrice();
                 } else {
                     foodBasket.setQuantity(String.valueOf(quantity));
                     holder.value.setText(String.valueOf(quantity));

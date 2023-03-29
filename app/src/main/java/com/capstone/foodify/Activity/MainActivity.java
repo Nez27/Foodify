@@ -14,10 +14,12 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.splashscreen.SplashScreen;
@@ -70,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
+    private ConstraintLayout progressLayout;
 
     //Location
     private static final int REQUEST_CHECK_SETTINGS = 100;
@@ -98,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
         user = mAuth.getCurrentUser();
 
         if (user != null && Common.CURRENT_USER == null) {
+            progressLayout.setVisibility(View.VISIBLE);
             user.getIdToken(true)
                     .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
                         @Override
@@ -189,10 +193,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    private void getLocationUser(){
 
+    }
     private void initComponent() {
         bottomNavigationView = findViewById(R.id.bottom_nav);
         viewPager2 = findViewById(R.id.viewPager);
+        progressLayout = findViewById(R.id.progress_layout);
     }
 
     private void bottomNavigation() {

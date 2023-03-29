@@ -41,7 +41,7 @@ public interface FoodApi {
     @GET("products/enable?pageNo=0&pageSize=10&sortBy=createdTime&sortDir=desc")
     Call<Foods> recentFood();
 
-    @GET("shops?pageNo=0&pageSize=10&sortBy=id&sortDir=asc")
+    @GET("shops/enable?pageNo=0&pageSize=10&sortBy=id&sortDir=asc")
     Call<Shops> allShops();
 
     @GET("products/search/{name}")

@@ -81,7 +81,7 @@ public interface FoodApiToken {
     @DELETE("users/{userId}/addresses/{addressId}")
     Call<CustomResponse> deleteAddressUser(@Path("userId") int userId, @Path("addressId") int addressId);
 
-    @POST("user/{userId}/orders")
+    @POST("users/{userId}/orders")
     Call<Order> createOrder(@Path("userId") int userId, @Body Order order);
 
     @POST("products/{productId}/comments")

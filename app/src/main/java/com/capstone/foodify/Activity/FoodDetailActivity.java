@@ -571,26 +571,29 @@ public class FoodDetailActivity extends AppCompatActivity {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressLayout.setVisibility(View.VISIBLE);
 
-                if(actionCode == CREATE_COMMENT){
-                    //Create comment
+                if(comment_content.getText().toString().trim().length() > 0){
+                    progressLayout.setVisibility(View.VISIBLE);
 
-                    createComment(comment_content.getText().toString(), ratingBarDialog);
-
-                    dialog.dismiss();
-
-                } else if(actionCode == EDIT_COMMENT){
-                    //Edit comment
-                    if(commentUser != null){
-
-                        editComment(comment_content.getText().toString(), ratingBarDialog);
+                    if(actionCode == CREATE_COMMENT){
+                        //Create comment
+                        createComment(comment_content.getText().toString(), ratingBarDialog);
 
                         dialog.dismiss();
+
+                    } else if(actionCode == EDIT_COMMENT){
+                        //Edit comment
+                        if(commentUser != null){
+
+                            editComment(comment_content.getText().toString(), ratingBarDialog);
+
+                            dialog.dismiss();
+                        }
+
                     }
-
+                } else {
+                    comment_content.setError("Khung bình luận không được để trống!");
                 }
-
             }
         });
 

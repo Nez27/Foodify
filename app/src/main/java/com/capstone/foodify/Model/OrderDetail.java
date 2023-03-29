@@ -7,6 +7,14 @@ public class OrderDetail {
     private String quantity;
     private float subTotal;
 
+    public OrderDetail(int productId, String quantity) {
+        this.productId = productId;
+        this.quantity = quantity;
+    }
+
+    public OrderDetail() {
+    }
+
     public int getId() {
         return id;
     }

@@ -29,15 +29,20 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstone.foodify.API.FoodApi;
+import com.capstone.foodify.API.FoodApiToken;
 import com.capstone.foodify.API.GoogleMapApi;
 import com.capstone.foodify.Adapter.OrderDetailAdapter;
 import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.Address;
+import com.capstone.foodify.Model.Basket;
 import com.capstone.foodify.Model.DistrictWardResponse;
 import com.capstone.foodify.Model.GoogleMap.GoogleMapResponse;
 import com.capstone.foodify.Model.GoogleMap.Location;
+import com.capstone.foodify.Model.Order;
+import com.capstone.foodify.Model.OrderDetail;
 import com.capstone.foodify.R;
 import com.capstone.foodify.ZaloPay.Api.CreateOrder;
+import com.capstone.foodify.ZaloPay.Helper.Helpers;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -63,9 +68,13 @@ import vn.zalopay.sdk.ZaloPaySDK;
 import vn.zalopay.sdk.listeners.PayOrderListener;
 
 public class OrderCheckOutActivity extends AppCompatActivity {
+    private static final String TAKE_FOOD_FROM_SHOP = "Đến shop lấy";
+    private static final String ZALO_PAYMENT_METHOD = "ZALO PAY";
+    private static final String CASH_PAYMENT = "CASH";
     private static final Double LAT_SHOP = 16.0500622;
     private static final Double LNG_SHOP = 108.2351611;
     private static String finalAddress = null;
+    private static double finalLat, finalLng = 0;
     ImageView back_image;
     OrderDetailAdapter adapter;
     RecyclerView recyclerView;
@@ -74,11 +83,11 @@ public class OrderCheckOutActivity extends AppCompatActivity {
     EditText edt_address;
     Spinner spn_list_address, spn_district, spn_ward;
     ConstraintLayout manual_input_address_layout;
-    Button change_address_button, confirm_address_button, btn_ZaloPay;
+    Button change_address_button, confirm_address_button, btn_ZaloPay, btn_Pay;
     RadioButton list_address_input, auto_detect_location, manual_input_address, radio_button_selected, take_food_from_shop;
     RadioGroup address_option;
     ConstraintLayout progress_layout;
-    float total;
+    float total, shipCost;
     private static final ArrayList<String> wardList = new ArrayList<>();
     private static final ArrayList<String> districtList = new ArrayList<>();
 
@@ -118,6 +127,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
         txt_distance = findViewById(R.id.txt_distance);
         txt_ship_cost = findViewById(R.id.txt_ship_cost);
         btn_ZaloPay = findViewById(R.id.btnZaloPay);
+        btn_Pay = findViewById(R.id.btnPay);
 
         //Reload user data
         Common.reloadUser(this);
@@ -193,7 +203,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
 
                 if(radio_button_selected == take_food_from_shop){
                     //Action 4
-                    finalAddress = "Đến shop lấy";
+                    finalAddress = TAKE_FOOD_FROM_SHOP;
                 }
 
                 if(finalAddress == null){
@@ -219,6 +229,28 @@ public class OrderCheckOutActivity extends AppCompatActivity {
         });
 
         initZaloPaymentMethod();
+
+        //Set event for button pay by CASH
+        btn_Pay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                progress_layout.setVisibility(View.VISIBLE);
+
+                if(!Common.CURRENT_USER.isLocked()){
+                    if(finalAddress != null){
+                        createOrderFood(Helpers.getAppTransId(), CASH_PAYMENT);
+                    } else {
+                        Toast.makeText(OrderCheckOutActivity.this, "Bạn chưa xác nhận địa chỉ!", Toast.LENGTH_SHORT).show();
+                        progress_layout.setVisibility(View.GONE);
+                    }
+                } else {
+                    //Show notification account locked
+                    FirebaseAuth.getInstance().signOut();
+                    Common.showErrorServerNotification(OrderCheckOutActivity.this, "Tài khoản của bạn đã bị khoá!");
+                }
+
+            }
+        });
     }
 
     private void getAddress() {
@@ -246,6 +278,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
     }
 
     private void initZaloPaymentMethod(){
+
         // handle CreateOrder
         btn_ZaloPay.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -257,7 +290,6 @@ public class OrderCheckOutActivity extends AppCompatActivity {
 
                 if(!Common.CURRENT_USER.isLocked()){
                     //Create order
-
                     //Check address is null or not
                     if(finalAddress != null){
 
@@ -278,24 +310,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
                                         runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                new AestheticDialog.Builder(OrderCheckOutActivity.this, DialogStyle.FLAT, DialogType.SUCCESS)
-                                                        .setTitle("Thành công!")
-                                                        .setMessage("Bạn đã thanh toán thành công cho đơn hàng #" + transactionId)
-                                                        .setCancelable(true)
-                                                        .setOnClickListener(new OnDialogClickListener() {
-                                                            @Override
-                                                            public void onClick(@NonNull AestheticDialog.Builder builder) {
-
-                                                                createOrderFood(transactionId);
-
-                                                                Common.LIST_BASKET_FOOD.clear();
-                                                                startActivity(new Intent(OrderCheckOutActivity.this, MainActivity.class));
-                                                                finish();
-                                                            }
-                                                        })
-                                                        .show();
-
-                                                progress_layout.setVisibility(View.GONE);
+                                                createOrderFood(transactionId, ZALO_PAYMENT_METHOD);
                                             }
 
                                         });
@@ -321,6 +336,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
                                                     @Override
                                                     public void onClick(@NonNull AestheticDialog.Builder builder) {
                                                         startActivity(new Intent(OrderCheckOutActivity.this, MainActivity.class));
+                                                        builder.dismiss();
                                                         finish();
                                                     }
                                                 })
@@ -348,72 +364,99 @@ public class OrderCheckOutActivity extends AppCompatActivity {
         });
     }
 
-    private void createOrderFood(String transactionId) {
+    private void createOrderFood(String transactionId, String paymentMethod) {
 
-//        //Create order object
-//        Order order = new Order(transactionId, "");
-//
-//        FoodApiToken.apiService.createOrder(Common.CURRENT_USER.getId()).enqueue(new Callback<Order>() {
-//            @Override
-//            public void onResponse(Call<Order> call, Response<Order> response) {
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Order> call, Throwable t) {
-//
-//            }
-//        });
-    }
+        //Create list order detail object
+        List<OrderDetail> listOrderDetail = new ArrayList<>();
+        for(Basket tempFood: Common.LIST_BASKET_FOOD){
+            OrderDetail orderTemp = new OrderDetail(Integer.parseInt(tempFood.getId()), tempFood.getQuantity());
+            listOrderDetail.add(orderTemp);
+        }
 
-    private void getDistanceAndCalculateShipCost(String address) {
-        //Get location from address
+        //Create order object
+        Order order = new Order(transactionId, paymentMethod, shipCost, "AWAITING" , finalAddress, listOrderDetail, String.valueOf(finalLat), String.valueOf(finalLng));
 
-        GoogleMapApi.apiService.getGeoCode(address, Common.MAP_API).enqueue(new Callback<GoogleMapResponse>() {
+        FoodApiToken.apiService.createOrder(Common.CURRENT_USER.getId(), order).enqueue(new Callback<Order>() {
             @Override
-            public void onResponse(Call<GoogleMapResponse> call, Response<GoogleMapResponse> response) {
-                GoogleMapResponse jsonResponse = response.body();
-
-                Double lat = jsonResponse.getResults().get(0).getGeometry().getLocation().getLat();
-                Double lng = jsonResponse.getResults().get(0).getGeometry().getLocation().getLng();
-
-                LatLng addressFrom = new LatLng(lat, lng);
-                LatLng addressTo = new LatLng(LAT_SHOP, LNG_SHOP);
-
-                double distance = CalculationByDistance(addressFrom, addressTo);
-
-                double roundDistance = Math.round(distance * 100.0) / 100.0;
-
-                //Show distance to user
-                txt_distance.setText(roundDistance + " km");
-
-                //Calculate ship cost
-                float shipCost = 0;
-                if(roundDistance <= 3){
-                    shipCost = 15000;
-                } else if(roundDistance > 3 && roundDistance <= 10){
-                    shipCost = 5000 * (float) roundDistance;
+            public void onResponse(Call<Order> call, Response<Order> response) {
+                if(response.code() == 201){
+                    new AestheticDialog.Builder(OrderCheckOutActivity.this, DialogStyle.FLAT, DialogType.SUCCESS)
+                            .setTitle("Thành công!")
+                            .setMessage("Bạn đã đặt hàng thành công cho đơn hàng #" + transactionId)
+                            .setCancelable(true)
+                            .setOnClickListener(new OnDialogClickListener() {
+                                @Override
+                                public void onClick(@NonNull AestheticDialog.Builder builder) {
+                                    Common.LIST_BASKET_FOOD.clear();
+                                    startActivity(new Intent(OrderCheckOutActivity.this, MainActivity.class));
+                                    builder.dismiss();
+                                    finish();
+                                }
+                            }).show();
                 } else {
-                    shipCost = 3000 * (float) roundDistance;
+                    Toast.makeText(OrderCheckOutActivity.this, "Đã có lỗi hệ thống! Mã lỗi: " + response.code(), Toast.LENGTH_SHORT).show();
                 }
-
-                txt_ship_cost.setText(Common.changeCurrencyUnit(shipCost));
-
-                //Update total order
-                total = total + shipCost;
-                txt_total.setText(Common.changeCurrencyUnit(total));
-
-                progress_layout.setVisibility(View.GONE);
             }
 
             @Override
-            public void onFailure(Call<GoogleMapResponse> call, Throwable t) {
-                Toast.makeText(OrderCheckOutActivity.this, "Error: "  + t, Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<Order> call, Throwable t) {
+                Toast.makeText(OrderCheckOutActivity.this, "Đã xảy ra lỗi kết nối hệ thống!", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    public double CalculationByDistance(LatLng from, LatLng to) {
+    private void getDistanceAndCalculateShipCost(String address) {
+        //Get location from address
+        if(!address.equals(TAKE_FOOD_FROM_SHOP)){
+            GoogleMapApi.apiService.getGeoCode(address, Common.MAP_API).enqueue(new Callback<GoogleMapResponse>() {
+                @Override
+                public void onResponse(Call<GoogleMapResponse> call, Response<GoogleMapResponse> response) {
+                    GoogleMapResponse jsonResponse = response.body();
+
+                    Double lat = jsonResponse.getResults().get(0).getGeometry().getLocation().getLat();
+                    Double lng = jsonResponse.getResults().get(0).getGeometry().getLocation().getLng();
+
+                    finalLat = lat;
+                    finalLng = lng;
+
+                    LatLng addressFrom = new LatLng(lat, lng);
+                    LatLng addressTo = new LatLng(LAT_SHOP, LNG_SHOP);
+
+                    int distance = CalculationByDistance(addressFrom, addressTo);
+
+                    //Show distance to user
+                    txt_distance.setText(distance + " km");
+
+                    //Calculate ship cost
+                    if(distance <= 3){
+                        shipCost = 15000;
+                    } else if(distance > 3 && distance <= 10){
+                        shipCost = 5000 * (float) distance;
+                    } else {
+                        shipCost = 3000 * (float) distance;
+                    }
+
+                    txt_ship_cost.setText(Common.changeCurrencyUnit(shipCost));
+
+                    //Update total order
+                    total = total + shipCost;
+                    txt_total.setText(Common.changeCurrencyUnit(total));
+
+                    progress_layout.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onFailure(Call<GoogleMapResponse> call, Throwable t) {
+                    Toast.makeText(OrderCheckOutActivity.this, "Error: "  + t, Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            progress_layout.setVisibility(View.GONE);
+        }
+
+    }
+
+    public int CalculationByDistance(LatLng from, LatLng to) {
         int Radius = 6371;// radius of earth in Km
         double lat1 = from.latitude;
         double lat2 = to.latitude;
@@ -429,11 +472,8 @@ public class OrderCheckOutActivity extends AppCompatActivity {
         double valueResult = Radius * c;
         double km = valueResult / 1;
         DecimalFormat newFormat = new DecimalFormat("####");
-        int kmInDec = Integer.valueOf(newFormat.format(km));
-        double meter = valueResult % 1000;
-        int meterInDec = Integer.valueOf(newFormat.format(meter));
 
-        return Radius * c;
+        return Integer.valueOf(newFormat.format(km));
     }
 
     private boolean validForm(){

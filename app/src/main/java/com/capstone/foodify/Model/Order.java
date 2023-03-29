@@ -11,15 +11,18 @@ public class Order {
     private String status;
     private String address;
     private List<OrderDetail> orderDetails;
+    private String lat;
+    private String lng;
 
-    public Order(String orderTrackingNumber, int shipperId, String paymentMethod, float shippingCost, String status, String address, List<OrderDetail> orderDetails) {
+    public Order(String orderTrackingNumber, String paymentMethod, float shippingCost, String status, String address, List<OrderDetail> orderDetails, String lat, String lng) {
         this.orderTrackingNumber = orderTrackingNumber;
-        this.shipperId = shipperId;
         this.paymentMethod = paymentMethod;
         this.shippingCost = shippingCost;
         this.status = status;
         this.address = address;
         this.orderDetails = orderDetails;
+        this.lat = lat;
+        this.lng = lng;
     }
 
     public int getId() {
@@ -95,5 +98,21 @@ public class Order {
 
     public void setListOrderDetail(List<OrderDetail> listOrderDetail) {
         this.orderDetails = listOrderDetail;
+    }
+
+    public String getLat() {
+        return lat;
+    }
+
+    public void setLat(String lat) {
+        this.lat = lat;
+    }
+
+    public String getLng() {
+        return lng;
+    }
+
+    public void setLng(String lng) {
+        this.lng = lng;
     }
 }

@@ -169,18 +169,28 @@ public class SignInActivity extends AppCompatActivity {
                                                     @Override
                                                     public void onResponse(Call<User> call, Response<User> response) {
                                                         if(response.code() == 200){
+
                                                             User userData = response.body();
                                                             if(userData != null){
 
                                                                 //Check user is lock or not
                                                                 if(!userData.isLocked()){
 
-                                                                    Common.CURRENT_USER = userData;
+                                                                    //Check role account
+                                                                    if(userData.getRole().getRoleName().equals("ROLE_USER")){
+                                                                        Common.CURRENT_USER = userData;
 
-                                                                    //Dismiss progress bar
-                                                                    progressLayout.setVisibility(View.GONE);
+                                                                        //Dismiss progress bar
+                                                                        progressLayout.setVisibility(View.GONE);
 
-                                                                    startActivity(new Intent(SignInActivity.this, MainActivity.class));
+                                                                        startActivity(new Intent(SignInActivity.this, MainActivity.class));
+                                                                    } else {
+                                                                        Toast.makeText(SignInActivity.this, "Tài khoản không hợp lệ! Vui lòng kiểm tra lại!", Toast.LENGTH_SHORT).show();
+                                                                        FirebaseAuth.getInstance().signOut();
+
+                                                                        //Dismiss progress bar
+                                                                        progressLayout.setVisibility(View.GONE);
+                                                                    }
                                                                 }
                                                                 else{
                                                                     Toast.makeText(SignInActivity.this, "Tài khoản của bạn đã bị khoá!", Toast.LENGTH_SHORT).show();

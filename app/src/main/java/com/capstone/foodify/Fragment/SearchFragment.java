@@ -178,6 +178,7 @@ public class SearchFragment extends Fragment {
 
         //If search not found
         if(listFoodSearch.size() == 0){
+            end_of_list_text_view.setVisibility(View.GONE);
             searchNotFound.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
         }
@@ -245,6 +246,10 @@ public class SearchFragment extends Fragment {
         FoodApi.apiService.listFoodByCategory(statusCategoryChecked, page, LIMIT, "id", "asc").enqueue(new Callback<Foods>() {
             @Override
             public void onResponse(Call<Foods> call, Response<Foods> response) {
+
+                searchNotFound.setVisibility(View.GONE);
+                end_of_list_text_view.setVisibility(View.GONE);
+
                 //Init total page and total elements value
                 LAST_PAGE = response.body().getPage().isLast();
                 loadFoodAdapter(response);

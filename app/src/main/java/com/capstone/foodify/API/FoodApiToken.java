@@ -12,6 +12,7 @@ import com.capstone.foodify.Model.Response.Addresses;
 import com.capstone.foodify.Model.Response.Comments;
 import com.capstone.foodify.Model.Response.CustomResponse;
 import com.capstone.foodify.Model.Response.Foods;
+import com.capstone.foodify.Model.Response.Orders;
 import com.capstone.foodify.Model.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -49,7 +50,7 @@ public interface FoodApiToken {
 
     FoodApiToken apiService = new Retrofit.Builder()
             .client(client)
-            .baseUrl("https://foodify-backend-production.up.railway.app/api/").addConverterFactory(GsonConverterFactory.create(gson))
+            .baseUrl("http://192.168.1.183:8080/api/").addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(FoodApiToken.class);
 
@@ -92,4 +93,10 @@ public interface FoodApiToken {
 
     @PUT("products/{productId}/comments/{commentId}")
     Call<CustomResponse> updateComment(@Path("productId") int productId, @Path("commentId") int commentId, @Body Comment comment);
+
+    @GET("users/{userId}/orders/status/{status}")
+    Call<Orders> getOrderUser(@Path("userId") int userId, @Path("status") String status, @Query("pageNo") int pageNo, @Query("pageSize") int pageSize, @Query("sortBy") String sortBy, @Query("sortDir") String sortDir);
+
+    @DELETE("users/{userId}/orders/{orderId}")
+    Call<CustomResponse> deleteOrder(@Path("userId") int userId, @Path("orderId") int orderId);
 }

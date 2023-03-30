@@ -48,7 +48,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_search"
-            tools:listitem="@layout/item_food_search_and_favorite"
+            tools:listitem="@layout/item_food_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/list_category"

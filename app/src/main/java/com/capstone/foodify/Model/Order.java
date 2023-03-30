@@ -1,8 +1,10 @@
 package com.capstone.foodify.Model;
 
+import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.List;
 
-public class Order {
+public class Order implements Serializable {
     private int id;
     private String orderTrackingNumber;
     private int shipperId;
@@ -11,8 +13,10 @@ public class Order {
     private String status;
     private String address;
     private List<OrderDetail> orderDetails;
+    private String orderTime;
     private String lat;
     private String lng;
+    private Long total;
 
     public Order(String orderTrackingNumber, String paymentMethod, float shippingCost, String status, String address, List<OrderDetail> orderDetails, String lat, String lng) {
         this.orderTrackingNumber = orderTrackingNumber;
@@ -114,5 +118,21 @@ public class Order {
 
     public void setLng(String lng) {
         this.lng = lng;
+    }
+
+    public String getOrderTime() {
+        return orderTime;
+    }
+
+    public void setOrderTime(String orderTime) {
+        this.orderTime = orderTime;
+    }
+
+    public Long getTotal() {
+        return total;
+    }
+
+    public void setTotal(Long total) {
+        this.total = total;
     }
 }

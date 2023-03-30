@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -30,6 +31,7 @@ import com.capstone.foodify.API.FoodApiToken;
 import com.capstone.foodify.Adapter.CommentAdapter;
 import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.Basket;
+import com.capstone.foodify.Model.Category;
 import com.capstone.foodify.Model.Food;
 import com.capstone.foodify.Model.Image;
 import com.capstone.foodify.Model.Response.Comments;
@@ -39,6 +41,8 @@ import com.capstone.foodify.R;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.mcdev.quantitizerlibrary.AnimationStyle;
 import com.mcdev.quantitizerlibrary.HorizontalQuantitizer;
 import com.mcdev.quantitizerlibrary.QuantitizerListener;
@@ -84,6 +88,7 @@ public class FoodDetailActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private CardView user_comment_layout;
     private Comment commentUser = null;
+    private ChipGroup list_category;
 
     private void initComponent() {
         horizontalQuantitizer = findViewById(R.id.quantity_option);
@@ -112,6 +117,7 @@ public class FoodDetailActivity extends AppCompatActivity {
         delete_button = findViewById(R.id.delete_button);
         user_comment_layout = findViewById(R.id.user_comment_layout);
         edt_button = findViewById(R.id.edit_button);
+        list_category = findViewById(R.id.list_category);
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -425,6 +431,7 @@ public class FoodDetailActivity extends AppCompatActivity {
     }
 
     private void initData() {
+        LayoutInflater inflater = LayoutInflater.from(this);
 
         foodName_txt.setText(food.getName());
         shopName_txt.setText(food.getShop().getName());
@@ -435,6 +442,15 @@ public class FoodDetailActivity extends AppCompatActivity {
             countRating_txt.setText("Chưa có bình luận nào!");
         } else {
             countRating_txt.setText(food.getReviewCount() + " đánh giá");
+        }
+
+        //Init category
+        for(Category category: food.getCategories()){
+            Chip chip = (Chip) inflater.inflate(R.layout.chip_item, null, false);
+            chip.setText(category.getName());
+            chip.setClickable(false);
+
+            list_category.addView(chip);
         }
 
 

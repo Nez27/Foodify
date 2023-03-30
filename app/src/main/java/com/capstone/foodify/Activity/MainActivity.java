@@ -191,11 +191,6 @@ public class MainActivity extends AppCompatActivity {
         }, 3000);
 
     }
-
-
-    private void getLocationUser(){
-
-    }
     private void initComponent() {
         bottomNavigationView = findViewById(R.id.bottom_nav);
         viewPager2 = findViewById(R.id.viewPager);

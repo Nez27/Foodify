@@ -11,18 +11,26 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstone.foodify.Activity.OrderDetailActivity;
+import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.Order;
 import com.capstone.foodify.R;
 
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHolder>{
 
     public List<Order> listOrders;
+    private Context context;
 
-    public OrderAdapter() {
+    public OrderAdapter(Context context) {
+        this.context = context;
     }
 
     public void setData(List<Order> listOrders){
@@ -40,18 +48,26 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
         Order order = listOrders.get(position);
 
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy");
-        LocalDateTime now = LocalDateTime.now();
-
         if(order == null)
             return;
 
         holder.order_tracking_number.setText("Order Id: #" + order.getOrderTrackingNumber());
-        holder.user_name.setText("Tên: Nguyễn Văn A");
-        holder.phone.setText("0987654321");
-        holder.address.setText("Phạm Như Xương, Hoà Khánh Nam, Liên Chiểu");
-        holder.orderTime.setText(dtf.format(now));
-        holder.total.setText("Tổng: 1.200.000đ");
+        holder.user_name.setText("Họ và tên: " + Common.CURRENT_USER.getFullName());
+        holder.phone.setText("Số điện thoại: " + Common.CURRENT_USER.getPhoneNumber());
+        holder.address.setText("Địa chỉ: " + order.getAddress());
+        holder.orderTime.setText("Thời gian đặt: " + order.getOrderTime());
+
+        if(order.getTotal() != null)
+            holder.total.setText("Tổng: " + Common.changeCurrencyUnit(order.getTotal()));
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, OrderDetailActivity.class);
+                intent.putExtra("order", order);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -76,13 +92,20 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             address = itemView.findViewById(R.id.address);
             orderTime = itemView.findViewById(R.id.order_time);
             total = itemView.findViewById(R.id.total);
+        }
+    }
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    context.startActivity(new Intent(context, OrderDetailActivity.class));
-                }
-            });
+    public static Timestamp convertStringToTimestamp(String strDate) {
+        try {
+            DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            // you can change format of date
+            Date date = formatter.parse(strDate);
+            Timestamp timeStampDate = new Timestamp(date.getTime());
+
+            return timeStampDate;
+        } catch (ParseException e) {
+            System.out.println("Exception :" + e);
+            return null;
         }
     }
 }

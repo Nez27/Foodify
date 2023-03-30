@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +43,7 @@ public class PreparingFragment extends Fragment {
     NestedScrollView nestedScrollView;
     private ProgressBar progressBar;
     private TextView endOfListText;
+    private LinearLayout empty_layout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,6 +82,7 @@ public class PreparingFragment extends Fragment {
         nestedScrollView = view.findViewById(R.id.root_view);
         progressBar = view.findViewById(R.id.progress_bar);
         endOfListText = view.findViewById(R.id.end_of_list_text);
+        empty_layout = view.findViewById(R.id.empty_layout);
     }
 
     private void getOrderUser(int page){
@@ -96,6 +99,17 @@ public class PreparingFragment extends Fragment {
 
                     if(LAST_PAGE)
                         hideProgressBarAndShowEndOfList();
+
+                    //If don't have order
+                    if(listOrders.size() == 0){
+                        nestedScrollView.setVisibility(View.GONE);
+
+                        empty_layout.setVisibility(View.VISIBLE);
+                    } else {
+                        nestedScrollView.setVisibility(View.VISIBLE);
+
+                        empty_layout.setVisibility(View.GONE);
+                    }
 
                     orderAdapter.setData(listOrders);
                     recyclerView.setAdapter(orderAdapter);

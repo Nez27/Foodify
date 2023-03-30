@@ -356,7 +356,7 @@ public class FoodDetailActivity extends AppCompatActivity {
                     }
                 } else if(response.code() == 404){
                     //Don't have user comment
-                    user_comment_layout.setVisibility(View.INVISIBLE);
+                    user_comment_layout.setVisibility(View.GONE);
                     showUI();
                 } else {
                     Toast.makeText(FoodDetailActivity.this, "Có lỗi từ hệ thống! Mã lỗi: " + response.code(), Toast.LENGTH_SHORT).show();
@@ -689,7 +689,7 @@ public class FoodDetailActivity extends AppCompatActivity {
 
                             //Remove layout comment
                             rating_button.setVisibility(View.VISIBLE);
-                            user_comment_layout.setVisibility(View.INVISIBLE);
+                            user_comment_layout.setVisibility(View.GONE);
 
                             //Update information food
                             progressLayout.setVisibility(View.VISIBLE);

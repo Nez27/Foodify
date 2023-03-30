@@ -189,7 +189,10 @@ public class FoodDetailActivity extends AppCompatActivity {
         rating_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openCommentDialog(Gravity.CENTER, CREATE_COMMENT);
+                if(Common.CURRENT_USER != null)
+                    openCommentDialog(Gravity.CENTER, CREATE_COMMENT);
+                else
+                    startActivity(new Intent(FoodDetailActivity.this, SignInActivity.class));
             }
         });
 
@@ -350,6 +353,8 @@ public class FoodDetailActivity extends AppCompatActivity {
                         ratingBarComment.setRating(commentData.getRating());
                         contentComment.setText(commentData.getContent());
 
+                        user_comment_layout.setVisibility(View.VISIBLE);
+
                         showUI();
 
                         rating_button.setVisibility(View.GONE);
@@ -502,9 +507,6 @@ public class FoodDetailActivity extends AppCompatActivity {
                 else
                     notFavoriteIcon();
 
-                getCommentUser();
-
-
             }
 
             @Override
@@ -524,9 +526,10 @@ public class FoodDetailActivity extends AppCompatActivity {
 
                 initData();
 
-                if(Common.CURRENT_USER != null)
+                if(Common.CURRENT_USER != null){
                     checkFoodIsFavorite(Integer.parseInt(foodId));
-                else
+                    getCommentUser();
+                } else
                     showUI();
             }
 

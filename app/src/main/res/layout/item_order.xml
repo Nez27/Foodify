@@ -21,7 +21,7 @@
                 android:id="@+id/order_tracking_number"
                 android:text="Order #123456789"
                 android:fontFamily="@font/bebas"
-                android:textColor="@color/black"
+                android:textColor="@color/primaryColor"
                 android:textSize="25sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

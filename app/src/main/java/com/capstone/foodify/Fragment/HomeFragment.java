@@ -85,12 +85,6 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        System.out.println("Main activity destroy!");
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         setNameUser();
@@ -133,8 +127,8 @@ public class HomeFragment extends Fragment {
     private List<Menu> getListMenu() {
         List<Menu> listMenu = new ArrayList<>();
 
-        listMenu.add(new Menu("Recommend Food", listFood));
-        listMenu.add(new Menu("Popular Food", recentFood));
+        listMenu.add(new Menu("Món ăn khuyến nghị", listFood));
+        listMenu.add(new Menu("Món ăn phổ biến", recentFood));
 
         return listMenu;
     }

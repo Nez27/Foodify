@@ -127,13 +127,13 @@ public class OrderDetailActivity extends AppCompatActivity {
     }
     
     private void deleteOrderUser(){
-        FoodApiToken.apiService.deleteOrder(Common.CURRENT_USER.getId(), order.getId()).enqueue(new Callback<CustomResponse>() {
+        FoodApiToken.apiService.updateOrderStatus(Common.CURRENT_USER.getId(), order.getId(), "CANCELED").enqueue(new Callback<CustomResponse>() {
             @Override
             public void onResponse(Call<CustomResponse> call, Response<CustomResponse> response) {
                 if(response.code() == 200){
                     new AestheticDialog.Builder(OrderDetailActivity.this, DialogStyle.RAINBOW, DialogType.SUCCESS)
                             .setTitle("Thông báo!")
-                            .setMessage("Đã xoá đơn thành công!")
+                            .setMessage("Đã huỷ đơn thành công!")
                             .setCancelable(false)
                             .setOnClickListener(new OnDialogClickListener() {
                                 @Override

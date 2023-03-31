@@ -61,6 +61,17 @@ public class FoodSearchAdapter extends RecyclerView.Adapter<FoodSearchAdapter.Fo
             holder.name.setText(foodName);
         }
 
+        String shopName = food.getShop().getName();
+
+        if(shopName.length() >= 18){
+            StringBuilder stringBuilder = new StringBuilder(food.getShop().getName());
+            stringBuilder.replace(18, food.getShop().getName().length(), "..." );
+            holder.shopName.setText(stringBuilder);
+        } else {
+            holder.shopName.setText(shopName);
+        }
+
+
         //When food does not have image
         if(food.getImages().size() == 0){
             holder.image.setImageResource(R.drawable.default_image_food);
@@ -143,7 +154,7 @@ public class FoodSearchAdapter extends RecyclerView.Adapter<FoodSearchAdapter.Fo
     public static class FoodViewHolder extends RecyclerView.ViewHolder{
 
         private final ImageView image, basket_icon;
-        private final TextView price, name, discount;
+        private final TextView price, name, discount, shopName;
 
         public FoodViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -153,6 +164,7 @@ public class FoodSearchAdapter extends RecyclerView.Adapter<FoodSearchAdapter.Fo
             price = itemView.findViewById(R.id.price_text_view);
             discount = itemView.findViewById(R.id.discount);
             basket_icon = itemView.findViewById(R.id.basket_icon);
+            shopName = itemView.findViewById(R.id.shop_name_text_view);
         }
     }
 }

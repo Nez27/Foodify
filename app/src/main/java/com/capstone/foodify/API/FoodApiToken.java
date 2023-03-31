@@ -50,7 +50,7 @@ public interface FoodApiToken {
 
     FoodApiToken apiService = new Retrofit.Builder()
             .client(client)
-            .baseUrl("https://foodify-backend-production.up.railway.app/api/").addConverterFactory(GsonConverterFactory.create(gson))
+            .baseUrl("http://192.168.1.183:8080/api/").addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(FoodApiToken.class);
 
@@ -99,4 +99,7 @@ public interface FoodApiToken {
 
     @DELETE("users/{userId}/orders/{orderId}")
     Call<CustomResponse> deleteOrder(@Path("userId") int userId, @Path("orderId") int orderId);
+
+    @PUT("users/{userId}/orders/{orderId}/status")
+    Call<CustomResponse> updateOrderStatus(@Path("userId") int userId, @Path("orderId") int orderId, @Query("status") String status);
 }

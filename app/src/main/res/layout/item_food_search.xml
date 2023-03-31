@@ -16,8 +16,8 @@
 
         <ImageView
             android:id="@+id/image_view"
-            android:layout_width="110dp"
-            android:layout_height="110dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:src="@drawable/food"
             android:scaleType="centerCrop"
             app:riv_corner_radius="10dip"
@@ -25,7 +25,7 @@
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:layout_weight="1"
             >
@@ -33,59 +33,67 @@
             <TextView
                 android:id="@+id/food_name_text_view"
                 android:text="Food Name"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:textColor="@color/black"
                 android:fontFamily="@font/opensans"
-                android:layout_width="wrap_content"
-                android:layout_height="47dp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:layout_marginStart="12dp"
+                android:layout_weight="0.5"
                 android:layout_marginTop="5dp"
                 app:layout_constraintStart_toEndOf="@id/image_view"
                 app:layout_constraintTop_toTopOf="parent"
                 />
 
-            <TextView
-                android:id="@+id/shop_name_text_view"
-                android:text="Shop Name"
-                android:textSize="18sp"
-                android:textColor="@color/secondary"
-                android:fontFamily="@font/opensans"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="2dp"
-                app:layout_constraintStart_toEndOf="@id/image_view"
-                app:layout_constraintTop_toBottomOf="@id/text_view_1"
-                />
-
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
+                android:layout_height="0dp"
+                android:layout_weight="0.5"
+                android:orientation="vertical"
                 >
-
                 <TextView
-                    android:id="@+id/price_text_view"
-                    android:text="$5.00"
-                    android:textSize="25sp"
-                    android:textColor="@color/primaryColor"
-                    android:fontFamily="@font/bebas"
+                    android:id="@+id/shop_name_text_view"
+                    android:text="Shop Name"
+                    android:textSize="15sp"
+                    android:textColor="@color/secondary"
+                    android:fontFamily="@font/opensans"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
+                    android:layout_marginTop="2dp"
+                    app:layout_constraintStart_toEndOf="@id/image_view"
+                    app:layout_constraintTop_toBottomOf="@id/text_view_1"
                     />
 
-                <TextView
-                    android:id="@+id/discount"
-                    android:text="-59%"
-                    android:textSize="8sp"
-                    android:textColor="@color/red"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:visibility="gone"
-                    />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    >
+
+                    <TextView
+                        android:id="@+id/price_text_view"
+                        android:text="$5.00"
+                        android:textSize="20sp"
+                        android:textColor="@color/primaryColor"
+                        android:fontFamily="@font/bebas"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        />
+
+                    <TextView
+                        android:id="@+id/discount"
+                        android:text="-59%"
+                        android:textSize="7sp"
+                        android:textColor="@color/red"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:visibility="gone"
+                        />
+                </LinearLayout>
+
             </LinearLayout>
-
 
         </LinearLayout>
 

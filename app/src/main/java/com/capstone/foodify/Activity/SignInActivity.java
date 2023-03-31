@@ -225,6 +225,7 @@ public class SignInActivity extends AppCompatActivity {
                                                                         progressLayout.setVisibility(View.GONE);
 
                                                                         startActivity(new Intent(SignInActivity.this, MainActivity.class));
+                                                                        finish();
                                                                     } else {
                                                                         Toast.makeText(SignInActivity.this, "Tài khoản không hợp lệ! Vui lòng kiểm tra lại!", Toast.LENGTH_SHORT).show();
                                                                         FirebaseAuth.getInstance().signOut();

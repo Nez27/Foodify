@@ -333,7 +333,8 @@ public class FoodDetailActivity extends AppCompatActivity {
 
             }
             Toast.makeText(FoodDetailActivity.this, "Đã thêm " + food.getName() + " vào giỏ hàng!", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(FoodDetailActivity.this, MainActivity.class));
+            onBackPressed();
+            finish();
 
         } else {
             Toast.makeText(FoodDetailActivity.this, "Bạn chưa chọn số lượng đồ ăn cần đặt!", Toast.LENGTH_SHORT).show();

@@ -362,6 +362,8 @@ public class OrderCheckOutActivity extends AppCompatActivity {
 
             }
         });
+
+        progress_layout.setVisibility(View.GONE);
     }
 
     private void createOrderFood(String transactionId, String paymentMethod) {

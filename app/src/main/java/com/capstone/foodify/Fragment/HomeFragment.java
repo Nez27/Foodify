@@ -128,7 +128,7 @@ public class HomeFragment extends Fragment {
         List<Menu> listMenu = new ArrayList<>();
 
         listMenu.add(new Menu("Món ăn khuyến nghị", listFood));
-        listMenu.add(new Menu("Món ăn phổ biến", recentFood));
+        listMenu.add(new Menu("Món ăn được thêm gần đây", recentFood));
 
         return listMenu;
     }

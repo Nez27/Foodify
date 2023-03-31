@@ -39,7 +39,7 @@
 
             <TextView
                 android:id="@+id/end_of_list_text"
-                android:text="End of list"
+                android:text="Đã hết"
                 android:fontFamily="@font/opensans"
                 android:textColor="@color/grayLight"
                 android:visibility="gone"

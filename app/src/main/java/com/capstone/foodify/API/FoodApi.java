@@ -31,11 +31,11 @@ public interface FoodApi {
     Gson gson = new GsonBuilder().setDateFormat("HH:mm:ss dd-MM-yyyy").setLenient().create();
 
     FoodApi apiService = new Retrofit.Builder()
-            .baseUrl("http://192.168.1.183:8080/api/").addConverterFactory(GsonConverterFactory.create(gson))
+            .baseUrl("https://foodify-backend-production.up.railway.app/api/").addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(FoodApi.class);
 
-    @GET("products/enable?pageNo=0&pageSize=10&sortBy=id&sortDir=asc")
+    @GET("products/random?pageSize=10")
     Call<Foods> recommendFood();
 
     @GET("products/enable?pageNo=0&pageSize=10&sortBy=createdTime&sortDir=desc")

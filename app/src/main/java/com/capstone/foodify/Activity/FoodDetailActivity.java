@@ -208,7 +208,9 @@ public class FoodDetailActivity extends AppCompatActivity {
         shopName_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(FoodDetailActivity.this, ShopDetailActivity.class));
+                Intent intent = new Intent(FoodDetailActivity.this, ShopDetailActivity.class);
+                intent.putExtra("ShopId", food.getShop().getId());
+                startActivity(intent);
             }
         });
 

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -102,6 +103,7 @@ public class VerifyAccountActivity extends AppCompatActivity {
 
         //Init text changedListener
         textChangedListenerEditTextOTP();
+
 
         //Add event to confirm button
         confirm_code.setOnClickListener(new View.OnClickListener() {
@@ -283,104 +285,119 @@ public class VerifyAccountActivity extends AppCompatActivity {
         inputCode1.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if(inputCode1.getText().toString().length()== 0)     //size as per your requirement
-                {
-                    inputCode2.requestFocus();
-                }
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // Nothing to do
+                if (s.length() == 1) {
+                    inputCode2.requestFocus(View.FOCUS_DOWN);
+                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                // Nothing to do
             }
         });
 
         inputCode2.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if(inputCode2.getText().toString().length()== 0)     //size as per your requirement
-                {
-                    inputCode3.requestFocus();
-                }
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // Nothing to do
+                if(count == 0) {
+                    inputCode1.requestFocus(View.FOCUS_DOWN);
+                } else {
+                    if (s.length() == 1) {
+                        inputCode3.requestFocus(View.FOCUS_DOWN);
+                    }
+                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                // Nothing to do
             }
         });
 
         inputCode3.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if(inputCode3.getText().toString().length()== 0)     //size as per your requirement
-                {
-                    inputCode4.requestFocus();
-                }
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // Nothing to do
+                if(count == 0) {
+                    inputCode2.requestFocus(View.FOCUS_DOWN);
+                } else {
+                    if (s.length() == 1) {
+                        inputCode4.requestFocus(View.FOCUS_DOWN);
+                    }
+                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                // Nothing to do
             }
         });
-
         inputCode4.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if(inputCode4.getText().toString().length()== 0)     //size as per your requirement
-                {
-                    inputCode5.requestFocus();
-                }
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // Nothing to do
+                if(count == 0) {
+                    inputCode3.requestFocus(View.FOCUS_DOWN);
+                } else {
+                    if (s.length() == 1) {
+                        inputCode5.requestFocus(View.FOCUS_DOWN);
+                    }
+                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                // Nothing to do
             }
         });
-
         inputCode5.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if(inputCode5.getText().toString().length()== 0)     //size as per your requirement
-                {
-                    inputCode6.requestFocus();
-                }
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // Nothing to do
+                if(count == 0) {
+                    inputCode4.requestFocus(View.FOCUS_DOWN);
+                } else {
+                    if (s.length() == 1) {
+                        inputCode6.requestFocus(View.FOCUS_DOWN);
+                    }
+                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                // Nothing to do
+            }
+        });
+
+        inputCode6.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(count == 0) {
+                    inputCode5.requestFocus(View.FOCUS_DOWN);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
             }
         });
     }
-
     private void requestSMSPermission()
     {
         String permission = Manifest.permission.RECEIVE_SMS;

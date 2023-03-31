@@ -138,6 +138,9 @@ public class OrderDetailActivity extends AppCompatActivity {
                             .setOnClickListener(new OnDialogClickListener() {
                                 @Override
                                 public void onClick(@NonNull AestheticDialog.Builder builder) {
+
+                                    OrderActivity.orderActivity.finish();
+
                                     startActivity(new Intent(OrderDetailActivity.this, OrderActivity.class));
                                     builder.dismiss();
                                     finish();

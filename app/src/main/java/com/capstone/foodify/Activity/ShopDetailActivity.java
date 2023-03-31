@@ -40,11 +40,10 @@ public class ShopDetailActivity extends AppCompatActivity {
     private static boolean LAST_PAGE = false;
     private int shopId;
     private List<Food> listFood = new ArrayList<>();
-    TextView content_description_text_view, student_shop_text_view, end_of_list_text_view;
+    TextView content_description_text_view, student_shop_text_view, end_of_list_text_view, txt_shop_name;
     ImageView imageShop, back_image;
     RecyclerView recycler_view_food_shop;
     FoodShopAdapter adapter;
-    private CollapsingToolbarLayout collapsingToolbarLayout;
     private NestedScrollView nestedScrollView;
     private ProgressBar progressBar;
     private Shop shop;
@@ -60,13 +59,13 @@ public class ShopDetailActivity extends AppCompatActivity {
         recycler_view_food_shop = findViewById(R.id.recycler_view_food_shop);
         back_image = findViewById(R.id.back_image);
         adapter = new FoodShopAdapter(this);
-        collapsingToolbarLayout = findViewById(R.id.collapsing);
         content_description_text_view = findViewById(R.id.content_description_text_view);
         student_shop_text_view = findViewById(R.id.student_shop_text_view);
         nestedScrollView = findViewById(R.id.food_detail);
         progressBar = findViewById(R.id.progress_bar);
         end_of_list_text_view = findViewById(R.id.end_of_list_text);
         progressLayout = findViewById(R.id.progress_layout);
+        txt_shop_name = findViewById(R.id.txt_shop_name);
 
         //Get data
         if (getIntent() != null)
@@ -159,7 +158,7 @@ public class ShopDetailActivity extends AppCompatActivity {
     private void initData(Shop shop) {
         //Init data
         Picasso.get().load(shop.getImageUrl()).into(imageShop);
-        collapsingToolbarLayout.setTitle(shop.getName());
+        txt_shop_name.setText(shop.getName());
         content_description_text_view.setText(shop.getDescription());
 
         //If shop is studentShop, enable tag student shop

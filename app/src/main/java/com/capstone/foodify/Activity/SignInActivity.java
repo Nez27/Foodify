@@ -2,6 +2,8 @@ package com.capstone.foodify.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,6 +19,7 @@ import com.capstone.foodify.Fragment.HomeFragment;
 import com.capstone.foodify.Model.User;
 import com.capstone.foodify.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -26,6 +29,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
+import com.google.firebase.auth.SignInMethodQueryResult;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -99,6 +103,24 @@ public class SignInActivity extends AppCompatActivity {
                 }
             }
         });
+
+        edt_password.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                textInput_password.setErrorEnabled(false);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
     }
 
     private void initData(){
@@ -146,7 +168,26 @@ public class SignInActivity extends AppCompatActivity {
 
         mAuth.setLanguageCode("vi");
 
-        mAuth.signInWithEmailAndPassword(edt_email.getText().toString(), edt_password.getText().toString())
+        mAuth.fetchSignInMethodsForEmail(email)
+                .addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
+
+                        boolean isNewUser = task.getResult().getSignInMethods().isEmpty();
+
+                        if (isNewUser) {
+                            Toast.makeText(SignInActivity.this, "Tài khoản chưa được đăng ký! Vui lòng đăng ký để tiếp tục sử dụng!", Toast.LENGTH_SHORT).show();
+                            progressLayout.setVisibility(View.GONE);
+                        } else {
+                            signInMethod();
+                        }
+
+                    }
+                });
+    }
+
+    private void signInMethod(){
+        mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(SignInActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -155,7 +196,7 @@ public class SignInActivity extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
 
                             //Save user
-                            Paper.book().write("user", user);
+//                            Paper.book().write("user", user);
 
                             user.getIdToken(true)
                                     .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {

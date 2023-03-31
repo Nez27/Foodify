@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
 
         //Get user from Paper
-        user = Paper.book().read("user");
+//        user = Paper.book().read("user");
 
         // Check if user is signed in (non-null) and update UI accordingly.
         user = mAuth.getCurrentUser();
@@ -117,6 +117,8 @@ public class MainActivity extends AppCompatActivity {
                                         if (userData != null) {
                                             Common.CURRENT_USER = userData;
                                             HomeFragment.setNameUser();
+
+                                            progressLayout.setVisibility(View.GONE);
                                         }
                                     }
 

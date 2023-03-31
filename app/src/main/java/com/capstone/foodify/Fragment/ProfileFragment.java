@@ -104,7 +104,7 @@ public class ProfileFragment extends Fragment {
                                 FirebaseAuth.getInstance().signOut();
 
                                 //Delete user from local storage
-                                Paper.book().delete("user");
+//                                Paper.book().delete("user");
 
                                 Common.TOKEN = null;
                                 Common.CURRENT_USER = null;

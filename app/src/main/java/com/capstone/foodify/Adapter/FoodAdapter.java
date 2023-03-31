@@ -51,9 +51,9 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         }
 
         String foodName = food.getName();
-        if(foodName.length() >= 30){
+        if(foodName.length() >= 24){
             StringBuilder stringBuilder = new StringBuilder(food.getName());
-            stringBuilder.replace(30, food.getName().length(), "..." );
+            stringBuilder.replace(24, food.getName().length(), "..." );
             holder.name.setText(stringBuilder);
         } else {
             holder.name.setText(foodName);

@@ -1,5 +1,6 @@
 package com.capstone.foodify.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -18,6 +19,10 @@ import com.capstone.foodify.Model.Basket;
 import com.capstone.foodify.Model.Food;
 import com.capstone.foodify.R;
 import com.squareup.picasso.Picasso;
+import com.thecode.aestheticdialogs.AestheticDialog;
+import com.thecode.aestheticdialogs.DialogAnimation;
+import com.thecode.aestheticdialogs.DialogStyle;
+import com.thecode.aestheticdialogs.DialogType;
 
 import java.util.List;
 
@@ -25,10 +30,12 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
 
     private List<Food> listFood;
     private Context context;
+    private Activity activity;
 
     public FoodAdapter(Context context){
         this.context = context;
     }
+
 
     public FoodAdapter() {}
     public void setData(List<Food> list) {
@@ -67,7 +74,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         }
 
         //Check value discountPercent
-        float cost = 0;
+        float cost;
         if(food.getDiscountPercent() > 0){
 
             //Calculate final cost when apply discountPercent
@@ -85,36 +92,21 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         holder.basket_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Basket foodInBasket = Common.getFoodExistInBasket(food.getId());
-                if(foodInBasket == null){
-                    //If item is not exist in basket
-
-                    //Check food image is null or not
-                    String imageTemp = null;
-                    if(food.getImages().size() > 0)
-                        imageTemp = food.getImages().get(0).getImageUrl();
-
-                    Common.LIST_BASKET_FOOD.add(new Basket(food.getId(), imageTemp, food.getName(), food.getCost(), food.getShop().getName(),
-                            "1", food.getDiscountPercent()));
-                } else {
-                    //If item is exist in basket
-
-                    for(int i = 0; i < Common.LIST_BASKET_FOOD.size(); i++){
-                        String foodId = Common.LIST_BASKET_FOOD.get(i).getId();
-                        //Find foodId exist
-                        if(foodId.equals(food.getId())){
-                            //Get quantity food from basket
-                            String quantity = Common.LIST_BASKET_FOOD.get(i).getQuantity();
-
-                            //Change quantity food from basket
-                            int quantityInt = Integer.parseInt(quantity) + 1;
-                            Common.LIST_BASKET_FOOD.get(i).setQuantity(String.valueOf(quantityInt));
-                            break;
-                        }
-                    }
-
+                if(Common.FINAL_SHOP == null && Common.LIST_BASKET_FOOD.size() == 0){
+                    Common.FINAL_SHOP = food.getShop().getName();
                 }
-                Toast.makeText(context, "Đã thêm " + food.getName() + " vào giỏ hàng!", Toast.LENGTH_SHORT).show();
+
+                if(Common.FINAL_SHOP.equals(food.getShop().getName())){
+                    Common.addFoodToBasket(food);
+                    Toast.makeText(context, "Đã thêm " + food.getName() + " vào giỏ hàng!", Toast.LENGTH_SHORT).show();
+                } else {
+                    new AestheticDialog.Builder((Activity) context, DialogStyle.FLAT, DialogType.INFO)
+                            .setTitle("Thông báo!")
+                            .setMessage("Bạn chỉ có thể đặt những món ăn cùng cửa hàng, xin vui lòng kiểm tra lại giỏ hàng!")
+                            .setAnimation(DialogAnimation.SHRINK)
+                            .setCancelable(true)
+                            .show();
+                }
             }
         });
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -125,7 +117,6 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
                 context.startActivity(intent);
             }
         });
-
     }
 
     @Override

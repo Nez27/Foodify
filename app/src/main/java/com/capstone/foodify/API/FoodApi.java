@@ -4,6 +4,7 @@ import com.capstone.foodify.Model.Category;
 import com.capstone.foodify.Model.Comment;
 import com.capstone.foodify.Model.DistrictWardResponse;
 import com.capstone.foodify.Model.Food;
+import com.capstone.foodify.Model.Response.Categories;
 import com.capstone.foodify.Model.Response.Comments;
 import com.capstone.foodify.Model.Response.CustomResponse;
 import com.capstone.foodify.Model.Response.Foods;
@@ -50,8 +51,8 @@ public interface FoodApi {
     @GET("products")
     Call<Foods> listFood(@Query("pageNo") int pageNo, @Query("pageSize") int pageSize, @Query("sortBy") String sortBy, @Query("sortDir") String sortDir);
 
-    @GET("categories")
-    Call<List<Category>> listCategory();
+    @GET("categories/randoms?pageNo=0&pageSize=7")
+    Call<Categories> listCategory();
 
     @GET("products/categories")
     Call<Foods> listFoodByCategory(@Query("id") List<Integer> id, @Query("pageNo") int pageNo, @Query("pageSize") int pageSize, @Query("sortBy") String sortBy, @Query("sortDir") String sortDir);
@@ -86,4 +87,7 @@ public interface FoodApi {
 
     @GET("products/{productId}/users/{userId}")
     Call<Comment> getUserComment(@Path("productId") int productId, @Path("userId") int userId);
+
+    @GET("shops/{id}")
+    Call<Shop> getShopById(@Path("id") int id);
 }

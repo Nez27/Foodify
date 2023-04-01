@@ -8,8 +8,9 @@ public class Basket {
     private String shopName;
     private String quantity;
     private float discountPercent;
+    private int shopId;
 
-    public Basket(String id, String img, String name, float cost, String shopName, String quantity, float discountPercent) {
+    public Basket(String id, String img, String name, float cost, String shopName, String quantity, float discountPercent, int shopId) {
         this.id = id;
         this.img = img;
         this.name = name;
@@ -17,6 +18,7 @@ public class Basket {
         this.shopName = shopName;
         this.quantity = quantity;
         this.discountPercent = discountPercent;
+        this.shopId = shopId;
     }
 
     public String getId() {
@@ -72,5 +74,13 @@ public class Basket {
 
     public void setDiscountPercent(float discountPercent) {
         this.discountPercent = discountPercent;
+    }
+
+    public int getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(int shopId) {
+        this.shopId = shopId;
     }
 }

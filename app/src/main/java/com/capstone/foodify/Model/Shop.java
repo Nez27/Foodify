@@ -10,6 +10,8 @@ public class Shop implements Serializable {
     private boolean isEnabled;
     private boolean isStudent;
     private int userId;
+    private double lat;
+    private double lng;
 
     public int getId() {
         return id;
@@ -65,5 +67,21 @@ public class Shop implements Serializable {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public double getLng() {
+        return lng;
+    }
+
+    public void setLng(double lng) {
+        this.lng = lng;
     }
 }

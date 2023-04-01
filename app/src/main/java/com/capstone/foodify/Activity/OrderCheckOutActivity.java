@@ -1,6 +1,7 @@
 package com.capstone.foodify.Activity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -40,6 +41,7 @@ import com.capstone.foodify.Model.GoogleMap.GoogleMapResponse;
 import com.capstone.foodify.Model.GoogleMap.Location;
 import com.capstone.foodify.Model.Order;
 import com.capstone.foodify.Model.OrderDetail;
+import com.capstone.foodify.Model.Shop;
 import com.capstone.foodify.R;
 import com.capstone.foodify.ZaloPay.Api.CreateOrder;
 import com.capstone.foodify.ZaloPay.Helper.Helpers;
@@ -47,6 +49,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.thecode.aestheticdialogs.AestheticDialog;
+import com.thecode.aestheticdialogs.DialogAnimation;
 import com.thecode.aestheticdialogs.DialogStyle;
 import com.thecode.aestheticdialogs.DialogType;
 import com.thecode.aestheticdialogs.OnDialogClickListener;
@@ -71,9 +74,9 @@ public class OrderCheckOutActivity extends AppCompatActivity {
     private static final String TAKE_FOOD_FROM_SHOP = "Đến shop lấy";
     private static final String ZALO_PAYMENT_METHOD = "ZALO PAY";
     private static final String CASH_PAYMENT = "CASH";
-    private static final Double LAT_SHOP = 16.0500622;
-    private static final Double LNG_SHOP = 108.2351611;
-    private static String finalAddress = null;
+    private static Double LAT_SHOP = 0.0;
+    private static Double LNG_SHOP = 0.0;
+    private static String finalAddress, tempAddress = null;
     private static double finalLat, finalLng = 0;
     ImageView back_image;
     OrderDetailAdapter adapter;
@@ -91,17 +94,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
     private static final ArrayList<String> wardList = new ArrayList<>();
     private static final ArrayList<String> districtList = new ArrayList<>();
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_order_check_out);
-
-        //Check user is login or not!
-        if(Common.CURRENT_USER == null)
-            startActivity(new Intent(this, SignInActivity.class));
-
-
-        //Init Component
+    private void initComponent(){
         txt_userName = findViewById(R.id.txt_userName);
         txt_phone = findViewById(R.id.txt_phone);
         spn_list_address = findViewById(R.id.list_address);
@@ -128,6 +121,22 @@ public class OrderCheckOutActivity extends AppCompatActivity {
         txt_ship_cost = findViewById(R.id.txt_ship_cost);
         btn_ZaloPay = findViewById(R.id.btnZaloPay);
         btn_Pay = findViewById(R.id.btnPay);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_order_check_out);
+
+        //Check user is login or not!
+        if(Common.CURRENT_USER == null)
+            startActivity(new Intent(this, SignInActivity.class));
+
+
+
+
+        //Init Component
+        initComponent();
 
         //Reload user data
         Common.reloadUser(this);
@@ -137,6 +146,8 @@ public class OrderCheckOutActivity extends AppCompatActivity {
             total = getIntent().getFloatExtra("total", 0);
             txt_total.setText(Common.changeCurrencyUnit(total));
         }
+        
+        getLocationShop();
 
         StrictMode.ThreadPolicy policy = new
                 StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -160,11 +171,16 @@ public class OrderCheckOutActivity extends AppCompatActivity {
         //Set user name and phone
         txt_userName.setText(Common.CURRENT_USER.getFullName());
         txt_phone.setText(Common.CURRENT_USER.getPhoneNumber());
+        
+        
 
         //Set event for change address button
         change_address_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                finalAddress = null;
+
                 confirm_address_button.setEnabled(true);
                 change_address_button.setVisibility(View.GONE);
 
@@ -187,7 +203,10 @@ public class OrderCheckOutActivity extends AppCompatActivity {
 
                 if(radio_button_selected == auto_detect_location){
                     //Action 2
-
+                    if(tempAddress == null)
+                        auto_detect_location.setText("Không thể lấy được vị trí! Vui lòng thử lại sau");
+                    else
+                        finalAddress = tempAddress;
                 }
 
                 if(radio_button_selected == manual_input_address){
@@ -207,7 +226,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
                 }
 
                 if(finalAddress == null){
-                    Toast.makeText(OrderCheckOutActivity.this, "Bạn chưa chọn địa chỉ!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(OrderCheckOutActivity.this, "Bạn chưa xác nhận địa chỉ!", Toast.LENGTH_SHORT).show();
                 } else {
                     progress_layout.setVisibility(View.VISIBLE);
                     confirm_address_button.setEnabled(false);
@@ -215,7 +234,22 @@ public class OrderCheckOutActivity extends AppCompatActivity {
 
                     disableAllInputAddressOption();
 
-                    getDistanceAndCalculateShipCost(finalAddress);
+                    if(radio_button_selected != take_food_from_shop){
+
+                        if(LAT_SHOP != 0.0 && LNG_SHOP != 0.0)
+                            getDistanceAndCalculateShipCost(finalAddress);
+                        else {
+                            new AestheticDialog.Builder(OrderCheckOutActivity.this, DialogStyle.FLAT, DialogType.INFO)
+                                    .setTitle("Thông báo!")
+                                    .setMessage("Chưa thể lấy được vị trí shop, vui lòng thử lại hoặc có thể chọn \"Đến shop lấy\" để tiếp tục!")
+                                    .setAnimation(DialogAnimation.SHRINK)
+                                    .setCancelable(true)
+                                    .show();
+                            progress_layout.setVisibility(View.GONE);
+                        }
+
+                    }
+                    progress_layout.setVisibility(View.GONE);
                 }
             }
         });
@@ -254,26 +288,36 @@ public class OrderCheckOutActivity extends AppCompatActivity {
     }
 
     private void getAddress() {
-        GoogleMapApi.apiService.getAddress(Common.CURRENT_LOCATION.getLatitude() + "," + Common.CURRENT_LOCATION.getLongitude(), Common.MAP_API).enqueue(new Callback<GoogleMapResponse>() {
-            @Override
-            public void onResponse(Call<GoogleMapResponse> call, Response<GoogleMapResponse> response) {
-                if(response.code() == 200){
-                    GoogleMapResponse responseData = response.body();
 
-                    String address = responseData.getResults().get(0).getFormattedAddress();
+        if(Common.tempCurrentAddressUser == null){
+            GoogleMapApi.apiService.getAddress(Common.CURRENT_LOCATION.getLatitude() + "," + Common.CURRENT_LOCATION.getLongitude(), Common.MAP_API).enqueue(new Callback<GoogleMapResponse>() {
+                @Override
+                public void onResponse(Call<GoogleMapResponse> call, Response<GoogleMapResponse> response) {
+                    if(response.code() == 200){
+                        GoogleMapResponse responseData = response.body();
 
-                    edt_address_detect.setText(address);
-                    
-                    finalAddress = address;
-                    progress_layout.setVisibility(View.GONE);
+                        String address = responseData.getResults().get(0).getFormattedAddress();
+
+                        Common.tempCurrentAddressUser = address;
+
+                        edt_address_detect.setText(address);
+
+                        tempAddress = address;
+                        progress_layout.setVisibility(View.GONE);
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<GoogleMapResponse> call, Throwable t) {
-                Toast.makeText(OrderCheckOutActivity.this, "Lỗi kết nối!", Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onFailure(Call<GoogleMapResponse> call, Throwable t) {
+                    Toast.makeText(OrderCheckOutActivity.this, "Lỗi kết nối!", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            edt_address_detect.setText(Common.tempCurrentAddressUser);
+
+            tempAddress = Common.tempCurrentAddressUser;
+            progress_layout.setVisibility(View.GONE);
+        }
 
     }
 
@@ -350,7 +394,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     } else {
-                        Toast.makeText(OrderCheckOutActivity.this, "Bạn chưa chọn địa chỉ!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(OrderCheckOutActivity.this, "Bạn chưa xác nhận địa chỉ!", Toast.LENGTH_SHORT).show();
                         progress_layout.setVisibility(View.GONE);
                     }
 
@@ -390,7 +434,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(@NonNull AestheticDialog.Builder builder) {
                                     Common.LIST_BASKET_FOOD.clear();
-                                    startActivity(new Intent(OrderCheckOutActivity.this, MainActivity.class));
+                                    startActivity(new Intent(OrderCheckOutActivity.this, OrderActivity.class));
                                     builder.dismiss();
                                     finish();
                                 }
@@ -455,6 +499,28 @@ public class OrderCheckOutActivity extends AppCompatActivity {
         } else {
             progress_layout.setVisibility(View.GONE);
         }
+
+    }
+
+    private void getLocationShop(){
+        FoodApi.apiService.getShopById(Common.LIST_BASKET_FOOD.get(0).getShopId()).enqueue(new Callback<Shop>() {
+            @Override
+            public void onResponse(Call<Shop> call, Response<Shop> response) {
+                if(response.code() == 200){
+                    Shop shopTemp = response.body();
+                    
+                    LAT_SHOP = shopTemp.getLat();
+                    LNG_SHOP = shopTemp.getLng();
+                } else {
+                    Toast.makeText(OrderCheckOutActivity.this, "Lỗi hệ thống! Mã lỗi: " + response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Shop> call, Throwable t) {
+                Toast.makeText(OrderCheckOutActivity.this, "Đã có lỗi kết nối đến hệ thống!", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
@@ -543,9 +609,9 @@ public class OrderCheckOutActivity extends AppCompatActivity {
 
     private void enabledAllInputAddressOption(){
         list_address_input.setEnabled(true);
-        auto_detect_location.setEnabled(true);
         manual_input_address.setEnabled(true);
         take_food_from_shop.setEnabled(true);
+        auto_detect_location.setEnabled(true);
 
         spn_list_address.setEnabled(true);
         edt_address.setEnabled(true);
@@ -613,6 +679,11 @@ public class OrderCheckOutActivity extends AppCompatActivity {
                     progress_layout.setVisibility(View.VISIBLE);
                     if(Common.CURRENT_LOCATION != null)
                         getAddress();
+                    else
+                        edt_address_detect.setText("Không thể lấy được vị trí do bạn chưa cấp quyền ứng dụng!");
+
+                    //Reset address;
+                    finalAddress = null;
                 }
                 break;
             case R.id.manual_input_address:

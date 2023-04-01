@@ -1,6 +1,7 @@
 package com.capstone.foodify.Activity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -49,6 +50,10 @@ import com.mcdev.quantitizerlibrary.QuantitizerListener;
 import com.sjapps.library.customdialog.BasicDialog;
 import com.sjapps.library.customdialog.DialogButtonEvent;
 import com.sjapps.library.customdialog.DialogButtonEvents;
+import com.thecode.aestheticdialogs.AestheticDialog;
+import com.thecode.aestheticdialogs.DialogAnimation;
+import com.thecode.aestheticdialogs.DialogStyle;
+import com.thecode.aestheticdialogs.DialogType;
 import com.willy.ratingbar.RotationRatingBar;
 import com.willy.ratingbar.ScaleRatingBar;
 
@@ -303,42 +308,59 @@ public class FoodDetailActivity extends AppCompatActivity {
 
     private void addFoodToBasket(){
         if(horizontalQuantitizer.getValue() > 0){
-            Basket foodInBasket = Common.getFoodExistInBasket(food.getId());
-            if(foodInBasket == null){
-                //If item is not exist in basket
-
-                //Check food image is null or not
-                String imageTemp = null;
-                if(food.getImages().size() > 0)
-                    imageTemp = food.getImages().get(0).getImageUrl();
-
-                Common.LIST_BASKET_FOOD.add(new Basket(food.getId(), imageTemp, food.getName(), food.getCost(), food.getShop().getName(),
-                        String.valueOf(horizontalQuantitizer.getValue()), food.getDiscountPercent()));
-            } else {
-                //If item is exist in basket
-
-                for(int i = 0; i < Common.LIST_BASKET_FOOD.size(); i++){
-                    String foodId = Common.LIST_BASKET_FOOD.get(i).getId();
-                    //Find foodId exist
-                    if(foodId.equals(food.getId())){
-                        //Get quantity food from basket
-                        String quantity = Common.LIST_BASKET_FOOD.get(i).getQuantity();
-
-                        //Change quantity food from basket
-                        int quantityInt = Integer.parseInt(quantity) + horizontalQuantitizer.getValue();
-                        Common.LIST_BASKET_FOOD.get(i).setQuantity(String.valueOf(quantityInt));
-                        break;
-                    }
-                }
-
+            if(Common.FINAL_SHOP == null && Common.LIST_BASKET_FOOD.size() == 0){
+                Common.FINAL_SHOP = food.getShop().getName();
             }
-            Toast.makeText(FoodDetailActivity.this, "Đã thêm " + food.getName() + " vào giỏ hàng!", Toast.LENGTH_SHORT).show();
-            onBackPressed();
-            finish();
+
+            if(Common.FINAL_SHOP.equals(food.getShop().getName())){
+                addFood();
+            } else {
+                new AestheticDialog.Builder(this, DialogStyle.FLAT, DialogType.INFO)
+                        .setTitle("Thông báo!")
+                        .setMessage("Bạn chỉ có thể đặt những món ăn cùng cửa hàng, xin vui lòng kiểm tra lại giỏ hàng!")
+                        .setAnimation(DialogAnimation.SHRINK)
+                        .setCancelable(true)
+                        .show();
+            }
 
         } else {
             Toast.makeText(FoodDetailActivity.this, "Bạn chưa chọn số lượng đồ ăn cần đặt!", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void addFood() {
+        Basket foodInBasket = Common.getFoodExistInBasket(food.getId());
+        if(foodInBasket == null){
+            //If item is not exist in basket
+
+            //Check food image is null or not
+            String imageTemp = null;
+            if(food.getImages().size() > 0)
+                imageTemp = food.getImages().get(0).getImageUrl();
+
+            Common.LIST_BASKET_FOOD.add(new Basket(food.getId(), imageTemp, food.getName(), food.getCost(), food.getShop().getName(),
+                    String.valueOf(horizontalQuantitizer.getValue()), food.getDiscountPercent(), food.getShop().getId()));
+        } else {
+            //If item is exist in basket
+
+            for(int i = 0; i < Common.LIST_BASKET_FOOD.size(); i++){
+                String foodId = Common.LIST_BASKET_FOOD.get(i).getId();
+                //Find foodId exist
+                if(foodId.equals(food.getId())){
+                    //Get quantity food from basket
+                    String quantity = Common.LIST_BASKET_FOOD.get(i).getQuantity();
+
+                    //Change quantity food from basket
+                    int quantityInt = Integer.parseInt(quantity) + horizontalQuantitizer.getValue();
+                    Common.LIST_BASKET_FOOD.get(i).setQuantity(String.valueOf(quantityInt));
+                    break;
+                }
+            }
+
+        }
+        Toast.makeText(FoodDetailActivity.this, "Đã thêm " + food.getName() + " vào giỏ hàng!", Toast.LENGTH_SHORT).show();
+        onBackPressed();
+        finish();
     }
 
     private void getCommentUser(){

@@ -21,6 +21,7 @@ import com.capstone.foodify.Activity.MainActivity;
 import com.capstone.foodify.Activity.SignInActivity;
 import com.capstone.foodify.Fragment.HomeFragment;
 import com.capstone.foodify.Model.Basket;
+import com.capstone.foodify.Model.Food;
 import com.capstone.foodify.Model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -48,8 +49,10 @@ public class Common {
     public static final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!_])(?=\\S+$).{4,}$";
     public static final String PHONE_PATTERN = "^0[98753]{1}\\d{8}$";
     public static List<Basket> LIST_BASKET_FOOD = new ArrayList<>();
+    public static String tempCurrentAddressUser = null;
     public static String TOKEN = null;
     public static User CURRENT_USER = null;
+    public static String FINAL_SHOP = null;
 
     public static String changeCurrencyUnit(float price){
         Locale locale = new Locale("vi", "VN");
@@ -162,5 +165,37 @@ public class Common {
 
     public static Basket getFoodExistInBasket(String foodId) {
         return Common.LIST_BASKET_FOOD.stream().filter(food -> foodId.equals(food.getId())).findFirst().orElse(null);
+    }
+
+    public static void addFoodToBasket(Food food) {
+        Basket foodInBasket = Common.getFoodExistInBasket(food.getId());
+        if (foodInBasket == null) {
+            //If item is not exist in basket
+
+            //Check food image is null or not
+            String imageTemp = null;
+            if (food.getImages().size() > 0)
+                imageTemp = food.getImages().get(0).getImageUrl();
+
+            Common.LIST_BASKET_FOOD.add(new Basket(food.getId(), imageTemp, food.getName(), food.getCost(), food.getShop().getName(),
+                    "1", food.getDiscountPercent(), food.getShop().getId()));
+        } else {
+            //If item is exist in basket
+
+            for (int i = 0; i < Common.LIST_BASKET_FOOD.size(); i++) {
+                String foodId = Common.LIST_BASKET_FOOD.get(i).getId();
+                //Find foodId exist
+                if (foodId.equals(food.getId())) {
+                    //Get quantity food from basket
+                    String quantity = Common.LIST_BASKET_FOOD.get(i).getQuantity();
+
+                    //Change quantity food from basket
+                    int quantityInt = Integer.parseInt(quantity) + 1;
+                    Common.LIST_BASKET_FOOD.get(i).setQuantity(String.valueOf(quantityInt));
+                    break;
+                }
+            }
+
+        }
     }
 }

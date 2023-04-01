@@ -60,11 +60,11 @@ public class BasketFragment extends Fragment implements ItemTouchHelperListener 
         //Init data
         total.setText(Common.changeCurrencyUnit(0));
 
-        //Get list food in basket
-        getListBasketFood();
-
         //Check list basket is null or not!
         checkListBasket();
+
+        //Get list food in basket
+        getListBasketFood();
 
         //Set layout recyclerview
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -129,8 +129,8 @@ public class BasketFragment extends Fragment implements ItemTouchHelperListener 
             adapter.removeItem(indexDelete, getContext());
 
             //Show notification food has been delete
-            Snackbar snackbar = Snackbar.make(listBasketFoodView, foodNameDelete + " remove!", Snackbar.LENGTH_LONG);
-            snackbar.setAction("Undo", new View.OnClickListener() {
+            Snackbar snackbar = Snackbar.make(listBasketFoodView, foodNameDelete + " đã xoá!", Snackbar.LENGTH_LONG);
+            snackbar.setAction("Hoàn tác", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     adapter.undoItem(foodDelete, indexDelete, getContext());

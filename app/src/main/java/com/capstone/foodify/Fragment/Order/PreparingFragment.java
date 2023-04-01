@@ -34,8 +34,8 @@ public class PreparingFragment extends Fragment {
     private static final String STATUS = "CONFIRMED";
     private static int CURRENT_PAGE = 0;
     private static final int PAGE_SIZE = 8;
-    private static final String SORT_BY = "id";
-    private static final String SORT_DIR = "asc";
+    private static final String SORT_BY = "orderTime";
+    private static final String SORT_DIR = "desc";
     private static boolean LAST_PAGE;
     private List<Order> listOrders = new ArrayList<>();
     RecyclerView recyclerView;

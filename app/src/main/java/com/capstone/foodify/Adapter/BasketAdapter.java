@@ -173,6 +173,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketView
 
         //Show notification empty basket
         if(listBasketFood.size() == 0){
+            Common.FINAL_SHOP = null;
             hideRecyclerViewAndShowNotificationEmpty();
         } else {
             showRecycleViewAndHideNotificationEmpty();
@@ -186,6 +187,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketView
 
         ////Show notification empty basket
         if(listBasketFood.size() == 0){
+            Common.FINAL_SHOP = null;
             hideRecyclerViewAndShowNotificationEmpty();
         } else {
             showRecycleViewAndHideNotificationEmpty();

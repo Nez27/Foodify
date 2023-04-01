@@ -22,6 +22,7 @@ import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.Category;
 import com.capstone.foodify.Model.Food;
 import com.capstone.foodify.Adapter.FoodSearchAdapter;
+import com.capstone.foodify.Model.Response.Categories;
 import com.capstone.foodify.Model.Response.Foods;
 import com.capstone.foodify.R;
 import com.google.android.material.chip.Chip;
@@ -188,13 +189,12 @@ public class SearchFragment extends Fragment {
     private void getListCategory() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
 
-        FoodApi.apiService.listCategory().enqueue(new Callback<List<Category>>() {
+        FoodApi.apiService.listCategory().enqueue(new Callback<Categories>() {
             @Override
-            public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
-                List<Category> categoriesData = response.body();
+            public void onResponse(Call<Categories> call, Response<Categories> response) {
 
-                if(categoriesData != null){
-                    for(Category tempCategory: categoriesData){
+                if(response.code() == 200){
+                    for(Category tempCategory: response.body().getCategories()){
                         Chip chip = (Chip) inflater.inflate(R.layout.chip_item, null, false);
                         chip.setText(tempCategory.getName());
                         chip.setEnabled(true);
@@ -235,7 +235,7 @@ public class SearchFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<Category>> call, Throwable t) {
+            public void onFailure(Call<Categories> call, Throwable t) {
                 //Check internet connection
                 Common.showNotificationError(getContext(), getActivity());
             }

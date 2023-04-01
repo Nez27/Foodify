@@ -1,5 +1,6 @@
 package com.capstone.foodify.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -18,6 +19,10 @@ import com.capstone.foodify.Model.Basket;
 import com.capstone.foodify.Model.Food;
 import com.capstone.foodify.R;
 import com.squareup.picasso.Picasso;
+import com.thecode.aestheticdialogs.AestheticDialog;
+import com.thecode.aestheticdialogs.DialogAnimation;
+import com.thecode.aestheticdialogs.DialogStyle;
+import com.thecode.aestheticdialogs.DialogType;
 
 import java.util.List;
 
@@ -25,6 +30,7 @@ public class FoodShopAdapter extends RecyclerView.Adapter<FoodShopAdapter.FoodSh
 
     private List<Food> listFoodShop;
     private Context context;
+    private static final int MAX_CHARACTER = 35;
 
     public FoodShopAdapter(Context context) {
         this.context = context;
@@ -53,10 +59,41 @@ public class FoodShopAdapter extends RecyclerView.Adapter<FoodShopAdapter.FoodSh
         } else {
             Picasso.get().load(food.getImages().get(0).getImageUrl()).into(holder.imageView);
         }
-
-        holder.foodName.setText(food.getName());
-        holder.quantitySoldOut.setText("1.2k đã bán");
         holder.price.setText(Common.changeCurrencyUnit(food.getCost()));
+
+        String foodName = food.getName();
+        if(foodName.length() >= MAX_CHARACTER){
+            StringBuilder stringBuilder = new StringBuilder(food.getName());
+            stringBuilder.replace(MAX_CHARACTER, food.getName().length(), "..." );
+            holder.foodName.setText(stringBuilder);
+        } else {
+            holder.foodName.setText(foodName);
+        }
+
+        String description = food.getDescription();
+        if(description.length() >= MAX_CHARACTER){
+            StringBuilder stringBuilder = new StringBuilder(food.getDescription());
+            stringBuilder.replace(MAX_CHARACTER, food.getDescription().length(), "..." );
+            holder.description.setText(stringBuilder);
+        } else {
+            holder.description.setText(description);
+        }
+
+        //Check value discountPercent
+        float cost;
+        if(food.getDiscountPercent() > 0){
+
+            //Calculate final cost when apply discountPercent
+            cost = food.getCost() - (food.getCost() * food.getDiscountPercent()/100);
+
+            //Show discountPercent value on screen
+            holder.discount.setVisibility(View.VISIBLE);
+            holder.discount.setText("-" + food.getDiscountPercent()+ "%");
+        } else {
+            cost = food.getCost();
+        }
+
+        holder.price.setText(Common.changeCurrencyUnit(cost));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,36 +108,21 @@ public class FoodShopAdapter extends RecyclerView.Adapter<FoodShopAdapter.FoodSh
         holder.basket_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Basket foodInBasket = Common.getFoodExistInBasket(food.getId());
-                if(foodInBasket == null){
-                    //If item is not exist in basket
-
-                    //Check food image is null or not
-                    String imageTemp = null;
-                    if(food.getImages().size() > 0)
-                        imageTemp = food.getImages().get(0).getImageUrl();
-
-                    Common.LIST_BASKET_FOOD.add(new Basket(food.getId(), imageTemp, food.getName(), food.getCost(), food.getShop().getName(),
-                            "1", food.getDiscountPercent()));
-                } else {
-                    //If item is exist in basket
-
-                    for(int i = 0; i < Common.LIST_BASKET_FOOD.size(); i++){
-                        String foodId = Common.LIST_BASKET_FOOD.get(i).getId();
-                        //Find foodId exist
-                        if(foodId.equals(food.getId())){
-                            //Get quantity food from basket
-                            String quantity = Common.LIST_BASKET_FOOD.get(i).getQuantity();
-
-                            //Change quantity food from basket
-                            int quantityInt = Integer.parseInt(quantity) + 1;
-                            Common.LIST_BASKET_FOOD.get(i).setQuantity(String.valueOf(quantityInt));
-                            break;
-                        }
-                    }
-
+                if(Common.FINAL_SHOP == null && Common.LIST_BASKET_FOOD.size() == 0){
+                    Common.FINAL_SHOP = food.getShop().getName();
                 }
-                Toast.makeText(context, "Đã thêm " + food.getName() + " vào giỏ hàng!", Toast.LENGTH_SHORT).show();
+
+                if(Common.FINAL_SHOP.equals(food.getShop().getName())){
+                    Common.addFoodToBasket(food);
+                    Toast.makeText(context, "Đã thêm " + food.getName() + " vào giỏ hàng!", Toast.LENGTH_SHORT).show();
+                } else {
+                    new AestheticDialog.Builder((Activity) context, DialogStyle.FLAT, DialogType.INFO)
+                            .setTitle("Thông báo!")
+                            .setMessage("Bạn chỉ có thể đặt những món ăn cùng cửa hàng, xin vui lòng kiểm tra lại giỏ hàng!")
+                            .setAnimation(DialogAnimation.SHRINK)
+                            .setCancelable(true)
+                            .show();
+                }
             }
         });
     }
@@ -115,7 +137,7 @@ public class FoodShopAdapter extends RecyclerView.Adapter<FoodShopAdapter.FoodSh
     public class FoodShopViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageView, basket_icon;
-        TextView foodName, quantitySoldOut, price;
+        TextView foodName, description, price, discount;
 
 
         public FoodShopViewHolder(@NonNull View itemView) {
@@ -123,9 +145,10 @@ public class FoodShopAdapter extends RecyclerView.Adapter<FoodShopAdapter.FoodSh
 
             imageView = itemView.findViewById(R.id.image_view);
             foodName = itemView.findViewById(R.id.food_name_text_view);
-            quantitySoldOut = itemView.findViewById(R.id.quantity_sold_out);
+            description = itemView.findViewById(R.id.description);
             price = itemView.findViewById(R.id.price_text_view);
             basket_icon = itemView.findViewById(R.id.basket_icon);
+            discount = itemView.findViewById(R.id.discount);
         }
     }
 }

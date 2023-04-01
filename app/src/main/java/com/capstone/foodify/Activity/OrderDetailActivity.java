@@ -40,7 +40,7 @@ import retrofit2.Response;
 
 public class OrderDetailActivity extends AppCompatActivity {
     private static final String AWAITING = "AWAITING";
-    private TextView order_tracking_number, user_name, phone, address, orderTime, total;
+    private TextView order_tracking_number, user_name, phone, address, orderTime, total, status;
     private ImageView back_image;
     private List<Basket> listOrderDetails = new ArrayList<>();
     OrderDetailAdapter adapter;
@@ -70,11 +70,13 @@ public class OrderDetailActivity extends AppCompatActivity {
         address.setText("Địa chỉ: " + order.getAddress());
         orderTime.setText("Thời gian đặt: " + order.getOrderTime());
         total.setText("Tổng: " + Common.changeCurrencyUnit(order.getTotal()));
+        status.setText("Trạng thái đơn hàng: " + translateStatus(order.getStatus()));
+
 
         for(OrderDetail tempFood: order.getOrderDetails()){
             Basket food = new Basket(tempFood.getFood().getId(), tempFood.getFood().getImages().get(0).getImageUrl(),
                     tempFood.getFood().getName(), tempFood.getFood().getCost() ,tempFood.getFood().getShop().getName(), tempFood.getQuantity(),
-                    tempFood.getFood().getDiscountPercent());
+                    tempFood.getFood().getDiscountPercent(), tempFood.getFood().getShop().getId());
             listOrderDetails.add(food);
         }
 
@@ -170,5 +172,32 @@ public class OrderDetailActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycler_view_order_detail);
         back_image = findViewById(R.id.back_image);
         btn_cancel_order = findViewById(R.id.cancel_order_button);
+        status = findViewById(R.id.status);
+    }
+
+    private String translateStatus(String status){
+        String statusHasTranslate = null;
+
+        if(status.equals("AWAITING")){
+            statusHasTranslate = "Chờ xác nhận";
+        }
+
+        if(status.equals("CONFIRMED")){
+            statusHasTranslate = "Đã xác nhận";
+        }
+
+        if(status.equals("SHIPPING")){
+            statusHasTranslate = "Đang giao";
+        }
+
+        if(status.equals("COMPLETED")){
+            statusHasTranslate = "Đã giao";
+        }
+
+        if(status.equals("CANCELED")){
+            statusHasTranslate = "Đã huỷ";
+        }
+
+        return statusHasTranslate;
     }
 }

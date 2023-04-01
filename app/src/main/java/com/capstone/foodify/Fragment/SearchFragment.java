@@ -34,6 +34,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.GET;
 
 public class SearchFragment extends Fragment {
 
@@ -44,6 +45,7 @@ public class SearchFragment extends Fragment {
     private static final int LIST_FOOD = -1;
     private static final int SEARCH_FOOD = 0;
     private static final int LIST_FOOD_BY_CATEGORY = 2;
+    private static final int LIST_FOOD_BY_CATEGORY_AND_NAME = 3;
     private String searchQuery = "";
     private LinearLayout searchNotFound;
     private RecyclerView recycler_view_search;
@@ -54,6 +56,7 @@ public class SearchFragment extends Fragment {
     private static final List<Food> listFoodSearch = new ArrayList<>();
     private ChipGroup list_Category;
     private final List<Integer> statusCategoryChecked = new ArrayList<>();
+    private SearchView searchView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,7 +64,7 @@ public class SearchFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         //Init Component
-        SearchView searchView = view.findViewById(R.id.search_view);
+        searchView = view.findViewById(R.id.search_view);
         recycler_view_search = view.findViewById(R.id.recycler_view_search);
         list_Category = view.findViewById(R.id.list_category);
         nestedScrollView = view.findViewById(R.id.search_fragment);
@@ -101,32 +104,32 @@ public class SearchFragment extends Fragment {
                 //Hide UI search not found
                 searchNotFound.setVisibility(View.GONE);
 
-                //Set action code
-                ACTION_CODE = SEARCH_FOOD;
-                CURRENT_PAGE = 0;
+
                 listFoodSearch.clear();
                 showProgressBarAndHideEndOfListText();
                 if (!query.isEmpty()) {
+
                     searchQuery = query;
-                    getListFoodBySearch(searchQuery, CURRENT_PAGE);
+
+                    //Search food with name and category
+                    if(statusCategoryChecked.size() != 0){
+                        ACTION_CODE = LIST_FOOD_BY_CATEGORY_AND_NAME;
+                        CURRENT_PAGE = 0;
+
+                        getListFoodByCategoryAndName(0);
+                    } else {
+                        //Set action code
+                        ACTION_CODE = SEARCH_FOOD;
+                        CURRENT_PAGE = 0;
+
+                        getListFoodBySearch(CURRENT_PAGE);
+                    }
                 }
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (searchView.getQuery().length() == 0) {
-                    listFoodSearch.clear();
-
-                    CURRENT_PAGE = 0;
-                    ACTION_CODE = LIST_FOOD;
-                    showProgressBarAndHideEndOfListText();
-
-                    //Hide UI search not found
-                    searchNotFound.setVisibility(View.GONE);
-
-                    getListFood(0);
-                }
                 return true;
             }
         });
@@ -145,8 +148,8 @@ public class SearchFragment extends Fragment {
     }
 
 
-    private void getListFoodBySearch(String query, int page) {
-        FoodApi.apiService.searchFoodByName(query, page, LIMIT, "id", "asc").enqueue(new Callback<Foods>() {
+    private void getListFoodBySearch(int page) {
+        FoodApi.apiService.searchFoodByName(searchQuery, page, LIMIT, "id", "asc").enqueue(new Callback<Foods>() {
             @Override
             public void onResponse(Call<Foods> call, Response<Foods> response) {
                 //Init total page and total elements value
@@ -213,17 +216,40 @@ public class SearchFragment extends Fragment {
                                 listFoodSearch.clear();
                                 CURRENT_PAGE = 0;
                                 showProgressBarAndHideEndOfListText();
+                                searchNotFound.setVisibility(View.GONE);
 
                                 //Check category list null or not
                                 if(statusCategoryChecked.size() == 0){
 
-                                    //If null, return list food
-                                    ACTION_CODE = LIST_FOOD;
-                                    getListFood(0);
+                                    //Check query text
+                                    if(!searchQuery.isEmpty()){
+                                        //Set action code
+                                        ACTION_CODE = SEARCH_FOOD;
+                                        CURRENT_PAGE = 0;
+
+                                        getListFoodBySearch(CURRENT_PAGE);
+
+                                    } else {
+                                        //If null, return list food
+                                        ACTION_CODE = LIST_FOOD;
+                                        getListFood(0);
+                                    }
                                 } else {
-                                    //If have category check, return list food by category
-                                    ACTION_CODE = LIST_FOOD_BY_CATEGORY;
-                                    getListFoodByCategory(CURRENT_PAGE);
+                                    //If have category check
+                                    if(!searchQuery.isEmpty()){
+                                        //Return list food by name and category
+
+                                        ACTION_CODE = LIST_FOOD_BY_CATEGORY_AND_NAME;
+                                        CURRENT_PAGE = 0;
+
+                                        getListFoodByCategoryAndName(0);
+                                    } else {
+                                        //Return list food by category
+
+                                        ACTION_CODE = LIST_FOOD_BY_CATEGORY;
+                                        getListFoodByCategory(CURRENT_PAGE);
+                                    }
+
                                 }
                             }
                         });
@@ -242,13 +268,33 @@ public class SearchFragment extends Fragment {
         });
     }
 
+    private void getListFoodByCategoryAndName(int page){
+        FoodApi.apiService.listFoodByCategoriesAndName(statusCategoryChecked, searchQuery, page, LIMIT, "id", "asc").enqueue(new Callback<Foods>() {
+            @Override
+            public void onResponse(Call<Foods> call, Response<Foods> response) {
+                searchNotFound.setVisibility(View.GONE);
+                showProgressBarAndHideEndOfListText();
+
+                if(response.code() == 200){
+                    LAST_PAGE = response.body().getPage().isLast();
+                    loadFoodAdapter(response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Foods> call, Throwable t) {
+
+            }
+        });
+    }
+
     private void getListFoodByCategory(int page) {
         FoodApi.apiService.listFoodByCategory(statusCategoryChecked, page, LIMIT, "id", "asc").enqueue(new Callback<Foods>() {
             @Override
             public void onResponse(Call<Foods> call, Response<Foods> response) {
 
                 searchNotFound.setVisibility(View.GONE);
-                end_of_list_text_view.setVisibility(View.GONE);
+                showProgressBarAndHideEndOfListText();
 
                 //Init total page and total elements value
                 LAST_PAGE = response.body().getPage().isLast();
@@ -291,7 +337,7 @@ public class SearchFragment extends Fragment {
             }
             case SEARCH_FOOD:{
                 if(!LAST_PAGE){
-                    getListFoodBySearch(searchQuery, ++CURRENT_PAGE);
+                    getListFoodBySearch(++CURRENT_PAGE);
                 } else {
                     hideProgressBarAndShowEndOfListText();
                 }
@@ -300,6 +346,14 @@ public class SearchFragment extends Fragment {
             case LIST_FOOD_BY_CATEGORY:{
                 if(!LAST_PAGE){
                     getListFoodByCategory(++CURRENT_PAGE);
+                } else {
+                    hideProgressBarAndShowEndOfListText();
+                }
+                break;
+            }
+            case LIST_FOOD_BY_CATEGORY_AND_NAME:{
+                if(!LAST_PAGE){
+                    getListFoodByCategoryAndName(++CURRENT_PAGE);
                 } else {
                     hideProgressBarAndShowEndOfListText();
                 }

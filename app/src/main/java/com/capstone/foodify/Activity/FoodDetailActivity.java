@@ -80,7 +80,7 @@ public class FoodDetailActivity extends AppCompatActivity {
     private String foodId = "";
     private Food food;
     private TextView foodName_txt, shopName_txt, discount_txt, price_txt, countRating_txt, description_content_txt, endOfListText,
-            userNameComment, contentComment;
+            userNameComment, contentComment, count_sold_txt;
     private ConstraintLayout content_view;
     private Button add_to_basket_button;
     private float totalPrice, price;
@@ -123,6 +123,7 @@ public class FoodDetailActivity extends AppCompatActivity {
         user_comment_layout = findViewById(R.id.user_comment_layout);
         edt_button = findViewById(R.id.edit_button);
         list_category = findViewById(R.id.list_category);
+        count_sold_txt = findViewById(R.id.count_sold);
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -472,6 +473,12 @@ public class FoodDetailActivity extends AppCompatActivity {
             countRating_txt.setText("Chưa có bình luận nào!");
         } else {
             countRating_txt.setText(food.getReviewCount() + " đánh giá");
+        }
+
+        if(food.getSold() == 0){
+            count_sold_txt.setText("Chưa có lượt bán nào!");
+        } else {
+            count_sold_txt.setText(food.getSold() + " đã bán");
         }
 
         //Init category

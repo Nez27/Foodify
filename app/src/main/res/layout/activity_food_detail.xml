@@ -69,13 +69,13 @@
                 >
                 <TextView
                     android:id="@+id/food_name_text_view"
-                    android:textSize="40sp"
+                    android:textSize="30sp"
                     android:text="Food Name"
                     android:textColor="@color/black"
                     android:fontFamily="@font/bebas"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_gravity="center_vertical"
                     android:layout_weight="0.8"
                     />
 
@@ -84,7 +84,7 @@
                     android:layout_height="60dp"
                     android:layout_weight="0.2"
                     android:orientation="vertical"
-                    android:layout_gravity="bottom"
+                    android:layout_gravity="center_vertical"
                     >
 
                     <TextView
@@ -158,6 +158,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="235 đánh giá" />
+
+                <TextView
+                    android:id="@+id/count_sold"
+                    android:textSize="13sp"
+                    android:layout_marginTop="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:text="250 đã bán" />
 
             </LinearLayout>
 

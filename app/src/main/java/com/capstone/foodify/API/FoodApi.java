@@ -57,6 +57,9 @@ public interface FoodApi {
     @GET("products/categories")
     Call<Foods> listFoodByCategory(@Query("id") List<Integer> id, @Query("pageNo") int pageNo, @Query("pageSize") int pageSize, @Query("sortBy") String sortBy, @Query("sortDir") String sortDir);
 
+    @GET("products/categoriesAndName")
+    Call<Foods> listFoodByCategoriesAndName(@Query("id") List<Integer> id, @Query("name") String name, @Query("pageNo") int pageNo, @Query("pageSize") int pageSize, @Query("sortBy") String sortBy, @Query("sortDir") String sortDir);
+
     @GET("products/{id}")
     Call<Food> detailFood(@Path("id") String id);
 

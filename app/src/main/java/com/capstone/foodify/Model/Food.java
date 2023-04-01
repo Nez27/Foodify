@@ -16,6 +16,7 @@ public class Food implements Comparable<Food>, Serializable {
     private List<Category> categories;
     private List<Image> images;
     private List<Comment> comments;
+    private int sold;
     public Food() {
     }
 
@@ -113,6 +114,14 @@ public class Food implements Comparable<Food>, Serializable {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public int getSold() {
+        return sold;
+    }
+
+    public void setSold(int sold) {
+        this.sold = sold;
     }
 
     @Override

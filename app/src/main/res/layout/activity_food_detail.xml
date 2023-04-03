@@ -325,7 +325,7 @@
 
                 <Button
                     android:id="@+id/rating_button"
-                    android:text="Đánh giá"
+                    android:text="Bình luận"
                     android:backgroundTint="@color/yellow"
                     android:textColor="@color/black"
                     android:fontFamily="@font/opensans"

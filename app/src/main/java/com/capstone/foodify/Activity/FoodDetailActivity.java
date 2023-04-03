@@ -73,7 +73,7 @@ public class FoodDetailActivity extends AppCompatActivity {
     private static final int PAGE_SIZE = 8;
     private static final String SORT_BY = "id";
     private static final String SORT_DIR = "asc";
-    private static boolean LAST_PAGE;
+    private static boolean LAST_PAGE, IS_BUY;
     private HorizontalQuantitizer horizontalQuantitizer;
     private ImageSlider imageSlider;
     private ImageView back_image, not_favorite, is_favorite, delete_button, edt_button;
@@ -149,6 +149,8 @@ public class FoodDetailActivity extends AppCompatActivity {
 
         hideUI();
 
+        checkUserBuyThisProduct();
+
 
 
         if(Common.CURRENT_USER == null){
@@ -195,10 +197,16 @@ public class FoodDetailActivity extends AppCompatActivity {
         rating_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(Common.CURRENT_USER != null)
-                    openCommentDialog(Gravity.CENTER, CREATE_COMMENT);
-                else
-                    startActivity(new Intent(FoodDetailActivity.this, SignInActivity.class));
+                if(Common.CURRENT_USER != null){
+                    if(IS_BUY){
+                        //If user already buy it
+                        openCommentDialog(Gravity.CENTER, CREATE_COMMENT);
+                    } else {
+                        //If not
+                        Toast.makeText(FoodDetailActivity.this, "Bạn cần phải mua sản phẩm trước khi bình luận!", Toast.LENGTH_SHORT).show();
+                    }
+                } else
+                    Toast.makeText(FoodDetailActivity.this, "Bạn cần phải đăng nhập để thực hiện hành động này!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -265,6 +273,29 @@ public class FoodDetailActivity extends AppCompatActivity {
                     showDeleteDialogConfirm();
             }
         });
+    }
+
+    private void checkUserBuyThisProduct(){
+
+        if(Common.CURRENT_USER != null){
+            FoodApi.apiService.checkUserBuyProduct(Integer.parseInt(foodId), Common.CURRENT_USER.getId()).enqueue(new Callback<CustomResponse>() {
+                @Override
+                public void onResponse(Call<CustomResponse> call, Response<CustomResponse> response) {
+                    if(response.code() == 200){
+                        
+                        IS_BUY = response.body().isTrue();
+                        
+                    } else {
+                        Toast.makeText(FoodDetailActivity.this, "Đã xảy ra lỗi hệ thống! Mã lỗi: " + response.code(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<CustomResponse> call, Throwable t) {
+                    Toast.makeText(FoodDetailActivity.this, "Đã xảy ra lỗi kết nối đến hệ thống!", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     private void isFavoriteIcon(){

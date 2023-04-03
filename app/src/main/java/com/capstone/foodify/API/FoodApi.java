@@ -32,7 +32,7 @@ public interface FoodApi {
     Gson gson = new GsonBuilder().setDateFormat("HH:mm:ss dd-MM-yyyy").setLenient().create();
 
     FoodApi apiService = new Retrofit.Builder()
-            .baseUrl("https://foodify-backend-production.up.railway.app/api/").addConverterFactory(GsonConverterFactory.create(gson))
+            .baseUrl("http://192.168.1.183:8080/api/").addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(FoodApi.class);
 
@@ -93,4 +93,7 @@ public interface FoodApi {
 
     @GET("shops/{id}")
     Call<Shop> getShopById(@Path("id") int id);
+
+    @GET("products/{productId}/user")
+    Call<CustomResponse> checkUserBuyProduct(@Path("productId") int productId, @Query("userId") int userId);
 }

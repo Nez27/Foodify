@@ -59,7 +59,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketView
         holder.value.setText(foodBasket.getQuantity());
 
         //Check value discountPercent
-        float cost = 0;
+        float cost;
         if(foodBasket.getDiscountPercent() > 0){
 
             //Calculate final cost when apply discountPercent
@@ -195,12 +195,12 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketView
     }
 
     private void showRecycleViewAndHideNotificationEmpty(){
-        basketFragment.recyclerView_basket_food.setVisibility(View.VISIBLE);
+        basketFragment.listBasketFoodLayout.setVisibility(View.VISIBLE);
         basketFragment.empty_layout.setVisibility(View.GONE);
     }
 
     private void hideRecyclerViewAndShowNotificationEmpty(){
-        basketFragment.recyclerView_basket_food.setVisibility(View.GONE);
+        basketFragment.listBasketFoodLayout.setVisibility(View.GONE);
         basketFragment.empty_layout.setVisibility(View.VISIBLE);
     }
 }

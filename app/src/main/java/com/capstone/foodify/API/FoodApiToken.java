@@ -8,8 +8,6 @@ import com.capstone.foodify.Model.Address;
 import com.capstone.foodify.Model.Comment;
 import com.capstone.foodify.Model.Food;
 import com.capstone.foodify.Model.Order;
-import com.capstone.foodify.Model.Response.Addresses;
-import com.capstone.foodify.Model.Response.Comments;
 import com.capstone.foodify.Model.Response.CustomResponse;
 import com.capstone.foodify.Model.Response.Foods;
 import com.capstone.foodify.Model.Response.Orders;
@@ -18,7 +16,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
-import java.util.List;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -50,7 +47,7 @@ public interface FoodApiToken {
 
     FoodApiToken apiService = new Retrofit.Builder()
             .client(client)
-            .baseUrl("http://192.168.1.183:8080/api/").addConverterFactory(GsonConverterFactory.create(gson))
+            .baseUrl("https://foodify-backend-production.up.railway.app/api/").addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(FoodApiToken.class);
 

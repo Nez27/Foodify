@@ -177,7 +177,7 @@ public class FoodDetailActivity extends AppCompatActivity {
 
                 if (totalPrice >= 0)
                     totalPrice = price * i;
-                add_to_basket_button.setText("Add to basket - " + Common.changeCurrencyUnit(totalPrice));
+                add_to_basket_button.setText("THÊM VÀO GIỎ HÀNG - " + Common.changeCurrencyUnit(totalPrice));
             }
         });
 
@@ -491,7 +491,7 @@ public class FoodDetailActivity extends AppCompatActivity {
         }
 
 
-        add_to_basket_button.setText("ADD TO BASKET - " + Common.changeCurrencyUnit(0));
+        add_to_basket_button.setText("THÊM VÀO GIỎ HÀNG - " + Common.changeCurrencyUnit(0));
 
         //Set slider image food
         List<SlideModel> slideModels = new ArrayList<>();

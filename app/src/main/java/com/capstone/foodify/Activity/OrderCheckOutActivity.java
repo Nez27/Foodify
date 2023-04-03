@@ -90,7 +90,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
     RadioButton list_address_input, auto_detect_location, manual_input_address, radio_button_selected, take_food_from_shop;
     RadioGroup address_option;
     ConstraintLayout progress_layout;
-    float total, shipCost;
+    float total, totalProduct, shipCost;
     private static final ArrayList<String> wardList = new ArrayList<>();
     private static final ArrayList<String> districtList = new ArrayList<>();
 
@@ -143,7 +143,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
 
 
         if(getIntent() != null){
-            total = getIntent().getFloatExtra("total", 0);
+            totalProduct = getIntent().getFloatExtra("total", 0);
             txt_total.setText(Common.changeCurrencyUnit(total));
         }
         
@@ -236,9 +236,10 @@ public class OrderCheckOutActivity extends AppCompatActivity {
 
                     if(radio_button_selected != take_food_from_shop){
 
-                        if(LAT_SHOP != 0.0 && LNG_SHOP != 0.0)
+                        if(LAT_SHOP != 0.0 && LNG_SHOP != 0.0){
+                            total = 0;
                             getDistanceAndCalculateShipCost(finalAddress);
-                        else {
+                        } else {
                             new AestheticDialog.Builder(OrderCheckOutActivity.this, DialogStyle.FLAT, DialogType.INFO)
                                     .setTitle("Thông báo!")
                                     .setMessage("Chưa thể lấy được vị trí shop, vui lòng thử lại hoặc có thể chọn \"Đến shop lấy\" để tiếp tục!")
@@ -248,8 +249,19 @@ public class OrderCheckOutActivity extends AppCompatActivity {
                             progress_layout.setVisibility(View.GONE);
                         }
 
+                    } else {
+                        //Show distance to user
+                        txt_distance.setText("0 km");
+
+                        txt_ship_cost.setText(Common.changeCurrencyUnit(0));
+
+                        //Change total value
+                        total = totalProduct;
+
+                        txt_total.setText(Common.changeCurrencyUnit(total));
+                        progress_layout.setVisibility(View.GONE);
                     }
-                    progress_layout.setVisibility(View.GONE);
+
                 }
             }
         });
@@ -272,6 +284,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
 
                 if(!Common.CURRENT_USER.isLocked()){
                     if(finalAddress != null){
+                        //Create order tracking number
                         createOrderFood(Helpers.getAppTransId(), CASH_PAYMENT);
                     } else {
                         Toast.makeText(OrderCheckOutActivity.this, "Bạn chưa xác nhận địa chỉ!", Toast.LENGTH_SHORT).show();
@@ -339,10 +352,11 @@ public class OrderCheckOutActivity extends AppCompatActivity {
 
                         CreateOrder orderApi = new CreateOrder();
 
+                        //Create order tracking number
+                        String orderTrackingNumber = Helpers.getAppTransId();
                         try {
-                            JSONObject data = orderApi.createOrder(String.valueOf((int) total));
+                            JSONObject data = orderApi.createOrder(String.valueOf((int) total), orderTrackingNumber);
                             String code = data.getString("return_code");
-
 
                             if (code.equals("1")) {
                                 //Success create order
@@ -354,7 +368,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
                                         runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                createOrderFood(transactionId, ZALO_PAYMENT_METHOD);
+                                                createOrderFood(orderTrackingNumber, ZALO_PAYMENT_METHOD);
                                             }
 
                                         });
@@ -434,6 +448,8 @@ public class OrderCheckOutActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(@NonNull AestheticDialog.Builder builder) {
                                     Common.LIST_BASKET_FOOD.clear();
+                                    Common.FINAL_SHOP = null;
+
                                     startActivity(new Intent(OrderCheckOutActivity.this, OrderActivity.class));
                                     builder.dismiss();
                                     finish();
@@ -485,7 +501,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
                     txt_ship_cost.setText(Common.changeCurrencyUnit(shipCost));
 
                     //Update total order
-                    total = total + shipCost;
+                    total = totalProduct + shipCost;
                     txt_total.setText(Common.changeCurrencyUnit(total));
 
                     progress_layout.setVisibility(View.GONE);

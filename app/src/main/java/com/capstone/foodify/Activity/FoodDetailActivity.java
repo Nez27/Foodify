@@ -285,7 +285,7 @@ public class FoodDetailActivity extends AppCompatActivity {
                         
                         IS_BUY = response.body().isTrue();
                         
-                    } else {
+                    } else if(response.code() != 404){
                         Toast.makeText(FoodDetailActivity.this, "Đã xảy ra lỗi hệ thống! Mã lỗi: " + response.code(), Toast.LENGTH_SHORT).show();
                     }
                 }

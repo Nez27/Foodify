@@ -141,12 +141,23 @@ public class OrderCheckOutActivity extends AppCompatActivity {
         //Reload user data
         Common.reloadUser(this);
 
+        //Check current location is null or not
+        if(Common.CURRENT_LOCATION == null){
+            auto_detect_location.setEnabled(false);
+            new AestheticDialog.Builder(OrderCheckOutActivity.this, DialogStyle.FLAT, DialogType.INFO)
+                    .setTitle("Thông báo")
+                    .setMessage("Tính năng \"Lấy vị trí theo thiết bị của bạn\" sẽ không khả dụng do ứng dụng chưa được cấp quyền vị trí!")
+                    .setCancelable(true).show();
+        }
 
+
+        //Get intent from previous activity
         if(getIntent() != null){
             totalProduct = getIntent().getFloatExtra("total", 0);
             txt_total.setText(Common.changeCurrencyUnit(total));
         }
-        
+
+
         getLocationShop();
 
         StrictMode.ThreadPolicy policy = new
@@ -239,6 +250,9 @@ public class OrderCheckOutActivity extends AppCompatActivity {
                         if(LAT_SHOP != 0.0 && LNG_SHOP != 0.0){
                             total = 0;
                             getDistanceAndCalculateShipCost(finalAddress);
+
+                            btn_Pay.setEnabled(true);
+                            btn_ZaloPay.setEnabled(true);
                         } else {
                             new AestheticDialog.Builder(OrderCheckOutActivity.this, DialogStyle.FLAT, DialogType.INFO)
                                     .setTitle("Thông báo!")
@@ -247,6 +261,9 @@ public class OrderCheckOutActivity extends AppCompatActivity {
                                     .setCancelable(true)
                                     .show();
                             progress_layout.setVisibility(View.GONE);
+
+                            btn_Pay.setEnabled(false);
+                            btn_ZaloPay.setEnabled(false);
                         }
 
                     } else {
@@ -260,6 +277,9 @@ public class OrderCheckOutActivity extends AppCompatActivity {
 
                         txt_total.setText(Common.changeCurrencyUnit(total));
                         progress_layout.setVisibility(View.GONE);
+
+                        btn_Pay.setEnabled(true);
+                        btn_ZaloPay.setEnabled(true);
                     }
 
                 }
@@ -625,9 +645,12 @@ public class OrderCheckOutActivity extends AppCompatActivity {
 
     private void enabledAllInputAddressOption(){
         list_address_input.setEnabled(true);
-        manual_input_address.setEnabled(true);
         take_food_from_shop.setEnabled(true);
-        auto_detect_location.setEnabled(true);
+        manual_input_address.setEnabled(true);
+        if(Common.CURRENT_LOCATION != null){
+            //If current location not null;
+            auto_detect_location.setEnabled(true);
+        }
 
         spn_list_address.setEnabled(true);
         edt_address.setEnabled(true);

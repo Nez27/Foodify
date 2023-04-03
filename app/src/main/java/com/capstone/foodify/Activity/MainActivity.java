@@ -211,21 +211,21 @@ public class MainActivity extends AppCompatActivity {
                 int id = item.getItemId();
                 switch (id) {
                     case R.id.activity_home:
-                        viewPager2.setCurrentItem(0);
+                        viewPager2.setCurrentItem(0, false);
                         break;
                     case R.id.activity_search:
-                        viewPager2.setCurrentItem(1);
+                        viewPager2.setCurrentItem(1, false);
                         break;
                     case R.id.activity_basket:
                         if(Common.CURRENT_USER != null){
-                            viewPager2.setCurrentItem(2);
+                            viewPager2.setCurrentItem(2, false);
                         } else {
                             startActivity(new Intent(MainActivity.this, SignInActivity.class));
                         }
                         break;
                     case R.id.activity_profile:
                         if(Common.CURRENT_USER != null){
-                            viewPager2.setCurrentItem(3);
+                            viewPager2.setCurrentItem(3, false);
                         } else {
                             startActivity(new Intent(MainActivity.this, SignInActivity.class));
                         }

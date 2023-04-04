@@ -72,7 +72,7 @@ import vn.zalopay.sdk.listeners.PayOrderListener;
 
 public class OrderCheckOutActivity extends AppCompatActivity {
     private static final String TAKE_FOOD_FROM_SHOP = "Đến shop lấy";
-    private static final String ZALO_PAYMENT_METHOD = "ZALO PAY";
+    private static final String ZALO_PAYMENT_METHOD = "Zalo Pay";
     private static final String CASH_PAYMENT = "CASH";
     private static Double LAT_SHOP = 0.0;
     private static Double LNG_SHOP = 0.0;

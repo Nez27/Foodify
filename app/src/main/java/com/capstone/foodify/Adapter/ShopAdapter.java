@@ -50,15 +50,7 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ShopViewHolder
         //Init data
         Picasso.get().load(shop.getImageUrl()).into(holder.imageView);
 
-        String shopName = shop.getName();
-
-        if(shopName.length() >= 24){
-            StringBuilder stringBuilder = new StringBuilder(shop.getName());
-            stringBuilder.replace(24, shop.getName().length(), "..." );
-            holder.shopName.setText(stringBuilder);
-        } else {
-            holder.shopName.setText(shopName);
-        }
+        holder.shopName.setText(shop.getName());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

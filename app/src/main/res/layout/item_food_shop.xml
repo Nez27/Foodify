@@ -78,6 +78,8 @@
                 android:layout_marginEnd="10dp"
                 app:layout_constraintStart_toEndOf="@id/image_view"
                 app:layout_constraintTop_toTopOf="parent"
+                android:maxLines="2"
+                android:ellipsize="end"
                 />
 
             <LinearLayout
@@ -96,7 +98,7 @@
 
                     <TextView
                         android:id="@+id/description"
-                        android:text="Descriptionssssssssssssssssssssssssssss"
+                        android:text="Description"
                         android:textSize="14sp"
                         android:textColor="@color/gray"
                         android:fontFamily="@font/opensans"
@@ -105,6 +107,8 @@
                         android:layout_marginTop="2dp"
                         app:layout_constraintStart_toEndOf="@id/image_view"
                         app:layout_constraintTop_toBottomOf="@id/text_view_1"
+                        android:maxLines="2"
+                        android:ellipsize="end"
                         />
 
                     <LinearLayout

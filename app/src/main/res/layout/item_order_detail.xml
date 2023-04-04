@@ -43,6 +43,8 @@
                 android:layout_weight="0.4"
                 app:layout_constraintStart_toEndOf="@id/image_view"
                 app:layout_constraintTop_toTopOf="parent"
+                android:maxLines="2"
+                android:ellipsize="end"
                 />
 
             <LinearLayout
@@ -71,6 +73,8 @@
                         android:layout_marginTop="2dp"
                         app:layout_constraintStart_toEndOf="@id/image_view"
                         app:layout_constraintTop_toBottomOf="@id/text_view_1"
+                        android:maxLines="1"
+                        android:ellipsize="end"
                         />
 
                     <LinearLayout

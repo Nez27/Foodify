@@ -57,14 +57,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
             return;
         }
 
-        String foodName = food.getName();
-        if(foodName.length() >= 24){
-            StringBuilder stringBuilder = new StringBuilder(food.getName());
-            stringBuilder.replace(24, food.getName().length(), "..." );
-            holder.name.setText(stringBuilder);
-        } else {
-            holder.name.setText(foodName);
-        }
+        holder.name.setText(food.getName());
 
         //When food does not have image
         if(food.getImages().size() == 0){

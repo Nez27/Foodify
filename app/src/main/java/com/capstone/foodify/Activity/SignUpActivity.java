@@ -216,7 +216,7 @@ public class SignUpActivity extends AppCompatActivity {
                     signUp(user);
                 } else {
                     loadCompleted();
-                    Toast.makeText(SignUpActivity.this, "Email or Phone exist!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignUpActivity.this, "Địa chỉ email hoặc số điện thoại đã trùng, vui lòng kiểm tra lại!", Toast.LENGTH_SHORT).show();
                 }
             }
 

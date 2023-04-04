@@ -46,26 +46,9 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
         holder.shop_name.setText(food.getShopName());
         holder.quantity.setText("Số lượng: " + food.getQuantity());
 
-        String foodName = food.getName();
-        if(foodName.length() >= 35){
-            StringBuilder stringBuilder = new StringBuilder(food.getName());
-            stringBuilder.replace(35, food.getName().length(), "..." );
-            holder.food_name.setText(stringBuilder);
-        } else {
-            holder.food_name.setText(foodName);
-        }
+        holder.food_name.setText(food.getName());
 
-        String shopName = food.getShopName();
-
-        if(shopName.length() >= 18){
-            StringBuilder stringBuilder = new StringBuilder(food.getShopName());
-            stringBuilder.replace(18, food.getShopName().length(), "..." );
-            holder.shop_name.setText(stringBuilder);
-        } else {
-            holder.shop_name.setText(shopName);
-        }
-
-
+        holder.shop_name.setText(food.getShopName());
 
         //Check value discountPercent
         float cost = 0;

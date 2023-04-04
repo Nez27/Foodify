@@ -61,23 +61,9 @@ public class FoodShopAdapter extends RecyclerView.Adapter<FoodShopAdapter.FoodSh
         }
         holder.price.setText(Common.changeCurrencyUnit(food.getCost()));
 
-        String foodName = food.getName();
-        if(foodName.length() >= MAX_CHARACTER){
-            StringBuilder stringBuilder = new StringBuilder(food.getName());
-            stringBuilder.replace(MAX_CHARACTER, food.getName().length(), "..." );
-            holder.foodName.setText(stringBuilder);
-        } else {
-            holder.foodName.setText(foodName);
-        }
+        holder.foodName.setText(food.getName());
 
-        String description = food.getDescription();
-        if(description.length() >= MAX_CHARACTER){
-            StringBuilder stringBuilder = new StringBuilder(food.getDescription());
-            stringBuilder.replace(MAX_CHARACTER, food.getDescription().length(), "..." );
-            holder.description.setText(stringBuilder);
-        } else {
-            holder.description.setText(description);
-        }
+        holder.description.setText(food.getDescription());
 
         //Check value discountPercent
         float cost;

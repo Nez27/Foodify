@@ -56,25 +56,9 @@ public class FoodSearchAdapter extends RecyclerView.Adapter<FoodSearchAdapter.Fo
         }
 
         //Init data
-        String foodName = food.getName();
-        if(foodName.length() >= LENGTH_CHARACTER){
-            StringBuilder stringBuilder = new StringBuilder(food.getName());
-            stringBuilder.replace(LENGTH_CHARACTER, food.getName().length(), "..." );
-            holder.name.setText(stringBuilder);
-        } else {
-            holder.name.setText(foodName);
-        }
 
-        String shopName = food.getShop().getName();
-
-        if(shopName.length() >= 18){
-            StringBuilder stringBuilder = new StringBuilder(food.getShop().getName());
-            stringBuilder.replace(18, food.getShop().getName().length(), "..." );
-            holder.shopName.setText(stringBuilder);
-        } else {
-            holder.shopName.setText(shopName);
-        }
-
+        holder.name.setText(food.getName());
+        holder.shopName.setText(food.getShop().getName());
 
         //When food does not have image
         if(food.getImages().size() == 0){

@@ -250,6 +250,7 @@ public class VerifyAccountActivity extends AppCompatActivity {
                                                 progressLayout.setVisibility(View.GONE);
                                                 //Create user success;
                                                 Toast.makeText(VerifyAccountActivity.this, "Tạo tài khoản thành công!", Toast.LENGTH_SHORT).show();
+                                                FirebaseAuth.getInstance().signOut();
                                                 startActivity(new Intent(VerifyAccountActivity.this, SignInActivity.class));
                                                 finish();
                                             } else {

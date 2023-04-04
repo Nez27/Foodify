@@ -31,7 +31,7 @@ public interface FoodApi {
     Gson gson = new GsonBuilder().setDateFormat("HH:mm:ss dd-MM-yyyy").setLenient().create();
 
     FoodApi apiService = new Retrofit.Builder()
-            .baseUrl("https://foodify-backend-production.up.railway.app/api/").addConverterFactory(GsonConverterFactory.create(gson))
+            .baseUrl("http://192.168.1.183:8080/api/").addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(FoodApi.class);
 
@@ -44,8 +44,8 @@ public interface FoodApi {
     @GET("shops/enable?pageNo=0&pageSize=10&sortBy=id&sortDir=asc")
     Call<Shops> allShops();
 
-    @GET("products/search/{name}")
-    Call<Foods> searchFoodByName(@Path("name") String name, @Query("pageNo") int pageNo, @Query("pageSize") int pageSize, @Query("sortBy") String sortBy, @Query("sortDir") String sortDir);
+    @GET("products/search/enable")
+    Call<Foods> searchFoodByName(@Query("productName") String name, @Query("pageNo") int pageNo, @Query("pageSize") int pageSize, @Query("sortBy") String sortBy, @Query("sortDir") String sortDir);
 
     @GET("products")
     Call<Foods> listFood(@Query("pageNo") int pageNo, @Query("pageSize") int pageSize, @Query("sortBy") String sortBy, @Query("sortDir") String sortDir);

@@ -108,7 +108,8 @@ public class ProfileFragment extends Fragment {
 
                                 Common.TOKEN = null;
                                 Common.CURRENT_USER = null;
-                                startActivity(new Intent(getContext(), MainActivity.class));
+                                getActivity().startActivity(new Intent(getContext(), MainActivity.class));
+                                getActivity().finish();
                             }
 
                             @Override

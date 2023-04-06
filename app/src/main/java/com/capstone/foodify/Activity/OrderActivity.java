@@ -18,14 +18,11 @@ public class OrderActivity extends AppCompatActivity {
     ViewPager2 viewPager2;
     ViewPagerAdapter viewPagerAdapter;
     ImageView back_image;
-    public static Activity orderActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
-
-        orderActivity = this;
 
         //Init Component
         tabLayout = findViewById(R.id.tab_layout);

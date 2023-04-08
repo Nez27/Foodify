@@ -358,7 +358,6 @@ public class OrderCheckOutActivity extends AppCompatActivity {
 
         // handle CreateOrder
         btn_ZaloPay.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
@@ -438,10 +437,9 @@ public class OrderCheckOutActivity extends AppCompatActivity {
                     Common.showErrorServerNotification(OrderCheckOutActivity.this, "Tài khoản của bạn đã bị khoá!");
                 }
 
+                progress_layout.setVisibility(View.GONE);
             }
         });
-
-        progress_layout.setVisibility(View.GONE);
     }
 
     private void createOrderFood(String transactionId, String paymentMethod) {

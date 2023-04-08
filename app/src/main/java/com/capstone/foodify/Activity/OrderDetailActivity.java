@@ -40,13 +40,15 @@ import retrofit2.Response;
 
 public class OrderDetailActivity extends AppCompatActivity {
     private static final String AWAITING = "AWAITING";
+    private static final String SHIPPING = "SHIPPING";
     private TextView order_tracking_number, user_name, phone, address, orderTime, total, status;
     private ImageView back_image;
     private List<Basket> listOrderDetails = new ArrayList<>();
     OrderDetailAdapter adapter;
     RecyclerView recyclerView;
     private Order order;
-    private Button btn_cancel_order;
+    private Button btn_cancel_order, btn_tracking_location_shipper;
+    private View line_cancel_order, line_tracking_order;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +62,18 @@ public class OrderDetailActivity extends AppCompatActivity {
         if(getIntent() != null)
             order = (Order) getIntent().getSerializableExtra("order");
 
-        if(order.getStatus().equals(AWAITING))
+        if(order.getStatus().equals(AWAITING)){
             btn_cancel_order.setVisibility(View.VISIBLE);
+            line_tracking_order.setVisibility(View.GONE);
+        }
+
+
+        if(order.getStatus().equals(SHIPPING)){
+            btn_tracking_location_shipper.setVisibility(View.VISIBLE);
+            line_cancel_order.setVisibility(View.GONE);
+        }
+
+
 
         //Init data
         order_tracking_number.setText("Order Id: #" + order.getOrderTrackingNumber());
@@ -99,6 +111,17 @@ public class OrderDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showDeleteDialogConfirm();
+            }
+        });
+
+        btn_tracking_location_shipper.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(OrderDetailActivity.this, TrackingOrderActivity.class);
+                intent.putExtra("trackingOrderNumber", order.getOrderTrackingNumber());
+                intent.putExtra("latOrder", order.getLat());
+                intent.putExtra("lngOrder", order.getLng());
+                startActivity(intent);
             }
         });
     }
@@ -141,8 +164,6 @@ public class OrderDetailActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(@NonNull AestheticDialog.Builder builder) {
 
-                                    OrderActivity.orderActivity.finish();
-
                                     startActivity(new Intent(OrderDetailActivity.this, OrderActivity.class));
                                     builder.dismiss();
                                     finish();
@@ -173,6 +194,10 @@ public class OrderDetailActivity extends AppCompatActivity {
         back_image = findViewById(R.id.back_image);
         btn_cancel_order = findViewById(R.id.cancel_order_button);
         status = findViewById(R.id.status);
+        btn_tracking_location_shipper = findViewById(R.id.tracking_shipper_location_button);
+
+        line_cancel_order = findViewById(R.id.line_view_cancel_order);
+        line_tracking_order = findViewById(R.id.line_view_tracking_order);
     }
 
     private String translateStatus(String status){

@@ -71,6 +71,8 @@ public class HomeFragment extends Fragment {
             rcvMenu.setAdapter(menuAdapter);
         }
 
+        setNameUser();
+
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         rcvMenu.setLayoutManager(linearLayoutManager);
@@ -91,10 +93,12 @@ public class HomeFragment extends Fragment {
     }
 
     public static void setNameUser(){
-        //Set name user while user already login
-        if(Common.CURRENT_USER != null)
-            welcomeText.setText("Xin chào, " + Common.CURRENT_USER.getFullName() + "!");
-        else
+        if(Common.CURRENT_USER != null){
+            //Set name user while user already login
+            String[] arrayOfName = Common.CURRENT_USER.getFullName().split(" ");
+            String name = arrayOfName[arrayOfName.length - 1];
+            welcomeText.setText("Xin chào, " + name + "!");
+        } else
             welcomeText.setText("Xin chào, khách!");
     }
 

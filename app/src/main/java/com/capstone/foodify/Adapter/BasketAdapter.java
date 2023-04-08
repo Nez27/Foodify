@@ -112,6 +112,8 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketView
 
                     //Update total price
                     calculateTotalPrice();
+
+                    Common.FINAL_SHOP = null;
                 } else {
                     foodBasket.setQuantity(String.valueOf(quantity));
                     holder.value.setText(String.valueOf(quantity));
@@ -129,6 +131,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketView
         for(Basket foodTemp: listBasketFood){
             total += (foodTemp.getCost()) * (Float.parseFloat(foodTemp.getQuantity())) * (100 - foodTemp.getDiscountPercent())/100;
         }
+
         basketFragment.total.setText(Common.changeCurrencyUnit(total));
         basketFragment.totalFloat = total;
     }

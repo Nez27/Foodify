@@ -77,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
     //Location
     private static final int REQUEST_CHECK_SETTINGS = 100;
     private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 1000;
-    private static final long FASTEST_UPDATE_IN_MILLISECONDS = 3000;
     private static final long MAX_WAIT_TIME_IN_MILLISECONDS = 1000;
     private static final int LOCATION_REQUEST_CODE = 100;
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -167,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
 
             mLocationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, UPDATE_INTERVAL_IN_MILLISECONDS)
                     .setWaitForAccurateLocation(false)
-                    .setMinUpdateDistanceMeters(FASTEST_UPDATE_IN_MILLISECONDS)
+                    .setMinUpdateIntervalMillis(1000)
                     .setMaxUpdateDelayMillis(MAX_WAIT_TIME_IN_MILLISECONDS)
                     .build();
 
@@ -367,7 +366,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        HomeFragment.setNameUser();
         if (mRequestingLocationUpdates && checkPermission() && Common.CURRENT_LOCATION == null) {
             startLocationUpdates();
         }

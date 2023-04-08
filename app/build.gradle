@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'com.google.gms.google-services'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
 android {
@@ -38,6 +39,9 @@ android {
             classpath 'com.google.gms:google-services:4.3.15'
         }
     }
+    buildFeatures {
+        viewBinding true
+    }
 
 
 }
@@ -53,6 +57,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
     implementation 'com.google.android.gms:play-services-location:21.0.1'
     implementation files('libs/zpdk-release-v3.1.aar')
+    implementation 'com.google.firebase:firebase-database-ktx:20.1.0'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
@@ -69,7 +74,7 @@ dependencies {
     implementation 'com.github.denzcoskun:ImageSlideshow:0.1.0'
     implementation 'com.makeramen:roundedimageview:2.3.0'
     implementation 'com.github.smarteist:autoimageslider:1.4.0'
-    implementation 'com.github.bumptech.glide:glide:4.14.2'
+    implementation 'com.github.bumptech.glide:glide:4.15.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'
     implementation 'com.github.kojofosu:Quantitizer:1.6.7'
     implementation 'com.squareup.picasso:picasso:2.71828'
@@ -81,6 +86,8 @@ dependencies {
     implementation 'io.github.pilgr:paperdb:2.7.2'
 
     implementation 'androidx.browser:browser:1.5.0'
+
+    implementation 'com.github.d-max:spots-dialog:1.1@aar'
 
     //Firebase
     implementation platform('com.google.firebase:firebase-bom:31.2.3')

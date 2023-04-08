@@ -108,6 +108,7 @@ public class ProfileFragment extends Fragment {
 
                                 Common.TOKEN = null;
                                 Common.CURRENT_USER = null;
+                                dialog.dismiss();
                                 getActivity().startActivity(new Intent(getContext(), MainActivity.class));
                                 getActivity().finish();
                             }

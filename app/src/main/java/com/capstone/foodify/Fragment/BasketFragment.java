@@ -61,9 +61,6 @@ public class BasketFragment extends Fragment implements ItemTouchHelperListener 
         btnCheckOut = view.findViewById(R.id.btnCheckOut);
         listBasketFoodLayout = view.findViewById(R.id.list_basket_food_layout);
 
-        //Init data
-        total.setText(Common.changeCurrencyUnit(0));
-
         //Check list basket is null or not!
         checkListBasket();
 

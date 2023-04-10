@@ -94,9 +94,9 @@ public interface FoodApiToken {
     @GET("users/{userId}/orders/status/{status}")
     Call<Orders> getOrderUser(@Path("userId") int userId, @Path("status") String status, @Query("pageNo") int pageNo, @Query("pageSize") int pageSize, @Query("sortBy") String sortBy, @Query("sortDir") String sortDir);
 
-    @DELETE("users/{userId}/orders/{orderId}")
-    Call<CustomResponse> deleteOrder(@Path("userId") int userId, @Path("orderId") int orderId);
-
     @PUT("users/{userId}/orders/{orderId}/status")
     Call<CustomResponse> updateOrderStatus(@Path("userId") int userId, @Path("orderId") int orderId, @Query("status") String status);
+
+    @PUT("users/{userId}/update/fcm")
+    Call<CustomResponse> updateFCMToken(@Path("userId") int userId, @Body String token);
 }

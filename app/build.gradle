@@ -16,7 +16,7 @@ android {
     defaultConfig {
         applicationId "com.capstone.foodify"
         minSdk 26
-        targetSdk 32
+        targetSdk 31
         versionCode 1
         versionName "1.0"
 
@@ -58,6 +58,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:21.0.1'
     implementation files('libs/zpdk-release-v3.1.aar')
     implementation 'com.google.firebase:firebase-database-ktx:20.1.0'
+    implementation 'com.google.firebase:firebase-messaging'
+    implementation 'com.google.firebase:firebase-analytics'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

@@ -2,12 +2,18 @@ package com.capstone.foodify.Activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.content.res.ColorStateList;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -19,8 +25,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.splashscreen.SplashScreen;
 
@@ -32,6 +40,7 @@ import com.capstone.foodify.API.FoodApiToken;
 import com.capstone.foodify.BuildConfig;
 import com.capstone.foodify.Common;
 import com.capstone.foodify.Fragment.HomeFragment;
+import com.capstone.foodify.Model.Response.CustomResponse;
 import com.capstone.foodify.Model.User;
 import com.capstone.foodify.R;
 import com.capstone.foodify.ViewPagerAdapter;
@@ -57,8 +66,12 @@ import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.objectweb.asm.Handle;
+
+import java.util.Arrays;
+import java.util.List;
 
 import io.paperdb.Paper;
 import retrofit2.Call;
@@ -79,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
     private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 1000;
     private static final long MAX_WAIT_TIME_IN_MILLISECONDS = 1000;
     private static final int LOCATION_REQUEST_CODE = 100;
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = "MainActivity";
 
     private FusedLocationProviderClient mFusedLocationClient;
     private SettingsClient mSettingsClient;
@@ -117,6 +130,8 @@ public class MainActivity extends AppCompatActivity {
                                             Common.CURRENT_USER = userData;
                                             HomeFragment.setNameUser();
 
+                                            getTokenFCM();
+
                                             progressLayout.setVisibility(View.GONE);
                                         }
                                     }
@@ -149,6 +164,12 @@ public class MainActivity extends AppCompatActivity {
         initComponent();
 
         bottomNavigation();
+
+        startPowerSaverIntent(this);
+        checkNotificationPermission();
+
+        if(Common.CURRENT_USER != null)
+            getTokenFCM();
 
 
         if (Common.CURRENT_LOCATION == null) {
@@ -189,8 +210,39 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             }
-        }, 3000);
+        }, 5000);
 
+    }
+
+    private void getTokenFCM(){
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if(!task.isSuccessful()){
+                            Log.d(TAG, "Failed to registration token!");
+                            
+                            return;
+                        }
+
+                        String token = task.getResult();
+
+                        FoodApiToken.apiService.updateFCMToken(Common.CURRENT_USER.getId(), token).enqueue(new Callback<CustomResponse>() {
+                            @Override
+                            public void onResponse(Call<CustomResponse> call, Response<CustomResponse> response) {
+                                if(response.code() != 200)
+                                    Toast.makeText(MainActivity.this, "Không thể cập nhật FCM Token. Mã lỗi: " + response.code(), Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onFailure(Call<CustomResponse> call, Throwable t) {
+                                Toast.makeText(MainActivity.this, "Đã có lỗi khi kết nối đến hệ thống!", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                        Log.d(TAG, "Token: " + token);
+                    }
+                });
     }
     private void initComponent() {
         bottomNavigationView = findViewById(R.id.bottom_nav);
@@ -256,6 +308,13 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    //myringtone permission
+    private void checkNotificationPermission(){
+        if(!NotificationManagerCompat.from(this).areNotificationsEnabled()){
+            showDialogPermission("Hãy bật quyền thông báo trên thiết bị của bạn để chúng thôi có thể cung cấp thông tin cho bạn một cách nhanh nhất!");
+        }
+    }
+
 
     //Location
     private void checkLocationPermission(){
@@ -283,15 +342,15 @@ public class MainActivity extends AppCompatActivity {
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 Toast.makeText(this, "Đã cấp quyền thành công!", Toast.LENGTH_SHORT).show();
             } else {
-                showDialogPermission();
+                showDialogPermission("Hãy cho ứng dụng truy cập vào vị trí của bạn để trải nghiệm tốt hơn!");
             }
         }
     }
 
-    private void showDialogPermission() {
+    private void showDialogPermission(String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        builder.setMessage("Hãy cho ứng dụng truy cập vào vị trí của bạn để trải nghiệm tốt hơn!")
+        builder.setMessage(message)
                 .setCancelable(false)
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
@@ -382,6 +441,66 @@ public class MainActivity extends AppCompatActivity {
                     Common.CURRENT_LOCATION = mCurrentLocation;
             }
         }
+
+        if(Common.CURRENT_USER != null)
+            getTokenFCM();
+    }
+
+    //Check auto start permission
+    public static List<Intent> POWER_MANAGER_INTENTS = Arrays.asList(
+            new Intent().setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity")),
+            new Intent().setComponent(new ComponentName("com.letv.android.letvsafe", "com.letv.android.letvsafe.AutobootManageActivity")),
+            new Intent().setComponent(new ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.optimize.process.ProtectActivity")),
+            new Intent().setComponent(new ComponentName("com.coloros.safecenter", "com.coloros.safecenter.permission.startup.StartupAppListActivity")),
+            new Intent().setComponent(new ComponentName("com.coloros.safecenter", "com.coloros.safecenter.startupapp.StartupAppListActivity")),
+            new Intent().setComponent(new ComponentName("com.oppo.safe", "com.oppo.safe.permission.startup.StartupAppListActivity")),
+            new Intent().setComponent(new ComponentName("com.iqoo.secure", "com.iqoo.secure.ui.phoneoptimize.AddWhiteListActivity")),
+            new Intent().setComponent(new ComponentName("com.iqoo.secure", "com.iqoo.secure.ui.phoneoptimize.BgStartUpManager")),
+            new Intent().setComponent(new ComponentName("com.vivo.permissionmanager", "com.vivo.permissionmanager.activity.BgStartUpManagerActivity")),
+            new Intent().setComponent(new ComponentName("com.asus.mobilemanager", "com.asus.mobilemanager.entry.FunctionActivity")).setData(android.net.Uri.parse("mobilemanager://function/entry/AutoStart"))
+    );
+
+
+    public void startPowerSaverIntent(Context context) {
+        SharedPreferences settings = context.getSharedPreferences("ProtectedApps", Context.MODE_PRIVATE);
+        boolean skipMessage = settings.getBoolean("skipProtectedAppCheck", false);
+        if (!skipMessage) {
+            final SharedPreferences.Editor editor = settings.edit();
+            boolean foundCorrectIntent = false;
+            for (Intent intent : POWER_MANAGER_INTENTS) {
+                if (isCallable(context, intent)) {
+                    foundCorrectIntent = true;
+                    final AppCompatCheckBox dontShowAgain = new AppCompatCheckBox(context);
+                    dontShowAgain.setText("Không hiện hộp thoại này nữa!");
+                    dontShowAgain.setButtonTintList(ColorStateList.valueOf(getResources().getColor(R.color.primaryColor, null)));
+                    dontShowAgain.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                        editor.putBoolean("skipProtectedAppCheck", isChecked);
+                        editor.apply();
+                    });
+
+                    new AlertDialog.Builder(context)
+                            .setTitle("Phát hiện máy " + Build.MANUFACTURER + "!")
+                            .setMessage(String.format("Vì một số dòng máy Trung Quốc tự động tắt chế độ chạy nền của app %s, nên cần bạn " +
+                                    "cho phép ứng dụng luôn tự khởi chạy ở cài đặt ứng dụng để có thể không bỏ lỡ bất kỳ thông báo nào!%n", context.getString(R.string.app_name)))
+                            .setView(dontShowAgain)
+                            .setPositiveButton("Đi đến cài đặt", (dialog, which) -> context.startActivity(intent))
+                            .setNegativeButton("Đóng", null)
+                            .show();
+                    break;
+                }
+            }
+            if (!foundCorrectIntent) {
+                editor.putBoolean("skipProtectedAppCheck", true);
+                editor.apply();
+            }
+        }
+    }
+
+
+    private static boolean isCallable(Context context, Intent intent) {
+        List<ResolveInfo> list = context.getPackageManager().queryIntentActivities(intent,
+                PackageManager.MATCH_DEFAULT_ONLY);
+        return list.size() > 0;
     }
 
 }

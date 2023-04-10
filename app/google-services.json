@@ -15,6 +15,72 @@
       },
       "oauth_client": [
         {
+          "client_id": "213676556381-bu8t1g75ma9l38e360ikreg2rchlciv1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.capstone.foodify",
+            "certificate_hash": "e0920906e0bbcc37124d669e6f5095a2f7e08ebf"
+          }
+        },
+        {
+          "client_id": "213676556381-jmh1dva918r6juc331d1jclgjeinqor1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBboME-vz27_Rgg98ftivvSvMVoH9lV1A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "213676556381-jmh1dva918r6juc331d1jclgjeinqor1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:213676556381:android:cebb0c6035fa9e05e88db4",
+        "android_client_info": {
+          "package_name": "com.capstone.foodify.shipper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "213676556381-jmh1dva918r6juc331d1jclgjeinqor1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBboME-vz27_Rgg98ftivvSvMVoH9lV1A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "213676556381-jmh1dva918r6juc331d1jclgjeinqor1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:213676556381:android:d951cc73dfe7438ee88db4",
+        "android_client_info": {
+          "package_name": "com.capstone.foodify.testapplication"
+        }
+      },
+      "oauth_client": [
+        {
           "client_id": "213676556381-jmh1dva918r6juc331d1jclgjeinqor1.apps.googleusercontent.com",
           "client_type": 3
         }

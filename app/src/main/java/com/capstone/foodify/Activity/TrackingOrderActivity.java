@@ -3,6 +3,7 @@ package com.capstone.foodify.Activity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -146,7 +147,7 @@ public class TrackingOrderActivity extends FragmentActivity implements OnMapRead
                     shippingMarker = mMap.addMarker(new MarkerOptions()
                             .position(latLng)
                             .title("Người giao")
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.shipper)));
                 } else {
                     shippingMarker.setPosition(latLng);
                 }
@@ -245,6 +246,13 @@ public class TrackingOrderActivity extends FragmentActivity implements OnMapRead
             }
             polyline = mMap.addPolyline(lineOptions);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        orderDatabase.addValueEventListener(this);
     }
 
     @Override

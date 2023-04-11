@@ -1,5 +1,6 @@
 package com.capstone.foodify.API;
 
+import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.Comment;
 import com.capstone.foodify.Model.DistrictWardResponse;
 import com.capstone.foodify.Model.Food;
@@ -31,7 +32,7 @@ public interface FoodApi {
     Gson gson = new GsonBuilder().setDateFormat("HH:mm:ss dd-MM-yyyy").setLenient().create();
 
     FoodApi apiService = new Retrofit.Builder()
-            .baseUrl("http://192.168.1.183:8080/api/").addConverterFactory(GsonConverterFactory.create(gson))
+            .baseUrl(Common.BASE_URL).addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(FoodApi.class);
 

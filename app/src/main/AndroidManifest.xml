@@ -94,10 +94,6 @@
             android:exported="false"
             android:noHistory="true" />
         <activity
-            android:name=".Activity.ResetPasswordActivity"
-            android:exported="false"
-            android:noHistory="true" />
-        <activity
             android:name=".Activity.VerifyAccountActivity"
             android:exported="false" />
         <activity

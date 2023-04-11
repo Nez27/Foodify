@@ -168,9 +168,6 @@ public class MainActivity extends AppCompatActivity {
         startPowerSaverIntent(this);
         checkNotificationPermission();
 
-        if(Common.CURRENT_USER != null)
-            getTokenFCM();
-
 
         if (Common.CURRENT_LOCATION == null) {
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -227,6 +224,7 @@ public class MainActivity extends AppCompatActivity {
 
                         String token = task.getResult();
 
+                        Common.FCM_TOKEN = token;
                         FoodApiToken.apiService.updateFCMToken(Common.CURRENT_USER.getId(), token).enqueue(new Callback<CustomResponse>() {
                             @Override
                             public void onResponse(Call<CustomResponse> call, Response<CustomResponse> response) {
@@ -307,8 +305,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-    //myringtone permission
     private void checkNotificationPermission(){
         if(!NotificationManagerCompat.from(this).areNotificationsEnabled()){
             showDialogPermission("Hãy bật quyền thông báo trên thiết bị của bạn để chúng thôi có thể cung cấp thông tin cho bạn một cách nhanh nhất!");
@@ -428,6 +424,9 @@ public class MainActivity extends AppCompatActivity {
         if (mRequestingLocationUpdates && checkPermission() && Common.CURRENT_LOCATION == null) {
             startLocationUpdates();
         }
+
+        if(Common.CURRENT_USER != null && Common.FCM_TOKEN == null)
+            getTokenFCM();
     }
 
     @Override
@@ -441,9 +440,6 @@ public class MainActivity extends AppCompatActivity {
                     Common.CURRENT_LOCATION = mCurrentLocation;
             }
         }
-
-        if(Common.CURRENT_USER != null)
-            getTokenFCM();
     }
 
     //Check auto start permission

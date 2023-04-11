@@ -16,6 +16,8 @@ import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.Response.CustomResponse;
 import com.capstone.foodify.Model.User;
 import com.capstone.foodify.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.FirebaseException;
@@ -23,16 +25,24 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.auth.SignInMethodQueryResult;
+import com.thecode.aestheticdialogs.AestheticDialog;
+import com.thecode.aestheticdialogs.DialogStyle;
+import com.thecode.aestheticdialogs.DialogType;
+import com.thecode.aestheticdialogs.OnDialogClickListener;
 
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
-    TextInputLayout textInput_phone;
-    EditText edt_phone;
+    private FirebaseAuth mAuth;
+    TextInputLayout textInput_email;
+    EditText edt_email;
     MaterialButton send_code_button;
     ConstraintLayout progress_layout;
     ImageView back_image;
@@ -42,6 +52,8 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_forgot_password);
 
         initComponent();
+
+        mAuth = FirebaseAuth.getInstance();
 
         //Back button
         back_image.setOnClickListener(new View.OnClickListener() {
@@ -54,86 +66,85 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         send_code_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                progress_layout.setVisibility(View.VISIBLE);
+                if(checkEmailValid()){
+                    mAuth.setLanguageCode("vi");
 
-                findUserByPhone(edt_phone.getText().toString());
+                    mAuth.fetchSignInMethodsForEmail(edt_email.getText().toString())
+                            .addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
+
+                                    boolean isNewUser = task.getResult().getSignInMethods().isEmpty();
+
+                                    if (isNewUser) {
+                                        new AestheticDialog.Builder(ForgotPasswordActivity.this, DialogStyle.TOASTER, DialogType.ERROR)
+                                                .setTitle("Thông báo!")
+                                                .setMessage("Tài khoản chưa được đăng ký ở hệ thống! Vui lòng kiểm tra lại")
+                                                .setCancelable(true).show();
+                                    } else {
+                                        sendEmail();
+                                    }
+
+                                }
+                            });
+                }
             }
         });
 
         setFontUI();
     }
 
-    private void findUserByPhone(String phone){
+    private void sendEmail(){
 
-        User user = new User();
-        user.setPhoneNumber(phone);
-
-        FoodApi.apiService.checkEmailOrPhoneExist(user).enqueue(new Callback<CustomResponse>() {
+        mAuth.sendPasswordResetEmail(edt_email.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
-            public void onResponse(Call<CustomResponse> call, Response<CustomResponse> response) {
-                CustomResponse responseData = response.body();
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    new AestheticDialog.Builder(ForgotPasswordActivity.this, DialogStyle.TOASTER, DialogType.SUCCESS)
+                            .setTitle("Email đã được gửi!")
+                            .setMessage("Vui lòng kiểm tra hộp thư và làm theo hướng dẫn để tiếp tục!")
+                            .setCancelable(true).show();
 
-                if(responseData != null){
-                    if(responseData.isTrue()){
-                        //If this phone number has already register in server, send the code
-
-                    } else {
-                        //If this phone number
-                        Toast.makeText(ForgotPasswordActivity.this, "Hệ thống hiện chưa tìm thấy số điện thoại này, vui lòng kiểm tra lại!", Toast.LENGTH_SHORT).show();
-                    }
+                    progress_layout.setVisibility(View.GONE);
                 }
             }
-
-            @Override
-            public void onFailure(Call<CustomResponse> call, Throwable t) {
-
-            }
         });
+
     }
 
-    private void sendCode(){
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        auth.setLanguageCode("vi");
-        PhoneAuthOptions options = PhoneAuthOptions.newBuilder(auth)
-                .setPhoneNumber(Common.PHONE_CODE + edt_phone.getText().toString())
-                .setTimeout(0L, TimeUnit.SECONDS)
-                .setActivity(this)
-                .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-                    @Override
-                    public void onCodeSent(@NonNull String verificationId,
-                                           @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+    private boolean checkEmailValid() {
+        boolean dataHasValidate = true;
 
+        //Check phone number
+        if (edt_email.getText().toString().isEmpty()) {
+            textInput_email.setError("Email không được bỏ trống!");
+            dataHasValidate = false;
+        } else {
 
-                        Intent intent = new Intent(ForgotPasswordActivity.this, VerifyAccountActivity.class);
-                        intent.putExtra("phone", edt_phone.getText().toString());
-                        intent.putExtra("verificationId", verificationId);
-                        intent.putExtra(Common.IS_FORGOT_PASSWORD, Common.IS_FORGOT_PASSWORD);
-                        startActivity(intent);
-                        finish();
-                    }
+            //Check email valid
+            Pattern patternEmail = Pattern.compile(Common.VALID_EMAIL_ADDRESS_REGEX, Pattern.CASE_INSENSITIVE);
+            Matcher matcherEmail = patternEmail.matcher(edt_email.getText().toString());
+            if (!matcherEmail.matches()) {
+                textInput_email.setError("Địa chỉ email không đúng định dạng. Xin vui lòng kiểm tra lại!");
+                dataHasValidate = false;
+            } else {
+                textInput_email.setErrorEnabled(false);
+            }
+        }
 
-                    @Override
-                    public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-
-                    }
-
-                    @Override
-                    public void onVerificationFailed(@NonNull FirebaseException e) {
-                        // ...
-                    }
-                })
-                .build();
-        PhoneAuthProvider.verifyPhoneNumber(options);
+        return dataHasValidate;
     }
-
     private void setFontUI() {
-        textInput_phone = (TextInputLayout) findViewById(R.id.textInput_phone);
-        textInput_phone.setTypeface(Common.setFontBebas(getAssets()));
+
+        textInput_email.setTypeface(Common.setFontBebas(getAssets()));
     }
 
     private void initComponent() {
-        back_image = (ImageView) findViewById(R.id.back_image);
-        send_code_button = (MaterialButton) findViewById(R.id.send_code_button);
-        edt_phone = findViewById(R.id.edt_phone);
+        textInput_email = findViewById(R.id.textInput_email);
+        back_image = findViewById(R.id.back_image);
+        send_code_button = findViewById(R.id.send_code_button);
+        edt_email = findViewById(R.id.edt_email);
         progress_layout = findViewById(R.id.progress_layout);
     }
 

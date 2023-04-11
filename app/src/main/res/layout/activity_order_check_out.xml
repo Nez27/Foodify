@@ -304,7 +304,8 @@
 
             <Button
                 android:id="@+id/confirm_address_button"
-                android:text="Xác nhận"
+                android:text="XÁC NHẬN"
+                android:textSize="14sp"
                 android:textAllCaps="false"
                 android:backgroundTint="@color/primaryColor"
                 android:layout_width="120dp"

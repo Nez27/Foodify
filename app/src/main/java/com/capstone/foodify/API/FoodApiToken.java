@@ -4,6 +4,7 @@ import static com.capstone.foodify.Common.TOKEN;
 
 import androidx.annotation.NonNull;
 
+import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.Address;
 import com.capstone.foodify.Model.Comment;
 import com.capstone.foodify.Model.Food;
@@ -47,7 +48,7 @@ public interface FoodApiToken {
 
     FoodApiToken apiService = new Retrofit.Builder()
             .client(client)
-            .baseUrl("http://192.168.1.183:8080/api/").addConverterFactory(GsonConverterFactory.create(gson))
+            .baseUrl(Common.BASE_URL).addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(FoodApiToken.class);
 

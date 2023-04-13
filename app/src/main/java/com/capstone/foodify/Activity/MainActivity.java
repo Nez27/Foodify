@@ -23,7 +23,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -31,9 +33,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.splashscreen.SplashScreen;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.capstone.foodify.API.FoodApiToken;
@@ -56,19 +55,18 @@ import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.Priority;
 import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.firebase.appdistribution.FirebaseAppDistribution;
+import com.google.firebase.appdistribution.InterruptionLevel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.messaging.FirebaseMessaging;
-
-import org.objectweb.asm.Handle;
 
 import java.util.Arrays;
 import java.util.List;
@@ -80,6 +78,7 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
+    FirebaseAppDistribution firebaseAppDistribution = FirebaseAppDistribution.getInstance();
     ViewPager2 viewPager2;
     ViewPagerAdapter viewPagerAdapter;
     BottomNavigationView bottomNavigationView;
@@ -131,8 +130,6 @@ public class MainActivity extends AppCompatActivity {
                                             HomeFragment.setNameUser();
 
                                             getTokenFCM();
-
-                                            progressLayout.setVisibility(View.GONE);
                                         }
                                     }
 
@@ -167,6 +164,13 @@ public class MainActivity extends AppCompatActivity {
 
         startPowerSaverIntent(this);
         checkNotificationPermission();
+
+        firebaseAppDistribution.showFeedbackNotification(
+                // Text providing notice to your testers about collection and
+                // processing of their feedback data
+                "Nhấp vào đây để đánh giá app Foodify!",
+                // The level of interruption for the notification
+                InterruptionLevel.HIGH);
 
 
         if (Common.CURRENT_LOCATION == null) {
@@ -206,8 +210,10 @@ public class MainActivity extends AppCompatActivity {
                     stopLocationUpdates();
                 }
 
+                progressLayout.setVisibility(View.GONE);
+
             }
-        }, 5000);
+        }, 4000);
 
     }
 
@@ -230,6 +236,8 @@ public class MainActivity extends AppCompatActivity {
                             public void onResponse(Call<CustomResponse> call, Response<CustomResponse> response) {
                                 if(response.code() != 200)
                                     Toast.makeText(MainActivity.this, "Không thể cập nhật FCM Token. Mã lỗi: " + response.code(), Toast.LENGTH_SHORT).show();
+
+                                progressLayout.setVisibility(View.GONE);
                             }
 
                             @Override

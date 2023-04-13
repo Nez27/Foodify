@@ -1,5 +1,7 @@
 package com.capstone.foodify.Adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.capstone.foodify.Activity.FoodDetailActivity;
 import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.Basket;
 import com.capstone.foodify.Model.OrderDetail;
@@ -20,8 +23,10 @@ import java.util.List;
 public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.OrderDetailViewHolder>{
 
     public List<Basket> listFoodInBasket;
-
-    public OrderDetailAdapter(){}
+    public Context context;
+    public OrderDetailAdapter(Context context){
+        this.context = context;
+    }
 
     public void setData(List<Basket> listFoodInBasket){
         this.listFoodInBasket = listFoodInBasket;
@@ -65,6 +70,15 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
         }
 
         holder.price.setText(Common.changeCurrencyUnit(cost));
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, FoodDetailActivity.class);
+                intent.putExtra("FoodId", food.getId());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

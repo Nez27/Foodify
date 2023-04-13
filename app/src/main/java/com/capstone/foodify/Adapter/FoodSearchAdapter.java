@@ -95,12 +95,8 @@ public class FoodSearchAdapter extends RecyclerView.Adapter<FoodSearchAdapter.Fo
                     Common.addFoodToBasket(food);
                     Toast.makeText(context, "Đã thêm " + food.getName() + " vào giỏ hàng!", Toast.LENGTH_SHORT).show();
                 } else {
-                    new AestheticDialog.Builder((Activity) context, DialogStyle.FLAT, DialogType.INFO)
-                            .setTitle("Thông báo!")
-                            .setMessage("Bạn chỉ có thể đặt những món ăn cùng cửa hàng, xin vui lòng kiểm tra lại giỏ hàng!")
-                            .setAnimation(DialogAnimation.SHRINK)
-                            .setCancelable(true)
-                            .show();
+
+                    Common.notificationDialog((Activity) context, DialogStyle.FLAT, DialogType.INFO, "Thông báo!", "Bạn chỉ có thể đặt những món ăn cùng cửa hàng, xin vui lòng kiểm tra lại giỏ hàng!");
                 }
             }
         });

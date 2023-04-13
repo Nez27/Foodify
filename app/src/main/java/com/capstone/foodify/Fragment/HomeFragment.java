@@ -45,7 +45,6 @@ public class HomeFragment extends Fragment {
     private RecyclerView rcvMenu, recyclerView_restaurant;
     private MenuAdapter menuAdapter;
     private ShopAdapter shopAdapter;
-    private ConstraintLayout progressLayout;
     private static TextView welcomeText;
 
 
@@ -60,7 +59,6 @@ public class HomeFragment extends Fragment {
         menuAdapter = new MenuAdapter(getContext());
         recyclerView_restaurant = view.findViewById(R.id.recycler_view_restaurant);
         shopAdapter = new ShopAdapter(getContext());
-        progressLayout = getActivity().findViewById(R.id.progress_layout);
         welcomeText = view.findViewById(R.id.welcome_text);
 
 
@@ -116,14 +114,10 @@ public class HomeFragment extends Fragment {
 
                 imageSlider.setImageList(slideModels, ScaleTypes.FIT);
 
-                //Dismiss progress bar
-                progressLayout.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<List<Slider>> call, Throwable t) {
-                //Dismiss progress bar
-                progressLayout.setVisibility(View.GONE);
             }
         });
     }
@@ -157,8 +151,6 @@ public class HomeFragment extends Fragment {
                 if(getActivity() != null)
                     Common.showNotificationError(getContext(), getActivity());
 
-                //Dismiss progress bar
-                progressLayout.setVisibility(View.GONE);
             }
         });
     }

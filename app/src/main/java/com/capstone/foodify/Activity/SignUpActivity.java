@@ -29,6 +29,8 @@ import com.capstone.foodify.Model.DistrictWardResponse;
 import com.capstone.foodify.Model.Response.CustomResponse;
 import com.capstone.foodify.Model.User;
 import com.capstone.foodify.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.FirebaseException;
@@ -36,6 +38,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.auth.SignInMethodQueryResult;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -45,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -64,7 +68,7 @@ public class SignUpActivity extends AppCompatActivity {
     private MaterialButton signUpButton;
     private ConstraintLayout progressLayout;
     private String email, phone, name, dateOfBirth, address, district, ward, password = null, identifiedCode;
-
+    private static boolean validIdentifiedCode, validPhone, validEmail = false;
     private static final ArrayList<String> wardList = new ArrayList<>();
     private static final ArrayList<String> districtList = new ArrayList<>();
 
@@ -157,7 +161,10 @@ public class SignUpActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(validateData()){
                     loading();
-                    checkEmailOrPhoneExist();
+
+                    checkIdentifiedCodeExist();
+                    checkPhoneExist();
+                    checkEmailExist();
                 }
             }
         });
@@ -197,7 +204,55 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
-    private void checkEmailOrPhoneExist(){
+    private void checkEmailExist(){
+        FirebaseAuth.getInstance().fetchSignInMethodsForEmail(email).addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
+            @Override
+            public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
+
+                boolean isNewUser = Objects.requireNonNull(task.getResult().getSignInMethods()).isEmpty();
+
+                if (!isNewUser) {
+                    textInput_email.setError("Email này đã được đăng ký sử dụng!");
+                    validEmail = false;
+
+                } else {
+
+                    validEmail = true;
+                    signUp();
+                }
+
+            }
+        });
+    }
+
+    private void checkIdentifiedCodeExist(){
+        FoodApi.apiService.checkIdentifiedCode(identifiedCode).enqueue(new Callback<CustomResponse>() {
+            @Override
+            public void onResponse(Call<CustomResponse> call, Response<CustomResponse> response) {
+                if(response.code() == 200){
+                    CustomResponse tempData = response.body();
+
+                    assert tempData != null;
+                    if(tempData.isTrue()){
+                        //Have identifiedCode exist
+                        validIdentifiedCode = false;
+                        textInput_id_card.setError("Số này đã được đăng ký!");
+                    } else {
+                        validIdentifiedCode = true;
+                        textInput_id_card.setErrorEnabled(false);
+
+                        signUp();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CustomResponse> call, Throwable t) {
+
+            }
+        });
+    }
+    private void checkPhoneExist(){
         //Create user object
         User user = new User(new Address(address, ward, district), dateOfBirth, email, name, identifiedCode, phone);
 
@@ -206,17 +261,16 @@ public class SignUpActivity extends AppCompatActivity {
             public void onResponse(Call<CustomResponse> call, Response<CustomResponse> response) {
                 CustomResponse dataTemp = response.body();
 
-                boolean isExist = false;
-
-                if(dataTemp != null)
-                    isExist = dataTemp.isTrue();
-
-                if(!isExist){
-                    //If user not exist on database, the app will create account
-                    signUp(user);
+                loadCompleted();
+                assert dataTemp != null;
+                if(dataTemp.isTrue()){
+                    textInput_phone.setError("Số điện thoại đã được đăng ký!");
+                    validPhone = false;
                 } else {
-                    loadCompleted();
-                    Toast.makeText(SignUpActivity.this, "Địa chỉ email hoặc số điện thoại đã trùng, vui lòng kiểm tra lại!", Toast.LENGTH_SHORT).show();
+                    validPhone = true;
+                    textInput_phone.setErrorEnabled(false);
+
+                    signUp();
                 }
             }
 
@@ -269,7 +323,7 @@ public class SignUpActivity extends AppCompatActivity {
         }
 
         //Check identified Code
-        if(identifiedCode.length() < 9 && identifiedCode.length() > 10){
+        if(identifiedCode.length() < 8 || identifiedCode.length() > 11){
             textInput_id_card.setError("CCCD / CMND không hợp lệ!");
             dataHasValidate = false;
         } else {
@@ -355,47 +409,52 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
-    private void signUp(User user){
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        auth.setLanguageCode("vi");
-        PhoneAuthOptions options = PhoneAuthOptions.newBuilder(auth)
-                .setPhoneNumber(Common.PHONE_CODE + edt_phone.getText().toString())
-                .setTimeout(0L, TimeUnit.SECONDS)
-                .setActivity(this)
-                .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-                    @Override
-                    public void onCodeSent(@NonNull String verificationId,
-                                           @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
-                        loadCompleted();
+    private void signUp(){
 
-                        Intent intent = new Intent(SignUpActivity.this, VerifyAccountActivity.class);
-                        intent.putExtra("user", user);
-                        intent.putExtra("phone", edt_phone.getText().toString());
-                        intent.putExtra("verificationId", verificationId);
-                        intent.putExtra("token", forceResendingToken);
-                        intent.putExtra("password", password);
-                        startActivity(intent);
-                        finish();
-                    }
+        if(validEmail && validIdentifiedCode && validPhone){
+            User user = new User(new Address(address, ward, district), dateOfBirth, email, name, identifiedCode, phone);
 
-                    @Override
-                    public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-                        loadCompleted();
-                    }
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            auth.setLanguageCode("vi");
+            PhoneAuthOptions options = PhoneAuthOptions.newBuilder(auth)
+                    .setPhoneNumber(Common.PHONE_CODE + edt_phone.getText().toString())
+                    .setTimeout(0L, TimeUnit.SECONDS)
+                    .setActivity(this)
+                    .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+                        @Override
+                        public void onCodeSent(@NonNull String verificationId,
+                                               @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                            loadCompleted();
 
-                    @Override
-    public void onVerificationFailed(@NonNull FirebaseException e) {
-        // ...
-        loadCompleted();
-        showError(e.toString());
-    }
-})
-        .build();
-        PhoneAuthProvider.verifyPhoneNumber(options);
-        // [END auth_test_phone_verify]
+                            Intent intent = new Intent(SignUpActivity.this, VerifyAccountActivity.class);
+                            intent.putExtra("user", user);
+                            intent.putExtra("phone", edt_phone.getText().toString());
+                            intent.putExtra("verificationId", verificationId);
+                            intent.putExtra("token", forceResendingToken);
+                            intent.putExtra("password", password);
+                            startActivity(intent);
+                            finish();
+                        }
+
+                        @Override
+                        public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
+                            loadCompleted();
+                        }
+
+                        @Override
+                        public void onVerificationFailed(@NonNull FirebaseException e) {
+                            // ...
+                            loadCompleted();
+                            showError(e.toString());
+                        }
+                    }).build();
+
+            PhoneAuthProvider.verifyPhoneNumber(options);
+            // [END auth_test_phone_verify]
         }
+    }
 
-private void showError(String msg){
+    private void showError(String msg){
         errorText.setText(msg);
         }
 

@@ -7,6 +7,7 @@ import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +45,7 @@ public class CancelOrderFragment extends Fragment {
     private ProgressBar progressBar;
     private TextView endOfListText;
     private LinearLayout empty_layout;
+    private SwipeRefreshLayout swipeRefreshLayout;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -53,7 +55,7 @@ public class CancelOrderFragment extends Fragment {
         //Init Component
         initComponent(view);
 
-        getOrderUser(0);
+        getOrderUser(CURRENT_PAGE);
 
         orderAdapter = new OrderAdapter(getContext());
 
@@ -73,6 +75,22 @@ public class CancelOrderFragment extends Fragment {
             });
         }
 
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.primaryColor, null));
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                listOrders.clear();
+                CURRENT_PAGE = 0;
+
+                getOrderUser(CURRENT_PAGE);
+
+                nestedScrollView.setVisibility(View.VISIBLE);
+                empty_layout.setVisibility(View.GONE);
+
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
         return view;
     }
 
@@ -82,6 +100,7 @@ public class CancelOrderFragment extends Fragment {
         progressBar = view.findViewById(R.id.progress_bar);
         endOfListText = view.findViewById(R.id.end_of_list_text);
         empty_layout = view.findViewById(R.id.empty_layout);
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh);
     }
 
     private void getOrderUser(int page){

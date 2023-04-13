@@ -5,6 +5,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        release {
+            storeFile file('C:\\Users\\phanh\\Desktop\\mykeystore\\foodify-keystore.jks')
+            storePassword 'Phanhuuloi2@@1'
+            keyAlias 'foodify'
+            keyPassword 'Phanhuuloi2@@1'
+        }
+    }
     namespace 'com.capstone.foodify'
     compileSdk 33
 
@@ -16,11 +24,12 @@ android {
     defaultConfig {
         applicationId "com.capstone.foodify"
         minSdk 26
-        targetSdk 31
+        targetSdk 32
         versionCode 1
-        versionName "1.0"
+        versionName "0.1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.release
     }
 
     buildTypes {
@@ -67,8 +76,9 @@ dependencies {
 
     implementation 'androidx.core:core-splashscreen:1.0.0'
 
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
     implementation 'com.google.code.gson:gson:2.10.1'
-    implementation 'com.google.android.material:material:1.7.0'
+    implementation 'com.google.android.material:material:1.8.0'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'
@@ -94,5 +104,8 @@ dependencies {
     //Firebase
     implementation platform('com.google.firebase:firebase-bom:31.2.3')
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
+
+    // ADD the API-only library to all variants
+    implementation 'com.google.firebase:firebase-appdistribution-api:16.0.0-beta07'
 
 }

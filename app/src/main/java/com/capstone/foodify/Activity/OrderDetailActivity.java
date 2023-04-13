@@ -189,7 +189,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         address = findViewById(R.id.address);
         orderTime = findViewById(R.id.order_time);
         total = findViewById(R.id.total);
-        adapter = new OrderDetailAdapter();
+        adapter = new OrderDetailAdapter(OrderDetailActivity.this);
         recyclerView = findViewById(R.id.recycler_view_order_detail);
         back_image = findViewById(R.id.back_image);
         btn_cancel_order = findViewById(R.id.cancel_order_button);

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="LockedOrientationActivity">
 
     <uses-feature
         android:name="android.hardware.telephony"
@@ -52,10 +53,12 @@
         <activity
             android:name=".Activity.TrackingOrderActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_tracking_order" />
         <activity
             android:name=".Activity.OrderCheckOutActivity"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -70,45 +73,58 @@
         </activity>
         <activity
             android:name=".Activity.FavoriteFoodActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".Activity.ShopDetailActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".Activity.OrderDetailActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".Activity.OrderActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".Activity.AddressManagerActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".Activity.ChangePasswordActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".Activity.AccountAndProfileActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".Activity.FoodDetailActivity"
+            android:screenOrientation="portrait"
             android:exported="false"
             android:noHistory="true" />
         <activity
             android:name=".Activity.VerifyAccountActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".Activity.ForgotPasswordActivity"
+            android:screenOrientation="portrait"
             android:exported="false"
             android:noHistory="true" />
         <activity
             android:name=".Activity.SignInActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".Activity.SignUpActivity"
+            android:screenOrientation="portrait"
             android:exported="false"
             android:noHistory="true" />
         <activity
             android:name=".Activity.MainActivity"
+            android:screenOrientation="portrait"
             android:exported="true"
             android:theme="@style/Theme.Foodify.SplashScreen">
             <intent-filter>

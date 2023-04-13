@@ -155,11 +155,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        new AestheticDialog.Builder(ChangePasswordActivity.this, DialogStyle.RAINBOW, DialogType.SUCCESS)
-                                                .setTitle("Thàng công!")
-                                                .setMessage("Đã thay đổi mật khẩu thành công!")
-                                                .setCancelable(true)
-                                                .show();
+                                        Common.notificationDialog(ChangePasswordActivity.this, DialogStyle.RAINBOW, DialogType.SUCCESS, "Thành công!", "Đã thay đổi mật khẩu thành công!");
 
                                         progressLayout.setVisibility(View.GONE);
                                     } else {
@@ -169,11 +165,8 @@ public class ChangePasswordActivity extends AppCompatActivity {
                                 }
                             });
                         } else {
-                            new AestheticDialog.Builder(ChangePasswordActivity.this, DialogStyle.RAINBOW, DialogType.ERROR)
-                                    .setTitle("Lỗi!")
-                                    .setMessage("Mật khẩu không đúng! Xin vui lòng thử lại!")
-                                    .setCancelable(true)
-                                    .show();
+                            Common.notificationDialog(ChangePasswordActivity.this, DialogStyle.RAINBOW, DialogType.ERROR, "Lỗi!", "Mật khẩu không đúng! Xin vui lòng thử lại!");
+
                             progressLayout.setVisibility(View.GONE);
                         }
                     }

@@ -96,4 +96,7 @@ public interface FoodApi {
 
     @GET("products/{productId}/user")
     Call<CustomResponse> checkUserBuyProduct(@Path("productId") int productId, @Query("userId") int userId);
+
+    @GET("auth/check")
+    Call<CustomResponse> checkIdentifiedCode(@Query("code") String code);
 }

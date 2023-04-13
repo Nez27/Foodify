@@ -296,12 +296,7 @@ public class AccountAndProfileActivity extends AppCompatActivity {
     }
 
     private void showDialogCaution() {
-        new AestheticDialog.Builder(this, DialogStyle.FLAT, DialogType.WARNING)
-                .setTitle("Email chưa được xác thực!")
-                .setMessage("Vui lòng xác thực email để bạn có thể thực hiện việc lấy lại mật khẩu nếu quên!")
-                .setAnimation(DialogAnimation.SHRINK)
-                .setCancelable(true)
-                .show();
+        Common.notificationDialog(this, DialogStyle.FLAT, DialogType.WARNING, "Email chưa được xác thực!", "Vui lòng xác thực email để bảo vệ tài khoản của bạn!");
     }
 
     private void updateUser(String imageUrl) {

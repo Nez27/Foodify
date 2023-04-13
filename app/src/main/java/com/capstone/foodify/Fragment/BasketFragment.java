@@ -55,7 +55,7 @@ public class BasketFragment extends Fragment implements ItemTouchHelperListener 
         //Init Component
         recyclerView_basket_food = view.findViewById(R.id.recycler_view_basket_food);
         listBasketFoodView = view.findViewById(R.id.list_basket_food_view);
-        adapter = new BasketAdapter(this);
+        adapter = new BasketAdapter(this, getContext());
         total = view.findViewById(R.id.total_text_view);
         empty_layout = view.findViewById(R.id.empty_layout);
         btnCheckOut = view.findViewById(R.id.btnCheckOut);

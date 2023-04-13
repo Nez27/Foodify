@@ -1,7 +1,9 @@
 package com.capstone.foodify.Adapter;
 
 import android.annotation.SuppressLint;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.capstone.foodify.Activity.FoodDetailActivity;
 import com.capstone.foodify.Common;
 import com.capstone.foodify.Fragment.BasketFragment;
 import com.capstone.foodify.Model.Basket;
@@ -27,9 +30,11 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketView
     public List<Basket> listBasketFood;
 
     private final BasketFragment basketFragment;
+    private Context context;
 
-    public BasketAdapter(BasketFragment basketFragment) {
+    public BasketAdapter(BasketFragment basketFragment, Context context) {
         this.basketFragment = basketFragment;
+        this.context = context;
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -121,6 +126,15 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketView
                     //Update total price
                     calculateTotalPrice();
                 }
+            }
+        });
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, FoodDetailActivity.class);
+                intent.putExtra("FoodId", foodBasket.getId());
+                context.startActivity(intent);
             }
         });
     }

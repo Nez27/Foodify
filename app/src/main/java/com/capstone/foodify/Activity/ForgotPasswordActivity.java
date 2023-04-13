@@ -78,10 +78,11 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                                     boolean isNewUser = task.getResult().getSignInMethods().isEmpty();
 
                                     if (isNewUser) {
-                                        new AestheticDialog.Builder(ForgotPasswordActivity.this, DialogStyle.TOASTER, DialogType.ERROR)
-                                                .setTitle("Thông báo!")
-                                                .setMessage("Tài khoản chưa được đăng ký ở hệ thống! Vui lòng kiểm tra lại")
-                                                .setCancelable(true).show();
+
+                                        Common.notificationDialog(ForgotPasswordActivity.this, DialogStyle.FLAT, DialogType.ERROR, "Thông báo!", "Email " +
+                                                "này chưa được đăng ký ở hệ thống! Vui lòng kiểm tra lại!");
+
+                                        progress_layout.setVisibility(View.GONE);
                                     } else {
                                         sendEmail();
                                     }
@@ -101,10 +102,8 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
-                    new AestheticDialog.Builder(ForgotPasswordActivity.this, DialogStyle.TOASTER, DialogType.SUCCESS)
-                            .setTitle("Email đã được gửi!")
-                            .setMessage("Vui lòng kiểm tra hộp thư và làm theo hướng dẫn để tiếp tục!")
-                            .setCancelable(true).show();
+                    Common.notificationDialog(ForgotPasswordActivity.this, DialogStyle.FLAT, DialogType.SUCCESS, "Email đã được gửi", "Vui lòng kiểm tra " +
+                            "hộp thư và làm theo hướng dẫn để tiếp tục!");
 
                     progress_layout.setVisibility(View.GONE);
                 }

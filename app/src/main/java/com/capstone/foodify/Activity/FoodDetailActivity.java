@@ -26,6 +26,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.capstone.foodify.API.FoodApi;
 import com.capstone.foodify.API.FoodApiToken;
@@ -66,7 +67,6 @@ import retrofit2.Response;
 
 public class FoodDetailActivity extends AppCompatActivity {
     ArrayList<Comment> listComment = new ArrayList<>();
-    private static final int ACTION_CODE = 0;
     private static final int CREATE_COMMENT = 1;
     private static final int EDIT_COMMENT = 2;
     private static int CURRENT_PAGE = 0;
@@ -94,6 +94,7 @@ public class FoodDetailActivity extends AppCompatActivity {
     private CardView user_comment_layout;
     private Comment commentUser = null;
     private ChipGroup list_category;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     private void initComponent() {
         horizontalQuantitizer = findViewById(R.id.quantity_option);
@@ -124,6 +125,7 @@ public class FoodDetailActivity extends AppCompatActivity {
         edt_button = findViewById(R.id.edit_button);
         list_category = findViewById(R.id.list_category);
         count_sold_txt = findViewById(R.id.count_sold);
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh);
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,14 +145,23 @@ public class FoodDetailActivity extends AppCompatActivity {
         if (getIntent() != null)
             foodId = getIntent().getStringExtra("FoodId");
 
-        commentAdapter.setData(getListComment(0));
         recyclerView_comment.setAdapter(commentAdapter);
-
 
         hideUI();
 
-        checkUserBuyThisProduct();
+        getData();
 
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.primaryColor, null));
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                listComment.clear();
+
+                getData();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
 
         if(Common.CURRENT_USER == null){
@@ -183,8 +194,6 @@ public class FoodDetailActivity extends AppCompatActivity {
             }
         });
 
-        getFoodById(foodId);
-
         //Turn previous action when click
         back_image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -203,10 +212,10 @@ public class FoodDetailActivity extends AppCompatActivity {
                         openCommentDialog(Gravity.CENTER, CREATE_COMMENT);
                     } else {
                         //If not
-                        Toast.makeText(FoodDetailActivity.this, "Bạn cần phải mua sản phẩm trước khi bình luận!", Toast.LENGTH_SHORT).show();
+                        Common.notificationDialog(FoodDetailActivity.this, DialogStyle.TOASTER, DialogType.INFO, "Thông báo!", "Bạn cần phải mua sản phẩm này trước khi bình luận!");
                     }
                 } else
-                    Toast.makeText(FoodDetailActivity.this, "Bạn cần phải đăng nhập để thực hiện hành động này!", Toast.LENGTH_SHORT).show();
+                    Common.notificationDialog(FoodDetailActivity.this, DialogStyle.TOASTER, DialogType.WARNING, "Thông báo!", "Bạn cần phải đăng nhập trước khi thực hiện hành động này!");
             }
         });
 
@@ -273,6 +282,13 @@ public class FoodDetailActivity extends AppCompatActivity {
                     showDeleteDialogConfirm();
             }
         });
+    }
+
+    private void getData() {
+        CURRENT_PAGE = 0;
+        commentAdapter.setData(getListComment(0));
+        checkUserBuyThisProduct();
+        getFoodById(foodId);
     }
 
     private void checkUserBuyThisProduct(){
@@ -347,12 +363,7 @@ public class FoodDetailActivity extends AppCompatActivity {
             if(Common.FINAL_SHOP.equals(food.getShop().getName())){
                 addFood();
             } else {
-                new AestheticDialog.Builder(this, DialogStyle.FLAT, DialogType.INFO)
-                        .setTitle("Thông báo!")
-                        .setMessage("Bạn chỉ có thể đặt những món ăn cùng cửa hàng, xin vui lòng kiểm tra lại giỏ hàng!")
-                        .setAnimation(DialogAnimation.SHRINK)
-                        .setCancelable(true)
-                        .show();
+                Common.notificationDialog(this, DialogStyle.FLAT, DialogType.INFO, "Thông báo!", "Bạn chỉ có thể đặt những món ăn cùng cửa hàng, xin vui lòng kiểm tra lại giỏ hàng!");
             }
 
         } else {
@@ -512,6 +523,7 @@ public class FoodDetailActivity extends AppCompatActivity {
             count_sold_txt.setText(food.getSold() + " đã bán");
         }
 
+        list_category.removeAllViews();
         //Init category
         for(Category category: food.getCategories()){
             Chip chip = (Chip) inflater.inflate(R.layout.chip_item, null, false);

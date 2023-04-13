@@ -102,7 +102,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
         spn_ward = findViewById(R.id.ward);
         edt_address_detect = findViewById(R.id.edt_address_detect);
         manual_input_address_layout = findViewById(R.id.manual_input_address_layout);
-        adapter = new OrderDetailAdapter();
+        adapter = new OrderDetailAdapter(OrderCheckOutActivity.this);
         recyclerView = findViewById(R.id.list_order);
         back_image = findViewById(R.id.back_image);
         change_address_button = findViewById(R.id.change_address_button);
@@ -144,10 +144,8 @@ public class OrderCheckOutActivity extends AppCompatActivity {
         //Check current location is null or not
         if(Common.CURRENT_LOCATION == null){
             auto_detect_location.setEnabled(false);
-            new AestheticDialog.Builder(OrderCheckOutActivity.this, DialogStyle.FLAT, DialogType.INFO)
-                    .setTitle("Thông báo")
-                    .setMessage("Tính năng \"Lấy vị trí theo thiết bị của bạn\" sẽ không khả dụng do ứng dụng chưa được cấp quyền vị trí!")
-                    .setCancelable(true).show();
+
+            Common.notificationDialog(OrderCheckOutActivity.this, DialogStyle.FLAT, DialogType.INFO, "Thông báo", "Tính năng \"Lấy vị trí theo thiết bị của bạn\" sẽ không khả dụng do ứng dụng chưa được cấp quyền vị trí!");
         }
 
 
@@ -254,12 +252,9 @@ public class OrderCheckOutActivity extends AppCompatActivity {
                             btn_Pay.setEnabled(true);
                             btn_ZaloPay.setEnabled(true);
                         } else {
-                            new AestheticDialog.Builder(OrderCheckOutActivity.this, DialogStyle.FLAT, DialogType.INFO)
-                                    .setTitle("Thông báo!")
-                                    .setMessage("Chưa thể lấy được vị trí shop, vui lòng thử lại hoặc có thể chọn \"Đến shop lấy\" để tiếp tục!")
-                                    .setAnimation(DialogAnimation.SHRINK)
-                                    .setCancelable(true)
-                                    .show();
+
+                            Common.notificationDialog(OrderCheckOutActivity.this, DialogStyle.FLAT, DialogType.INFO, "Thông báo!", "Chưa thể lấy được vị trí shop, vui lòng thử lại hoặc có thể chọn \"Đến shop lấy\" để tiếp tục!");
+
                             progress_layout.setVisibility(View.GONE);
 
                             btn_Pay.setEnabled(false);
@@ -395,11 +390,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
 
                                     @Override
                                     public void onPaymentCanceled(String zpTransToken, String appTransID) {
-                                        new AestheticDialog.Builder(OrderCheckOutActivity.this, DialogStyle.RAINBOW, DialogType.INFO)
-                                                .setTitle("Thông báo!")
-                                                .setMessage("Huỷ thanh toán thành công!")
-                                                .setCancelable(true)
-                                                .show();
+                                        Common.notificationDialog(OrderCheckOutActivity.this, DialogStyle.RAINBOW, DialogType.INFO, "Thông báo!", "Huỷ thanh toán thành công!");
                                         progress_layout.setVisibility(View.GONE);
                                     }
 

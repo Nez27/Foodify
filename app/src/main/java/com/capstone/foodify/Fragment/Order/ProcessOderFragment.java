@@ -15,6 +15,7 @@ import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.capstone.foodify.API.FoodApiToken;
 import com.capstone.foodify.Adapter.OrderAdapter;
@@ -44,6 +45,7 @@ public class ProcessOderFragment extends Fragment {
     private ProgressBar progressBar;
     private TextView endOfListText;
     private LinearLayout empty_layout;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,9 +56,9 @@ public class ProcessOderFragment extends Fragment {
         //Init Component
         initComponent(view);
 
-        getOrderUser(0);
-
         orderAdapter = new OrderAdapter(getContext());
+
+        getOrderUser(CURRENT_PAGE);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -74,6 +76,23 @@ public class ProcessOderFragment extends Fragment {
             });
         }
 
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.primaryColor, null));
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                listOrders.clear();
+                CURRENT_PAGE = 0;
+
+                getOrderUser(CURRENT_PAGE);
+
+                nestedScrollView.setVisibility(View.VISIBLE);
+                empty_layout.setVisibility(View.GONE);
+
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
         return view;
     }
 
@@ -85,6 +104,7 @@ public class ProcessOderFragment extends Fragment {
         progressBar = view.findViewById(R.id.progress_bar);
         endOfListText = view.findViewById(R.id.end_of_list_text);
         empty_layout = view.findViewById(R.id.empty_layout);
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh);
     }
 
     private void getOrderUser(int page){

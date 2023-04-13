@@ -40,7 +40,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class Common {
-    public static final String BASE_URL = "http://192.168.1.183:8080/api/";
+    //https://foodify-backend-production.up.railway.app/
+    public static final String BASE_URL = "https://foodify-backend-production.up.railway.app/api/";
     public static String FCM_TOKEN = null;
     public static Location CURRENT_LOCATION = null;
     public static final String MAP_API = "AIzaSyAY14Ic32UP26Hg6GILznOfbBihiY5BUxw";

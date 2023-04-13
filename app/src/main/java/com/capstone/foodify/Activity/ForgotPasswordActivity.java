@@ -60,6 +60,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 onBackPressed();
+                finish();
             }
         });
 

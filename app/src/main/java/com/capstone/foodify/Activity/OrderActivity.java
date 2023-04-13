@@ -19,6 +19,8 @@ public class OrderActivity extends AppCompatActivity {
     ViewPagerAdapter viewPagerAdapter;
     ImageView back_image;
 
+    public static Activity orderActivity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +33,8 @@ public class OrderActivity extends AppCompatActivity {
 
         viewPagerAdapter = new ViewPagerAdapter(this);
         viewPager2.setAdapter(viewPagerAdapter);
+
+        orderActivity = this;
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

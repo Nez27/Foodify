@@ -7,12 +7,16 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -53,7 +57,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class TrackingOrderActivity extends FragmentActivity implements OnMapReadyCallback, ValueEventListener {
-
+    private static final String TAG = "TrackingOrderActivity";
     private GoogleMap mMap;
     private ActivityTrackingOrderBinding binding;
     private String trackingOrderNumber, latOrder, lngOrder = null;
@@ -62,11 +66,34 @@ public class TrackingOrderActivity extends FragmentActivity implements OnMapRead
     private DatabaseReference orderDatabase;
     private Marker shippingMarker;
     private Polyline polyline;
-    private static final String TAG = "TrackingOrderActivity";
+
+    @IntRange(from = 0, to = 3)
+    public int getConnectionType() {
+        int result = 0; // Returns connection type. 0: none; 1: mobile data; 2: wifi
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            NetworkCapabilities capabilities = cm.getNetworkCapabilities(cm.getActiveNetwork());
+            if (capabilities != null) {
+                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                    result = 2;
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                    result = 1;
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
+                    result = 3;
+                }
+            }
+        }
+        return result;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Check internet connection
+        if(getConnectionType() == 0){
+            Common.showErrorInternetConnectionNotification(this);
+        }
 
         //Get tracking number order
         if(getIntent() != null){
@@ -175,7 +202,7 @@ public class TrackingOrderActivity extends FragmentActivity implements OnMapRead
 
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
-                        Toast.makeText(TrackingOrderActivity.this, "Có lỗi kết nối!", Toast.LENGTH_SHORT).show();
+                        Log.e(TAG, t.toString());
                     }
                 });
             }

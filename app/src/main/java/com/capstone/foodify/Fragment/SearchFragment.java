@@ -1,6 +1,7 @@
 package com.capstone.foodify.Fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,7 @@ import retrofit2.http.GET;
 
 public class SearchFragment extends Fragment {
 
+    private static final String TAG = "SearchFragment";
     private static int CURRENT_PAGE = 0;
     private static final int LIMIT = 8;
     private static boolean LAST_PAGE;
@@ -72,6 +74,11 @@ public class SearchFragment extends Fragment {
         progressBar = view.findViewById(R.id.progress_bar);
         end_of_list_text_view = view.findViewById(R.id.end_of_list_text);
         searchNotFound = view.findViewById(R.id.search_not_found);
+
+        //Check status internet
+        if(Common.getConnectionType(requireContext()) == 0){
+            Common.showErrorInternetConnectionNotification(getActivity());
+        }
 
         getListCategory();
 
@@ -161,8 +168,7 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Foods> call, Throwable t) {
-                //Check internet connection
-                Common.showNotificationError(getContext(), getActivity());
+                Log.e(TAG, t.toString());
             }
         });
     }
@@ -262,8 +268,7 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Categories> call, Throwable t) {
-                //Check internet connection
-                Common.showNotificationError(getContext(), getActivity());
+                Log.e(TAG, t.toString());
             }
         });
     }
@@ -283,7 +288,7 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Foods> call, Throwable t) {
-
+                Log.e(TAG, t.toString());
             }
         });
     }
@@ -303,8 +308,7 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Foods> call, Throwable t) {
-                //Check internet connection
-                Common.showNotificationError(getContext(), getActivity());
+                Log.e(TAG, t.toString());
             }
         });
     }
@@ -319,8 +323,7 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Foods> call, Throwable t) {
-                //Check internet connection
-                Common.showNotificationError(getContext(), getActivity());
+                Log.e(TAG, t.toString());
             }
         });
     }

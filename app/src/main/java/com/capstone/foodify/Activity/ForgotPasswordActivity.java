@@ -1,10 +1,14 @@
 package com.capstone.foodify.Activity;
 
+import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -41,17 +45,41 @@ import retrofit2.Response;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
-    TextInputLayout textInput_email;
-    EditText edt_email;
-    MaterialButton send_code_button;
-    ConstraintLayout progress_layout;
-    ImageView back_image;
+    private TextInputLayout textInput_email;
+    private EditText edt_email;
+    private MaterialButton send_code_button;
+    private ConstraintLayout progress_layout;
+    private ImageView back_image;
+
+    @IntRange(from = 0, to = 3)
+    public int getConnectionType() {
+        int result = 0; // Returns connection type. 0: none; 1: mobile data; 2: wifi
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            NetworkCapabilities capabilities = cm.getNetworkCapabilities(cm.getActiveNetwork());
+            if (capabilities != null) {
+                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                    result = 2;
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                    result = 1;
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
+                    result = 3;
+                }
+            }
+        }
+        return result;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
 
         initComponent();
+
+        //Check internet connection
+        if(getConnectionType() == 0){
+            Common.showErrorInternetConnectionNotification(this);
+        }
 
         mAuth = FirebaseAuth.getInstance();
 

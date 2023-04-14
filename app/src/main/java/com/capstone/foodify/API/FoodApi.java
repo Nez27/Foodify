@@ -63,9 +63,6 @@ public interface FoodApi {
     @GET("products/{id}")
     Call<Food> detailFood(@Path("id") String id);
 
-    @GET("shops/{id}")
-    Call<Shop> detailShop(@Path("id") int id);
-
     @GET("products/shops/{id}")
     Call<Foods> listFoodByShopId(@Path("id") int id, @Query("pageNo") int pageNo, @Query("pageSize") int pageSize, @Query("sortBy") String sortBy, @Query("sortDir") String sortDir);
 

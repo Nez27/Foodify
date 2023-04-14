@@ -1,8 +1,12 @@
 package com.capstone.foodify.Activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -10,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -38,6 +43,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class FavoriteFoodActivity extends AppCompatActivity implements ItemTouchHelperListener {
+    private static final String TAG = "FavoriteFoodActivity";
     private static int CURRENT_PAGE = 0;
     private static final int PAGE_SIZE = 8;
     private static final String SORT_BY = "name";
@@ -52,18 +58,37 @@ public class FavoriteFoodActivity extends AppCompatActivity implements ItemTouch
     private ProgressBar progressBar;
     private TextView endOfListText;
     private LinearLayout no_food_favorite_layout;
+
+    @IntRange(from = 0, to = 3)
+    public int getConnectionType() {
+        int result = 0; // Returns connection type. 0: none; 1: mobile data; 2: wifi
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            NetworkCapabilities capabilities = cm.getNetworkCapabilities(cm.getActiveNetwork());
+            if (capabilities != null) {
+                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                    result = 2;
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                    result = 1;
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
+                    result = 3;
+                }
+            }
+        }
+        return result;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorite_food);
 
         //Init component
-        back_image = findViewById(R.id.back_image);
-        nestedScrollView = findViewById(R.id.nestedScrollView);
-        progressBar = findViewById(R.id.progress_bar);
-        endOfListText = findViewById(R.id.end_of_list_text);
-        no_food_favorite_layout = findViewById(R.id.no_food_favorite_layout);
-        listFavoriteFoodLayout = findViewById(R.id.list_favorite_food_layout);
+        initComponent();
+
+        //Check internet connection
+        if(getConnectionType() == 0){
+            Common.showErrorInternetConnectionNotification(this);
+        }
 
         //Set event when user scroll down
         if (nestedScrollView != null) {
@@ -107,6 +132,15 @@ public class FavoriteFoodActivity extends AppCompatActivity implements ItemTouch
 
         ItemTouchHelper.SimpleCallback simpleCallback = new RecyclerViewItemTouchHelperFavoriteFood(0, ItemTouchHelper.LEFT, this);
         new ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView_favorite_food);
+    }
+
+    private void initComponent() {
+        back_image = findViewById(R.id.back_image);
+        nestedScrollView = findViewById(R.id.nestedScrollView);
+        progressBar = findViewById(R.id.progress_bar);
+        endOfListText = findViewById(R.id.end_of_list_text);
+        no_food_favorite_layout = findViewById(R.id.no_food_favorite_layout);
+        listFavoriteFoodLayout = findViewById(R.id.list_favorite_food_layout);
     }
 
     private void dataLoadMore() {
@@ -153,7 +187,7 @@ public class FavoriteFoodActivity extends AppCompatActivity implements ItemTouch
 
             @Override
             public void onFailure(Call<Foods> call, Throwable t) {
-                Toast.makeText(FavoriteFoodActivity.this, "Đã có lỗi từ hệ thống! Vui lòng thử lại sau!", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, t.toString());
             }
         });
 

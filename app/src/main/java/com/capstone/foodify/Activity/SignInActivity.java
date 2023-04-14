@@ -1,25 +1,28 @@
 package com.capstone.foodify.Activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.capstone.foodify.API.FoodApiToken;
 import com.capstone.foodify.Common;
-import com.capstone.foodify.Fragment.HomeFragment;
 import com.capstone.foodify.Model.User;
 import com.capstone.foodify.R;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -40,18 +43,42 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SignInActivity extends AppCompatActivity {
-
+    private static final String TAG = "SignInActivity";
     private FirebaseAuth mAuth;
-    TextView signUp_textView, forgotPassword_textView;
-    TextInputLayout textInput_email, textInput_password;
-    TextInputEditText edt_email, edt_password;
-    MaterialButton signInButton;
-    ImageView back_image;
-    ConstraintLayout progressLayout;
-    String email, password = null;
+    private TextView signUp_textView, forgotPassword_textView;
+    private TextInputLayout textInput_email, textInput_password;
+    private TextInputEditText edt_email, edt_password;
+    private MaterialButton signInButton;
+    private ImageView back_image;
+    private ConstraintLayout progressLayout;
+    private String email, password = null;
+
+    @IntRange(from = 0, to = 3)
+    public int getConnectionType() {
+        int result = 0; // Returns connection type. 0: none; 1: mobile data; 2: wifi
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            NetworkCapabilities capabilities = cm.getNetworkCapabilities(cm.getActiveNetwork());
+            if (capabilities != null) {
+                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                    result = 2;
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                    result = 1;
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
+                    result = 3;
+                }
+            }
+        }
+        return result;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Check internet connection
+        if(getConnectionType() == 0){
+            Common.showErrorInternetConnectionNotification(this);
+        }
 
         //Init firebase app
         FirebaseApp.initializeApp(SignInActivity.this);
@@ -247,8 +274,7 @@ public class SignInActivity extends AppCompatActivity {
 
                                                     @Override
                                                     public void onFailure(Call<User> call, Throwable t) {
-                                                        System.out.println("ERROR: " + t);
-                                                        Common.showErrorServerNotification(SignInActivity.this, "Không thể đăng nhập tài khoản! Vui lòng thử lại sau!");
+                                                        Log.e(TAG, t.toString());
                                                     }
                                                 });
                                             } else {

@@ -3,10 +3,14 @@ package com.capstone.foodify.Activity;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -21,6 +25,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -42,11 +47,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
-import com.thecode.aestheticdialogs.AestheticDialog;
-import com.thecode.aestheticdialogs.DialogAnimation;
 import com.thecode.aestheticdialogs.DialogStyle;
 import com.thecode.aestheticdialogs.DialogType;
-import com.thecode.aestheticdialogs.OnDialogClickListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -59,21 +61,22 @@ import retrofit2.Response;
 
 public class AccountAndProfileActivity extends AppCompatActivity {
 
+    private static final String TAG = "AccountAndProfileActivity";
     private static final String FOLDER_DIRECTORY = "UserImages/";
-    TextInputLayout textInput_email, textInput_phone, textInput_fullName, textInput_birthDay;
-    TextView txt_countdown, txt_resend_code, txt_verify_email;
-    EditText edt_birthday, edt_email, edt_phone, edt_fullName;
-    final Calendar myCalendar= Calendar.getInstance();
-    LinearLayout change_password, countdown_layout;
-    Button update_button, update_image_button;
-    ImageView back_image;
-    RoundedImageView profile_avatar;
+    private TextInputLayout textInput_email, textInput_phone, textInput_fullName, textInput_birthDay;
+    private TextView txt_countdown, txt_resend_code, txt_verify_email;
+    private EditText edt_birthday, edt_email, edt_phone, edt_fullName;
+    private final Calendar myCalendar= Calendar.getInstance();
+    private LinearLayout change_password, countdown_layout;
+    private Button update_button, update_image_button;
+    private ImageView back_image;
+    private RoundedImageView profile_avatar;
     private Uri imageUri;
-    final private StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-    ConstraintLayout progressLayout;
-    FirebaseAuth mAuth;
-    FirebaseUser firebaseUser;
-    CountDownTimer count = new CountDownTimer(60000, 1000) {
+    private final StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+    private ConstraintLayout progressLayout;
+    private FirebaseAuth mAuth;
+    private FirebaseUser firebaseUser;
+    private final CountDownTimer count = new CountDownTimer(60000, 1000) {
         @Override
         public void onTick(long millisUntilFinished) {
             txt_countdown.setText(millisUntilFinished / 1000 + " giây");
@@ -94,6 +97,10 @@ public class AccountAndProfileActivity extends AppCompatActivity {
 
         initComponent();
         setFontUI();
+
+        if(getConnectionType() == 0){
+            Common.showErrorInternetConnectionNotification(this);
+        }
 
         //Init data
         initData();
@@ -206,7 +213,7 @@ public class AccountAndProfileActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
 
-                Toast.makeText(AccountAndProfileActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AccountAndProfileActivity.this, "Tải ảnh thất bại!", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -319,7 +326,7 @@ public class AccountAndProfileActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                Common.showErrorServerNotification(AccountAndProfileActivity.this, "Không thể cập nhật thông tin, vui lòng thử lại sau!");
+                Log.e(TAG, t.toString());
                 progressLayout.setVisibility(View.GONE);
             }
         });
@@ -386,5 +393,24 @@ public class AccountAndProfileActivity extends AppCompatActivity {
     private void updateLabel(){
         SimpleDateFormat dateFormat=new SimpleDateFormat(Common.FORMAT_DATE, Locale.US);
         edt_birthday.setText(dateFormat.format(myCalendar.getTime()));
+    }
+
+    @IntRange(from = 0, to = 3)
+    public int getConnectionType() {
+        int result = 0; // Returns connection type. 0: none; 1: mobile data; 2: wifi
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            NetworkCapabilities capabilities = cm.getNetworkCapabilities(cm.getActiveNetwork());
+            if (capabilities != null) {
+                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                    result = 2;
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                    result = 1;
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
+                    result = 3;
+                }
+            }
+        }
+        return result;
     }
 }

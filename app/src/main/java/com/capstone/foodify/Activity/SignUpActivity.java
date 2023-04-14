@@ -1,5 +1,6 @@
 package com.capstone.foodify.Activity;
 
+import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -8,9 +9,12 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -58,6 +62,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SignUpActivity extends AppCompatActivity {
+    private static final String TAG = "SignUpActivity";
     TextInputLayout textInput_password, textInput_phone, textInput_email, textInput_id_card,
             textInput_address, textInput_confirmPassword, textInput_fullName, textInput_birthDay;
     final Calendar myCalendar= Calendar.getInstance();
@@ -106,6 +111,24 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
+    @IntRange(from = 0, to = 3)
+    public int getConnectionType() {
+        int result = 0; // Returns connection type. 0: none; 1: mobile data; 2: wifi
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            NetworkCapabilities capabilities = cm.getNetworkCapabilities(cm.getActiveNetwork());
+            if (capabilities != null) {
+                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                    result = 2;
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                    result = 1;
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
+                    result = 3;
+                }
+            }
+        }
+        return result;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,8 +136,14 @@ public class SignUpActivity extends AppCompatActivity {
 
         initComponent();
 
+        //Check internet connection
+        if(getConnectionType() == 0){
+            Common.showErrorInternetConnectionNotification(this);
+        }
+
         setFontUI();
         chooseDateOfBirth();
+
 
         //Get list district
         if(districtList.size() == 0){
@@ -248,7 +277,7 @@ public class SignUpActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<CustomResponse> call, Throwable t) {
-
+                Log.e(TAG, t.toString());
             }
         });
     }
@@ -276,7 +305,7 @@ public class SignUpActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<CustomResponse> call, Throwable t) {
-
+                Log.e(TAG, t.toString());
             }
         });
     }
@@ -485,7 +514,7 @@ public class SignUpActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<DistrictWardResponse>> call, Throwable t) {
-                Toast.makeText(SignUpActivity.this, "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau!", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, t.toString());
             }
         });
     }
@@ -523,7 +552,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<List<DistrictWardResponse>> call, Throwable t) {
-                    Toast.makeText(SignUpActivity.this, "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau!", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, t.toString());
                 }
             });
         } else {

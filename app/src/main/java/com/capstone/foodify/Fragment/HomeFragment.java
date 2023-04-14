@@ -1,17 +1,19 @@
 package com.capstone.foodify.Fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstone.foodify.API.FoodApi;
+import com.capstone.foodify.Activity.MainActivity;
 import com.capstone.foodify.Adapter.MenuAdapter;
 import com.capstone.foodify.Adapter.ShopAdapter;
 import com.capstone.foodify.Common;
@@ -28,6 +30,7 @@ import com.denzcoskun.imageslider.models.SlideModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,6 +38,7 @@ import retrofit2.Response;
 
 public class HomeFragment extends Fragment {
 
+    private static final String TAG = "HomeFragment";
     public static List<Food> listFood = new ArrayList<>();
     private static List<Food> recentFood = new ArrayList<>();
 
@@ -61,9 +65,16 @@ public class HomeFragment extends Fragment {
         shopAdapter = new ShopAdapter(getContext());
         welcomeText = view.findViewById(R.id.welcome_text);
 
+        //Check status internet
+        if(Common.getConnectionType(requireContext()) == 0){
+            Common.showErrorInternetConnectionNotification(getActivity());
+        }
+
 
         if(listFood.isEmpty() || recentFood.isEmpty()){
+            //Get food
             getListFood();
+            recentFood();
         } else {
             menuAdapter.setData(getListMenu());
             rcvMenu.setAdapter(menuAdapter);
@@ -75,7 +86,8 @@ public class HomeFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         rcvMenu.setLayoutManager(linearLayoutManager);
 
-        showSlider();
+        //Get slider
+        getSlider();
 
         //Get list shop
         getListShop();
@@ -100,7 +112,7 @@ public class HomeFragment extends Fragment {
             welcomeText.setText("Xin chào, khách!");
     }
 
-    private void showSlider(){
+    private void getSlider(){
 
         FoodApi.apiService.listSlider().enqueue(new Callback<List<Slider>>() {
             @Override
@@ -114,10 +126,13 @@ public class HomeFragment extends Fragment {
 
                 imageSlider.setImageList(slideModels, ScaleTypes.FIT);
 
+                MainActivity.slider = true;
+                MainActivity.hideProgressbar();
             }
 
             @Override
             public void onFailure(Call<List<Slider>> call, Throwable t) {
+                Log.e(TAG, t.toString());
             }
         });
     }
@@ -140,17 +155,17 @@ public class HomeFragment extends Fragment {
                 //Check null data
                 if(foodResponse == null)
                     return;
-
                 listFood = foodResponse.getProducts();
-                recentFood();
+
+                menuAdapter.setData(getListMenu());
+
+                MainActivity.recommendFood = true;
+                MainActivity.hideProgressbar();
             }
 
             @Override
             public void onFailure(Call<Foods> call, Throwable t) {
-                //Check internet connection
-                if(getActivity() != null)
-                    Common.showNotificationError(getContext(), getActivity());
-
+                Log.e(TAG, t.toString());
             }
         });
     }
@@ -169,10 +184,14 @@ public class HomeFragment extends Fragment {
 
                 menuAdapter.setData(getListMenu());
                 rcvMenu.setAdapter(menuAdapter);
+
+                MainActivity.recentFood = true;
+                MainActivity.hideProgressbar();
             }
 
             @Override
             public void onFailure(Call<Foods> call, Throwable t) {
+                Log.e(TAG, t.toString());
             }
         });
     }
@@ -190,10 +209,14 @@ public class HomeFragment extends Fragment {
 
                 shopAdapter.setData(shopList);
                 recyclerView_restaurant.setAdapter(shopAdapter);
+
+                MainActivity.shop = true;
+                MainActivity.hideProgressbar();
             }
 
             @Override
             public void onFailure(Call<Shops> call, Throwable t) {
+                Log.e(TAG, t.toString());
             }
         });
     }

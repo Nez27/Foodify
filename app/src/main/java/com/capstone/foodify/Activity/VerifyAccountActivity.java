@@ -2,13 +2,17 @@ package com.capstone.foodify.Activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -20,6 +24,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -52,17 +57,37 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class VerifyAccountActivity extends AppCompatActivity {
+    private static final String TAG = "VerifyAccountActivity";
     private static final String PHONE_CODE = "+84";
-    ActivityResultLauncher<Intent> activityResultLauncher;
-    SmsBroadcastReceiver smsBroadcastReceiver;
+    private ActivityResultLauncher<Intent> activityResultLauncher;
+    private SmsBroadcastReceiver smsBroadcastReceiver;
     private EditText inputCode1, inputCode2, inputCode3, inputCode4, inputCode5, inputCode6;
-    ImageView close_image;
-    MaterialButton confirm_code;
-    String verificationId, phone, password = null;
-    ConstraintLayout progressLayout;
-    TextView resendCodeText, resendCodeTextButton, countDown, errorText;
-    User user;
-    FirebaseAuth mAuth;
+    private ImageView close_image;
+    private  MaterialButton confirm_code;
+    private String verificationId, phone, password = null;
+    private ConstraintLayout progressLayout;
+    private TextView resendCodeText, resendCodeTextButton, countDown, errorText;
+    private User user;
+    private FirebaseAuth mAuth;
+
+    @IntRange(from = 0, to = 3)
+    public int getConnectionType() {
+        int result = 0; // Returns connection type. 0: none; 1: mobile data; 2: wifi
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            NetworkCapabilities capabilities = cm.getNetworkCapabilities(cm.getActiveNetwork());
+            if (capabilities != null) {
+                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                    result = 2;
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                    result = 1;
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
+                    result = 3;
+                }
+            }
+        }
+        return result;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +95,11 @@ public class VerifyAccountActivity extends AppCompatActivity {
         setContentView(R.layout.activity_verify_account);
 
         initComponent();
+
+        //Check internet connection
+        if(getConnectionType() == 0){
+            Common.showErrorInternetConnectionNotification(this);
+        }
 
         //Auto fill OTP Code
         requestSMSPermission();
@@ -263,7 +293,7 @@ public class VerifyAccountActivity extends AppCompatActivity {
                                         public void onFailure(Call<User> call, Throwable t) {
                                             progressLayout.setVisibility(View.GONE);
                                             showErrorText(t.toString());
-                                            Common.showErrorServerNotification(VerifyAccountActivity.this, "Không thể tạo tài khoản! Vui lòng thử lại sau!");
+                                            Log.e(TAG, t.toString());
                                         }
                                     });
                                 } else {
@@ -429,7 +459,6 @@ public class VerifyAccountActivity extends AppCompatActivity {
 
             @Override
             public void onFailure() {
-
             }
         };
 

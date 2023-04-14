@@ -28,6 +28,7 @@ import com.squareup.picasso.Picasso;
 import io.paperdb.Paper;
 
 public class ProfileFragment extends Fragment {
+    private static final String TAG = "ProfileFragment";
     LinearLayout account_and_profile, manage_address, favorite_food, order_history, log_out;
     PopupDialog popupDialog;
     TextView user_name;
@@ -48,6 +49,11 @@ public class ProfileFragment extends Fragment {
         profile_avatar = rootView.findViewById(R.id.profile_avatar);
 
         popupDialog = PopupDialog.getInstance(getContext());
+
+        //Check status internet
+        if(Common.getConnectionType(requireContext()) == 0){
+            Common.showErrorInternetConnectionNotification(getActivity());
+        }
 
         //Set image for user
         if(Common.CURRENT_USER.getImageUrl().isEmpty()){

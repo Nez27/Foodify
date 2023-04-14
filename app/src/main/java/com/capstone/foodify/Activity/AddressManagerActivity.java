@@ -2,7 +2,10 @@ package com.capstone.foodify.Activity;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +19,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.IntRange;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -47,6 +51,7 @@ import retrofit2.Response;
 
 public class AddressManagerActivity extends AppCompatActivity {
 
+    private static final String TAG = "AddressManagerActivity";
     private Address defaultAddress = null;
     private RecyclerView recycler_view_address;
     private AddressAdapter adapter;
@@ -55,13 +60,32 @@ public class AddressManagerActivity extends AppCompatActivity {
     private ImageView back_image, edit_btn;
     private TextView txt_Address, errorTextDistrictWard;
     private List<Address> listAddress = new ArrayList<>();
-    Spinner wardSpinner, districtSpinner;
-    EditText edt_address;
-    ConstraintLayout progressLayout, progressLayoutDialog;
-    CheckBox default_address_checkbox;
+    private Spinner wardSpinner, districtSpinner;
+    private EditText edt_address;
+    private ConstraintLayout progressLayout, progressLayoutDialog;
+    private CheckBox default_address_checkbox;
     private static final ArrayList<String> wardList = new ArrayList<>();
     private static final ArrayList<String> districtList = new ArrayList<>();
     String address, ward, district;
+
+    @IntRange(from = 0, to = 3)
+    public int getConnectionType() {
+        int result = 0; // Returns connection type. 0: none; 1: mobile data; 2: wifi
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            NetworkCapabilities capabilities = cm.getNetworkCapabilities(cm.getActiveNetwork());
+            if (capabilities != null) {
+                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                    result = 2;
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                    result = 1;
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
+                    result = 3;
+                }
+            }
+        }
+        return result;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +99,10 @@ public class AddressManagerActivity extends AppCompatActivity {
         txt_Address = findViewById(R.id.text_view_address);
         progressLayout = findViewById(R.id.progress_layout);
         edit_btn = findViewById(R.id.edit_button);
+
+        if(getConnectionType() == 0){
+            Common.showErrorInternetConnectionNotification(this);
+        }
 
         //Set layout recyclerview
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -184,7 +212,7 @@ public class AddressManagerActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<CustomResponse> call, Throwable t) {
-                Toast.makeText(AddressManagerActivity.this, "Đã có lỗi từ hệ thống, vui lòng thử lại sau!", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, t.toString());
             }
         });
     }
@@ -201,7 +229,7 @@ public class AddressManagerActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<CustomResponse> call, Throwable t) {
-                Toast.makeText(AddressManagerActivity.this, "Đã có lỗi từ hệ thống! Vui lòng thử lại sau!", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, t.toString());
             }
         });
     }
@@ -221,7 +249,7 @@ public class AddressManagerActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                Toast.makeText(AddressManagerActivity.this, "Đã có lỗi khi thay đổi địa chỉ mặc định, vui lòng thử lại sau!", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, t.toString());
             }
         });
     }
@@ -249,6 +277,7 @@ public class AddressManagerActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
+                Log.e(TAG, t.toString());
             }
         });
     }
@@ -318,7 +347,7 @@ public class AddressManagerActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<CustomResponse> call, Throwable t) {
-
+                Log.e(TAG, t.toString());
             }
         });
     }
@@ -327,14 +356,7 @@ public class AddressManagerActivity extends AppCompatActivity {
         View view = LayoutInflater.from(this).inflate(R.layout.add_address_dialog,null);
 
         //Init component
-        textInput_address = view.findViewById(R.id.textInput_address);
-        wardSpinner = view.findViewById(R.id.ward);
-        districtSpinner = view.findViewById(R.id.district);
-        edt_address = view.findViewById(R.id.edt_address);
-        errorTextDistrictWard = view.findViewById(R.id.errorTextDistrictWard);
-        progressLayoutDialog = view.findViewById(R.id.progress_layout);
-        default_address_checkbox = view.findViewById(R.id.checkbox_default_address);
-
+        initComponent(view);
 
         //Set font
         textInput_address.setTypeface(Common.setFontOpenSans(getAssets()));
@@ -463,6 +485,16 @@ public class AddressManagerActivity extends AppCompatActivity {
         customViewDialog.show();
     }
 
+    private void initComponent(View view) {
+        textInput_address = view.findViewById(R.id.textInput_address);
+        wardSpinner = view.findViewById(R.id.ward);
+        districtSpinner = view.findViewById(R.id.district);
+        edt_address = view.findViewById(R.id.edt_address);
+        errorTextDistrictWard = view.findViewById(R.id.errorTextDistrictWard);
+        progressLayoutDialog = view.findViewById(R.id.progress_layout);
+        default_address_checkbox = view.findViewById(R.id.checkbox_default_address);
+    }
+
     private boolean validData(String address, String ward, String district){
         //Valid data
         boolean dataHasValidate = true;
@@ -511,7 +543,7 @@ public class AddressManagerActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<DistrictWardResponse>> call, Throwable t) {
-                Toast.makeText(AddressManagerActivity.this, "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau!", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, t.toString());
             }
         });
     }
@@ -548,7 +580,7 @@ public class AddressManagerActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<List<DistrictWardResponse>> call, Throwable t) {
-                    Toast.makeText(AddressManagerActivity.this, "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau!", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, t.toString());
                 }
             });
         } else {

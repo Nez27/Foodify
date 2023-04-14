@@ -117,7 +117,7 @@
 
                 <TextView
                     android:id="@+id/total_text_view"
-                    android:text="0 đ"
+                    android:text="12500"
                     android:fontFamily="@font/opensans"
                     android:textSize="24sp"
                     android:textColor="@android:color/white"

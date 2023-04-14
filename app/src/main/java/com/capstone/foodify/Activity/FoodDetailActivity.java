@@ -3,10 +3,14 @@ package com.capstone.foodify.Activity;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +23,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -66,6 +71,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class FoodDetailActivity extends AppCompatActivity {
+    private static final String TAG = "FoodDetailActivity";
     ArrayList<Comment> listComment = new ArrayList<>();
     private static final int CREATE_COMMENT = 1;
     private static final int EDIT_COMMENT = 2;
@@ -95,6 +101,25 @@ public class FoodDetailActivity extends AppCompatActivity {
     private Comment commentUser = null;
     private ChipGroup list_category;
     private SwipeRefreshLayout swipeRefreshLayout;
+
+    @IntRange(from = 0, to = 3)
+    public int getConnectionType() {
+        int result = 0; // Returns connection type. 0: none; 1: mobile data; 2: wifi
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            NetworkCapabilities capabilities = cm.getNetworkCapabilities(cm.getActiveNetwork());
+            if (capabilities != null) {
+                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                    result = 2;
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                    result = 1;
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
+                    result = 3;
+                }
+            }
+        }
+        return result;
+    }
 
     private void initComponent() {
         horizontalQuantitizer = findViewById(R.id.quantity_option);
@@ -135,6 +160,11 @@ public class FoodDetailActivity extends AppCompatActivity {
         //Init Component
 
         initComponent();
+
+        //Check internet connection
+        if(getConnectionType() == 0){
+            Common.showErrorInternetConnectionNotification(this);
+        }
 
         commentAdapter = new CommentAdapter(this);
 
@@ -308,7 +338,7 @@ public class FoodDetailActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<CustomResponse> call, Throwable t) {
-                    Toast.makeText(FoodDetailActivity.this, "Đã xảy ra lỗi kết nối đến hệ thống!", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, t.toString());
                 }
             });
         }
@@ -334,7 +364,7 @@ public class FoodDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Food> call, Throwable t) {
-                Toast.makeText(FoodDetailActivity.this, "Oops! Đã có lỗi, vui lòng thử lại sau!", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, t.toString());
             }
         });
     }
@@ -349,7 +379,7 @@ public class FoodDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Food> call, Throwable t) {
-                Toast.makeText(FoodDetailActivity.this, "Oops! Đã có lỗi, vui lòng thử lại sau!", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, t.toString());
             }
         });
     }
@@ -440,7 +470,7 @@ public class FoodDetailActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Comment> call, Throwable t) {
                 showUI();
-                Common.showErrorServerNotification(FoodDetailActivity.this, "Lỗi kết nối!");
+                Log.e(TAG, t.toString());
             }
         });
     }
@@ -487,7 +517,7 @@ public class FoodDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Comments> call, Throwable t) {
-                Toast.makeText(FoodDetailActivity.this, "Đã có lỗi từ hệ thống!", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, t.toString());
             }
         });
 
@@ -586,7 +616,7 @@ public class FoodDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<CustomResponse> call, Throwable t) {
-                Toast.makeText(FoodDetailActivity.this, "Oops, đã có lỗi xảy ra! Vui lòng thử lại sau!", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, t.toString());
             }
         });
     }
@@ -610,7 +640,7 @@ public class FoodDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Food> call, Throwable t) {
-                Common.showNotificationError(getBaseContext(), FoodDetailActivity.this);
+                Log.e(TAG, t.toString());
             }
         });
     }
@@ -719,7 +749,7 @@ public class FoodDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<CustomResponse> call, Throwable t) {
-                Toast.makeText(FoodDetailActivity.this, "Đã có lỗi kết nối đến hệ thống!", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, t.toString());
             }
         });
     }
@@ -750,7 +780,7 @@ public class FoodDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Comment> call, Throwable t) {
-                Toast.makeText(FoodDetailActivity.this, "Đã xuất hiện lỗi hệ thống!", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, t.toString());
             }
         });
     }
@@ -783,7 +813,7 @@ public class FoodDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<CustomResponse> call, Throwable t) {
-                Toast.makeText(FoodDetailActivity.this, "Đã có lỗi kết nối tới hệ thống!", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, t.toString());
             }
         });
     }

@@ -1,12 +1,17 @@
 package com.capstone.foodify.Activity;
 
+import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -39,17 +44,36 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class OrderDetailActivity extends AppCompatActivity {
+    private static final String TAG = "OrderDetailActivity";
     private static final String AWAITING = "AWAITING";
     private static final String SHIPPING = "SHIPPING";
     private TextView order_tracking_number, user_name, phone, address, orderTime, total, status;
     private ImageView back_image;
     private List<Basket> listOrderDetails = new ArrayList<>();
-    OrderDetailAdapter adapter;
-    RecyclerView recyclerView;
+    private OrderDetailAdapter adapter;
+    private RecyclerView recyclerView;
     private Order order;
     private Button btn_cancel_order, btn_tracking_location_shipper;
     private View line_cancel_order, line_tracking_order;
 
+    @IntRange(from = 0, to = 3)
+    public int getConnectionType() {
+        int result = 0; // Returns connection type. 0: none; 1: mobile data; 2: wifi
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            NetworkCapabilities capabilities = cm.getNetworkCapabilities(cm.getActiveNetwork());
+            if (capabilities != null) {
+                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                    result = 2;
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                    result = 1;
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
+                    result = 3;
+                }
+            }
+        }
+        return result;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +81,11 @@ public class OrderDetailActivity extends AppCompatActivity {
 
         //Init Component
         initComponent();
+
+        //Check internet connection
+        if(getConnectionType() == 0){
+            Common.showErrorInternetConnectionNotification(this);
+        }
 
         //Get data from previous fragment
         if(getIntent() != null)
@@ -179,7 +208,7 @@ public class OrderDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<CustomResponse> call, Throwable t) {
-                Toast.makeText(OrderDetailActivity.this, "Đã có lỗi kết nối đến hệ thống! Vui lòng thử lại sau!", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, t.toString());
             }
         });
     }

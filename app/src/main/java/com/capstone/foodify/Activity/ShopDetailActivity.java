@@ -1,11 +1,17 @@
 package com.capstone.foodify.Activity;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -13,6 +19,7 @@ import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.capstone.foodify.API.FoodApi;
 import com.capstone.foodify.Adapter.FoodShopAdapter;
@@ -32,7 +39,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ShopDetailActivity extends AppCompatActivity {
-
+    private static final String TAG = "ShopDetailActivity";
     private static int CURRENT_PAGE;
     private static int PAGE_SIZE = 8;
     private static String SORT_BY = "name";
@@ -40,14 +47,35 @@ public class ShopDetailActivity extends AppCompatActivity {
     private static boolean LAST_PAGE = false;
     private int shopId;
     private List<Food> listFood = new ArrayList<>();
-    TextView content_description_text_view, student_shop_text_view, end_of_list_text_view, txt_shop_name;
-    ImageView imageShop, back_image;
-    RecyclerView recycler_view_food_shop;
-    FoodShopAdapter adapter;
+    private TextView content_description_text_view, student_shop_text_view, end_of_list_text_view, txt_shop_name;
+    private ImageView imageShop, back_image;
+    private RecyclerView recycler_view_food_shop;
+    private FoodShopAdapter adapter;
+    private LinearLayout empty_layout;
     private NestedScrollView nestedScrollView;
     private ProgressBar progressBar;
     private Shop shop;
     private ConstraintLayout progressLayout;
+    private SwipeRefreshLayout swipeRefreshLayout;
+
+    @IntRange(from = 0, to = 3)
+    public int getConnectionType() {
+        int result = 0; // Returns connection type. 0: none; 1: mobile data; 2: wifi
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            NetworkCapabilities capabilities = cm.getNetworkCapabilities(cm.getActiveNetwork());
+            if (capabilities != null) {
+                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                    result = 2;
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                    result = 1;
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
+                    result = 3;
+                }
+            }
+        }
+        return result;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,17 +83,12 @@ public class ShopDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_shop_detail);
 
         //Init Component
-        imageShop = findViewById(R.id.image_shop);
-        recycler_view_food_shop = findViewById(R.id.recycler_view_food_shop);
-        back_image = findViewById(R.id.back_image);
-        adapter = new FoodShopAdapter(this);
-        content_description_text_view = findViewById(R.id.content_description_text_view);
-        student_shop_text_view = findViewById(R.id.student_shop_text_view);
-        nestedScrollView = findViewById(R.id.food_detail);
-        progressBar = findViewById(R.id.progress_bar);
-        end_of_list_text_view = findViewById(R.id.end_of_list_text);
-        progressLayout = findViewById(R.id.progress_layout);
-        txt_shop_name = findViewById(R.id.txt_shop_name);
+        initComponent();
+
+        //Check internet connection
+        if(getConnectionType() == 0){
+            Common.showErrorInternetConnectionNotification(this);
+        }
 
         //Get data
         if (getIntent() != null)
@@ -101,6 +124,42 @@ public class ShopDetailActivity extends AppCompatActivity {
             });
         }
 
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.primaryColor, null));
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                CURRENT_PAGE = 0;
+                getDetailShop(shopId);
+                nestedScrollView.setVisibility(View.GONE);
+                progressLayout.setVisibility(View.VISIBLE);
+
+                recycler_view_food_shop.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
+                end_of_list_text_view.setVisibility(View.GONE);
+
+                empty_layout.setVisibility(View.GONE);
+
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+    }
+
+    private void initComponent() {
+        imageShop = findViewById(R.id.image_shop);
+        recycler_view_food_shop = findViewById(R.id.recycler_view_food_shop);
+        back_image = findViewById(R.id.back_image);
+        adapter = new FoodShopAdapter(this);
+        content_description_text_view = findViewById(R.id.content_description_text_view);
+        student_shop_text_view = findViewById(R.id.student_shop_text_view);
+        nestedScrollView = findViewById(R.id.food_detail);
+        progressBar = findViewById(R.id.progress_bar);
+        end_of_list_text_view = findViewById(R.id.end_of_list_text);
+        progressLayout = findViewById(R.id.progress_layout);
+        txt_shop_name = findViewById(R.id.txt_shop_name);
+        empty_layout = findViewById(R.id.empty_layout);
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh);
     }
 
     private void getListFood(int shopId){
@@ -122,21 +181,33 @@ public class ShopDetailActivity extends AppCompatActivity {
                 recycler_view_food_shop.setAdapter(adapter);
 
                 initData(shop);
-
                 progressLayout.setVisibility(View.GONE);
+
+                if(listFood.size() == 0){
+                    progressBar.setVisibility(View.GONE);
+                    end_of_list_text_view.setVisibility(View.GONE);
+
+                    empty_layout.setVisibility(View.VISIBLE);
+                    return;
+                }
+
+
+                if(LAST_PAGE){
+                    progressBar.setVisibility(View.GONE);
+                    end_of_list_text_view.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
             public void onFailure(Call<Foods> call, Throwable t) {
-                //Check internet connection
-                Common.showNotificationError(getBaseContext(), ShopDetailActivity.this);
+                Log.e(TAG, t.toString());
                 progressLayout.setVisibility(View.GONE);
             }
         });
     }
 
     private void getDetailShop(int shopId) {
-        FoodApi.apiService.detailShop(shopId).enqueue(new Callback<Shop>() {
+        FoodApi.apiService.getShopById(shopId).enqueue(new Callback<Shop>() {
             @Override
             public void onResponse(Call<Shop> call, Response<Shop> response) {
                 Shop tempShop = response.body();
@@ -150,7 +221,7 @@ public class ShopDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Shop> call, Throwable t) {
-                Common.showNotificationError(getBaseContext(), ShopDetailActivity.this);
+                Log.e(TAG, t.toString());
             }
         });
     }

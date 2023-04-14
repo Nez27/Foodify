@@ -6,9 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.location.Geocoder;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -22,6 +25,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -71,6 +75,7 @@ import vn.zalopay.sdk.ZaloPaySDK;
 import vn.zalopay.sdk.listeners.PayOrderListener;
 
 public class OrderCheckOutActivity extends AppCompatActivity {
+    private static final String TAG = "OrderCheckOutActivity";
     private static final String TAKE_FOOD_FROM_SHOP = "Đến shop lấy";
     private static final String ZALO_PAYMENT_METHOD = "Zalo Pay";
     private static final String CASH_PAYMENT = "CASH";
@@ -78,19 +83,19 @@ public class OrderCheckOutActivity extends AppCompatActivity {
     private static Double LNG_SHOP = 0.0;
     private static String finalAddress, tempAddress = null;
     private static double finalLat, finalLng = 0;
-    ImageView back_image;
-    OrderDetailAdapter adapter;
-    RecyclerView recyclerView;
-    TextView txt_userName, txt_phone, edt_address_detect, errorTextDistrictWard, txt_total, txt_distance, txt_ship_cost;
-    TextInputLayout textInput_address;
-    EditText edt_address;
-    Spinner spn_list_address, spn_district, spn_ward;
-    ConstraintLayout manual_input_address_layout;
-    Button change_address_button, confirm_address_button, btn_ZaloPay, btn_Pay;
-    RadioButton list_address_input, auto_detect_location, manual_input_address, radio_button_selected, take_food_from_shop;
-    RadioGroup address_option;
-    ConstraintLayout progress_layout;
-    float total, totalProduct, shipCost;
+    private ImageView back_image;
+    private OrderDetailAdapter adapter;
+    private RecyclerView recyclerView;
+    private TextView txt_userName, txt_phone, edt_address_detect, errorTextDistrictWard, txt_total, txt_distance, txt_ship_cost;
+    private TextInputLayout textInput_address;
+    private EditText edt_address;
+    private Spinner spn_list_address, spn_district, spn_ward;
+    private ConstraintLayout manual_input_address_layout;
+    private Button change_address_button, confirm_address_button, btn_ZaloPay, btn_Pay;
+    private RadioButton list_address_input, auto_detect_location, manual_input_address, radio_button_selected, take_food_from_shop;
+    private RadioGroup address_option;
+    private ConstraintLayout progress_layout;
+    private float total, totalProduct, shipCost;
     private static final ArrayList<String> wardList = new ArrayList<>();
     private static final ArrayList<String> districtList = new ArrayList<>();
 
@@ -123,6 +128,25 @@ public class OrderCheckOutActivity extends AppCompatActivity {
         btn_Pay = findViewById(R.id.btnPay);
     }
 
+    @IntRange(from = 0, to = 3)
+    public int getConnectionType() {
+        int result = 0; // Returns connection type. 0: none; 1: mobile data; 2: wifi
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            NetworkCapabilities capabilities = cm.getNetworkCapabilities(cm.getActiveNetwork());
+            if (capabilities != null) {
+                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                    result = 2;
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                    result = 1;
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
+                    result = 3;
+                }
+            }
+        }
+        return result;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,7 +156,10 @@ public class OrderCheckOutActivity extends AppCompatActivity {
         if(Common.CURRENT_USER == null)
             startActivity(new Intent(this, SignInActivity.class));
 
-
+        //Check internet connection
+        if(getConnectionType() == 0){
+            Common.showErrorInternetConnectionNotification(this);
+        }
 
 
         //Init Component
@@ -337,7 +364,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<GoogleMapResponse> call, Throwable t) {
-                    Toast.makeText(OrderCheckOutActivity.this, "Lỗi kết nối!", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, t.toString());
                 }
             });
         } else {
@@ -471,7 +498,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Order> call, Throwable t) {
-                Toast.makeText(OrderCheckOutActivity.this, "Đã xảy ra lỗi kết nối hệ thống!", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, t.toString());
             }
         });
     }
@@ -501,7 +528,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
                     //Calculate ship cost
                     if(distance <= 3){
                         shipCost = 15000;
-                    } else if(distance > 3 && distance <= 10){
+                    } else if(distance <= 10){
                         shipCost = 5000 * (float) distance;
                     } else {
                         shipCost = 3000 * (float) distance;
@@ -518,7 +545,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<GoogleMapResponse> call, Throwable t) {
-                    Toast.makeText(OrderCheckOutActivity.this, "Error: "  + t, Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, t.toString());
                 }
             });
         } else {
@@ -543,7 +570,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Shop> call, Throwable t) {
-                Toast.makeText(OrderCheckOutActivity.this, "Đã có lỗi kết nối đến hệ thống!", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, t.toString());
             }
         });
 
@@ -563,10 +590,9 @@ public class OrderCheckOutActivity extends AppCompatActivity {
                 * Math.sin(dLon / 2);
         double c = 2 * Math.asin(Math.sqrt(a));
         double valueResult = Radius * c;
-        double km = valueResult / 1;
         DecimalFormat newFormat = new DecimalFormat("####");
 
-        return Integer.valueOf(newFormat.format(km));
+        return Integer.valueOf(newFormat.format(valueResult));
     }
 
     private boolean validForm(){
@@ -759,7 +785,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<DistrictWardResponse>> call, Throwable t) {
-                Toast.makeText(OrderCheckOutActivity.this, "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau!", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, t.toString());
             }
         });
     }
@@ -797,7 +823,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<List<DistrictWardResponse>> call, Throwable t) {
-                    Toast.makeText(OrderCheckOutActivity.this, "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau!", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, t.toString());
                 }
             });
         } else {

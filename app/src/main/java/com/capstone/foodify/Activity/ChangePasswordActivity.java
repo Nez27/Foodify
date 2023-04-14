@@ -1,10 +1,14 @@
 package com.capstone.foodify.Activity;
 
+import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.Context;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -33,12 +37,31 @@ import java.util.regex.Pattern;
 
 public class ChangePasswordActivity extends AppCompatActivity {
 
-    TextInputLayout textInput_old_password, textInput_password, textInput_password_confirm;
-    EditText edtOldPassword, edtPassword, edtPasswordConfirm;
-    ImageView back_image;
-    ConstraintLayout progressLayout;
+    private TextInputLayout textInput_old_password, textInput_password, textInput_password_confirm;
+    private EditText edtOldPassword, edtPassword, edtPasswordConfirm;
+    private ImageView back_image;
+    private ConstraintLayout progressLayout;
 
     Button changePasswordButton;
+
+    @IntRange(from = 0, to = 3)
+    public int getConnectionType() {
+        int result = 0; // Returns connection type. 0: none; 1: mobile data; 2: wifi
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            NetworkCapabilities capabilities = cm.getNetworkCapabilities(cm.getActiveNetwork());
+            if (capabilities != null) {
+                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                    result = 2;
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                    result = 1;
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
+                    result = 3;
+                }
+            }
+        }
+        return result;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +70,10 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
         initComponent();
         setFontUI();
+
+        if(getConnectionType() == 0){
+            Common.showErrorInternetConnectionNotification(this);
+        }
 
         //Handle event when back image on click
         back_image.setOnClickListener(new View.OnClickListener() {

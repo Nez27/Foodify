@@ -78,13 +78,13 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    FirebaseAppDistribution firebaseAppDistribution = FirebaseAppDistribution.getInstance();
-    ViewPager2 viewPager2;
-    ViewPagerAdapter viewPagerAdapter;
-    BottomNavigationView bottomNavigationView;
+    public static boolean slider, shop, recommendFood, recentFood, loadUser;
+    private final FirebaseAppDistribution firebaseAppDistribution = FirebaseAppDistribution.getInstance();
+    private ViewPager2 viewPager2;
+    private BottomNavigationView bottomNavigationView;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
-    private ConstraintLayout progressLayout;
+    private static ConstraintLayout progressLayout;
 
     //Location
     private static final int REQUEST_CHECK_SETTINGS = 100;
@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
         user = mAuth.getCurrentUser();
 
         if (user != null && Common.CURRENT_USER == null) {
+
             progressLayout.setVisibility(View.VISIBLE);
             user.getIdToken(true)
                     .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
@@ -130,6 +131,9 @@ public class MainActivity extends AppCompatActivity {
                                             HomeFragment.setNameUser();
 
                                             getTokenFCM();
+
+                                            loadUser = true;
+                                            hideProgressbar();
                                         }
                                     }
 
@@ -142,6 +146,16 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     });
+        } else {
+            //No account login
+            loadUser = true;
+            hideProgressbar();
+        }
+    }
+
+    public static void hideProgressbar(){
+        if(slider && shop && recentFood && recommendFood && loadUser){
+            progressLayout.setVisibility(View.GONE);
         }
     }
 
@@ -210,7 +224,6 @@ public class MainActivity extends AppCompatActivity {
                     stopLocationUpdates();
                 }
 
-                progressLayout.setVisibility(View.GONE);
 
             }
         }, 4000);
@@ -237,7 +250,6 @@ public class MainActivity extends AppCompatActivity {
                                 if(response.code() != 200)
                                     Toast.makeText(MainActivity.this, "Không thể cập nhật FCM Token. Mã lỗi: " + response.code(), Toast.LENGTH_SHORT).show();
 
-                                progressLayout.setVisibility(View.GONE);
                             }
 
                             @Override
@@ -257,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void bottomNavigation() {
-        viewPagerAdapter = new ViewPagerAdapter(this);
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this);
         viewPager2.setAdapter(viewPagerAdapter);
 
         viewPager2.setUserInputEnabled(false);

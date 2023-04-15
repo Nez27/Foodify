@@ -1,5 +1,7 @@
 package com.capstone.foodify.Fragment;
 
+import static com.capstone.foodify.Common.firebaseAppDistribution;
+
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.capstone.foodify.Activity.AccountAndProfileActivity;
@@ -18,6 +21,9 @@ import com.capstone.foodify.Activity.MainActivity;
 import com.capstone.foodify.Activity.OrderActivity;
 import com.capstone.foodify.Common;
 import com.capstone.foodify.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.appdistribution.FirebaseAppDistribution;
 import com.google.firebase.auth.FirebaseAuth;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.saadahmedsoft.popupdialog.PopupDialog;
@@ -29,7 +35,7 @@ import io.paperdb.Paper;
 
 public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
-    LinearLayout account_and_profile, manage_address, favorite_food, order_history, log_out;
+    LinearLayout account_and_profile, manage_address, favorite_food, order_history, feed_back, log_out;
     PopupDialog popupDialog;
     TextView user_name;
     RoundedImageView profile_avatar;
@@ -40,13 +46,7 @@ public class ProfileFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
         //Init component
-        account_and_profile = rootView.findViewById(R.id.account_and_profile);
-        manage_address = rootView.findViewById(R.id.manage_address);
-        favorite_food = rootView.findViewById(R.id.favorite_food);
-        order_history = rootView.findViewById(R.id.order_history);
-        log_out = rootView.findViewById(R.id.log_out);
-        user_name = rootView.findViewById(R.id.user_name);
-        profile_avatar = rootView.findViewById(R.id.profile_avatar);
+        initComponent(rootView);
 
         popupDialog = PopupDialog.getInstance(getContext());
 
@@ -90,6 +90,13 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        feed_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                firebaseAppDistribution.startFeedback("Cảm ơn vì sự đóng góp ý kiến từ các bạn!");
+            }
+        });
+
         log_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,6 +134,17 @@ public class ProfileFragment extends Fragment {
             }
         });
         return rootView;
+    }
+
+    private void initComponent(View rootView) {
+        account_and_profile = rootView.findViewById(R.id.account_and_profile);
+        manage_address = rootView.findViewById(R.id.manage_address);
+        favorite_food = rootView.findViewById(R.id.favorite_food);
+        order_history = rootView.findViewById(R.id.order_history);
+        log_out = rootView.findViewById(R.id.log_out);
+        user_name = rootView.findViewById(R.id.user_name);
+        profile_avatar = rootView.findViewById(R.id.profile_avatar);
+        feed_back = rootView.findViewById(R.id.feedback);
     }
 
     @Override

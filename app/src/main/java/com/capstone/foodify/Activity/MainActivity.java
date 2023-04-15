@@ -61,12 +61,14 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-import com.google.firebase.appdistribution.FirebaseAppDistribution;
-import com.google.firebase.appdistribution.InterruptionLevel;
+import com.google.firebase.appdistribution.AppDistributionRelease;
+import com.google.firebase.appdistribution.OnProgressListener;
+import com.google.firebase.appdistribution.UpdateProgress;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.techiness.progressdialoglibrary.ProgressDialog;
 
 import java.util.Arrays;
 import java.util.List;
@@ -79,13 +81,11 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
     public static boolean slider, shop, recommendFood, recentFood, loadUser;
-    private final FirebaseAppDistribution firebaseAppDistribution = FirebaseAppDistribution.getInstance();
     private ViewPager2 viewPager2;
     private BottomNavigationView bottomNavigationView;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private static ConstraintLayout progressLayout;
-
     //Location
     private static final int REQUEST_CHECK_SETTINGS = 100;
     private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 1000;
@@ -169,6 +169,56 @@ public class MainActivity extends AppCompatActivity {
         //Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
+
+        if(Common.firebaseAppDistribution.isTesterSignedIn()){
+
+            //Customise progress dialog
+            ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTheme(ProgressDialog.THEME_LIGHT);
+            progressDialog.setMode(ProgressDialog.MODE_DETERMINATE);
+            progressDialog.setProgress(0);
+            progressDialog.setMessage("Xin vui lòng chờ...");
+            progressDialog.showProgressTextAsFraction(true);
+            progressDialog.setProgressTintList(getColorStateList(R.color.primaryColor));
+            progressDialog.setSecondaryProgressTintList(getColorStateList(R.color.primaryLightColor));
+
+            Common.firebaseAppDistribution.checkForNewRelease().addOnCompleteListener(new OnCompleteListener<AppDistributionRelease>() {
+                @Override
+                public void onComplete(@NonNull Task<AppDistributionRelease> task) {
+                    if(task.isSuccessful()){
+                        AppDistributionRelease appDistributionRelease = task.getResult();
+
+                        if(appDistributionRelease != null){
+                            progressDialog.show();
+                        }
+                    }
+                }
+            });
+
+            Common.firebaseAppDistribution.updateIfNewReleaseAvailable().addOnProgressListener(new OnProgressListener() {
+                @Override
+                public void onProgressUpdate(@NonNull UpdateProgress updateProgress) {
+                    double totalBytes = updateProgress.getApkFileTotalBytes();
+
+                    double number = (updateProgress.getApkBytesDownloaded() / totalBytes) * 100;
+
+                    progressDialog.setProgress((int) number);
+                    progressDialog.setSecondaryProgress((int) number + 10);
+
+                    if(number == 100){
+                        progressDialog.dismiss();
+                    }
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if(!task.isSuccessful()){
+                        progressDialog.dismiss();
+                    }
+                }
+            });
+        }
+
         //Paper Init
         Paper.init(this);
 
@@ -179,14 +229,12 @@ public class MainActivity extends AppCompatActivity {
         startPowerSaverIntent(this);
         checkNotificationPermission();
 
-        firebaseAppDistribution.showFeedbackNotification(
-                // Text providing notice to your testers about collection and
-                // processing of their feedback data
-                "Nhấp vào đây để đánh giá app Foodify!",
-                // The level of interruption for the notification
-                InterruptionLevel.HIGH);
 
+        getLocation();
 
+    }
+
+    private void getLocation() {
         if (Common.CURRENT_LOCATION == null) {
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
             mSettingsClient = LocationServices.getSettingsClient(this);
@@ -212,22 +260,21 @@ public class MainActivity extends AppCompatActivity {
 
             checkLocationPermission();
 
-        }
+            //Init location user
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if(mCurrentLocation != null){
+                        Common.CURRENT_LOCATION = mCurrentLocation;
+                        stopLocationUpdates();
+                    }
 
-        //Init location user
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(mCurrentLocation != null){
-                    Common.CURRENT_LOCATION = mCurrentLocation;
-                    stopLocationUpdates();
+
                 }
+            }, 4000);
 
-
-            }
-        }, 4000);
-
+        }
     }
 
     private void getTokenFCM(){
@@ -355,8 +402,8 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if(requestCode == LOCATION_REQUEST_CODE){
-            if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                Toast.makeText(this, "Đã cấp quyền thành công!", Toast.LENGTH_SHORT).show();
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                getLocation();
             } else {
                 showDialogPermission("Hãy cho ứng dụng truy cập vào vị trí của bạn để trải nghiệm tốt hơn!");
             }

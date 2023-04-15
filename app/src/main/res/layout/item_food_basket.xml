@@ -46,12 +46,13 @@
         android:orientation="horizontal"
         android:background="@color/white"
         android:layout_margin="7dp"
+        android:gravity="center"
         >
 
         <ImageView
             android:id="@+id/image_view"
-            android:layout_width="110dp"
-            android:layout_height="110dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:src="@drawable/food"
             android:scaleType="centerCrop"
             app:riv_corner_radius="10dip"
@@ -74,7 +75,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="47dp"
                 android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
                 android:layout_marginEnd="10dp"
                 app:layout_constraintStart_toEndOf="@id/image_view"
                 app:layout_constraintTop_toTopOf="parent"
@@ -120,7 +120,7 @@
                         <TextView
                             android:id="@+id/price_text_view"
                             android:text="$5.00"
-                            android:textSize="25sp"
+                            android:textSize="23sp"
                             android:textColor="@color/primaryColor"
                             android:fontFamily="@font/bebas"
                             android:layout_width="wrap_content"
@@ -143,17 +143,17 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.4"
+                    android:layout_weight="0.5"
                     >
 
                     <TextView
                         android:id="@+id/txt_increment"
                         android:text="+"
-                        android:textSize="19sp"
+                        android:textSize="21sp"
                         android:padding="5dp"
                         android:textColor="@color/primaryColor"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_gravity="center_vertical"
                         android:gravity="center"
                         android:layout_weight="0.3"
@@ -168,7 +168,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:gravity="center"
-                        android:layout_weight="0.6"
+                        android:layout_weight="0.5"
                         />
 
                     <TextView
@@ -178,7 +178,7 @@
                         android:padding="5dp"
                         android:textColor="@color/primaryColor"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:gravity="center"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="0.3"

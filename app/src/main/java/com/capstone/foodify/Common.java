@@ -23,6 +23,7 @@ import com.capstone.foodify.Fragment.HomeFragment;
 import com.capstone.foodify.Model.Basket;
 import com.capstone.foodify.Model.Food;
 import com.capstone.foodify.Model.User;
+import com.google.firebase.appdistribution.FirebaseAppDistribution;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.thecode.aestheticdialogs.AestheticDialog;
@@ -41,7 +42,7 @@ import retrofit2.Response;
 
 public class Common {
     //https://foodify-backend-production.up.railway.app/
-    public static final String BASE_URL = "http://192.168.1.183:8080/api/";
+    public static final String BASE_URL = "https://foodify-backend-production.up.railway.app/api/";
     public static String FCM_TOKEN = null;
     public static Location CURRENT_LOCATION = null;
     public static final String MAP_API = "AIzaSyAY14Ic32UP26Hg6GILznOfbBihiY5BUxw";
@@ -55,6 +56,7 @@ public class Common {
     public static String TOKEN = null;
     public static User CURRENT_USER = null;
     public static String FINAL_SHOP = null;
+    public static final FirebaseAppDistribution firebaseAppDistribution = FirebaseAppDistribution.getInstance();
 
     public static String changeCurrencyUnit(float price){
         Locale locale = new Locale("vi", "VN");

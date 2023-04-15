@@ -479,7 +479,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
                     new AestheticDialog.Builder(OrderCheckOutActivity.this, DialogStyle.FLAT, DialogType.SUCCESS)
                             .setTitle("Thành công!")
                             .setMessage("Bạn đã đặt hàng thành công cho đơn hàng #" + transactionId)
-                            .setCancelable(true)
+                            .setCancelable(false)
                             .setOnClickListener(new OnDialogClickListener() {
                                 @Override
                                 public void onClick(@NonNull AestheticDialog.Builder builder) {

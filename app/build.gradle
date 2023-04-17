@@ -48,10 +48,10 @@ android {
             classpath 'com.google.gms:google-services:4.3.15'
         }
     }
+
     buildFeatures {
         viewBinding true
     }
-
 
 }
 
@@ -92,10 +92,7 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.github.ome450901:SimpleRatingBar:1.5.1'
     implementation 'com.cepheuen.elegant-number-button:lib:1.0.2'
-    implementation 'com.github.slavce14:SJ-Dialog:1.6'
     implementation 'com.saadahmedev.popup-dialog:popup-dialog:1.0.2'
-    implementation 'com.github.gabriel-TheCode:AestheticDialogs:1.3.6'
-    implementation 'io.github.pilgr:paperdb:2.7.2'
     implementation 'com.github.techinessoverloaded:progress-dialog:1.5.1'
 
     implementation 'androidx.browser:browser:1.5.0'
@@ -109,5 +106,8 @@ dependencies {
 
     // ADD the API-only library to all variants
     implementation 'com.google.firebase:firebase-appdistribution:16.0.0-beta08'
+
+    implementation(project(':aestheticdialogs'))
+    implementation(project(':SJDialog'))
 
 }

@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.capstone.foodify.Activity.AccountAndProfileActivity;
@@ -21,17 +20,12 @@ import com.capstone.foodify.Activity.MainActivity;
 import com.capstone.foodify.Activity.OrderActivity;
 import com.capstone.foodify.Common;
 import com.capstone.foodify.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.appdistribution.FirebaseAppDistribution;
 import com.google.firebase.auth.FirebaseAuth;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.saadahmedsoft.popupdialog.PopupDialog;
 import com.saadahmedsoft.popupdialog.Styles;
 import com.saadahmedsoft.popupdialog.listener.OnDialogButtonClickListener;
 import com.squareup.picasso.Picasso;
-
-import io.paperdb.Paper;
 
 public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
@@ -115,9 +109,6 @@ public class ProfileFragment extends Fragment {
                             @Override
                             public void onPositiveClicked(Dialog dialog) {
                                 FirebaseAuth.getInstance().signOut();
-
-                                //Delete user from local storage
-//                                Paper.book().delete("user");
 
                                 Common.TOKEN = null;
                                 Common.CURRENT_USER = null;

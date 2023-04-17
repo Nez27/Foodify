@@ -54,7 +54,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-import io.paperdb.Paper;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -107,9 +106,6 @@ public class AccountAndProfileActivity extends AppCompatActivity {
 
         //Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
-
-        //Paper Init
-        Paper.init(this);
 
         //Show notification about email verify for user
         showNotificationEmailVerify();

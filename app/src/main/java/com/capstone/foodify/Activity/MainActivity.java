@@ -6,7 +6,6 @@ import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
@@ -23,6 +22,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -76,7 +76,6 @@ import com.techiness.progressdialoglibrary.ProgressDialog;
 import java.util.Arrays;
 import java.util.List;
 
-import io.paperdb.Paper;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -107,9 +106,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-
-        //Get user from Paper
-//        user = Paper.book().read("user");
 
         // Check if user is signed in (non-null) and update UI accordingly.
         user = mAuth.getCurrentUser();
@@ -224,15 +220,12 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-        //Paper Init
-        Paper.init(this);
-
         initComponent();
 
         bottomNavigation();
 
         startPowerSaverIntent(this);
-        checkNotificationPermission();
+        checkNotificationPermission(this);
         startRefreshTokenService();
 
         getLocation();
@@ -394,9 +387,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    private void checkNotificationPermission(){
-        if(!NotificationManagerCompat.from(this).areNotificationsEnabled()){
-            showDialogPermission("Hãy bật quyền thông báo trên thiết bị của bạn để chúng thôi có thể cung cấp thông tin cho bạn một cách nhanh nhất!");
+    private void checkNotificationPermission(Context context){
+        if(!NotificationManagerCompat.from(context).areNotificationsEnabled()){
+            showDialogPermission("Hãy bật quyền thông báo trên thiết bị của bạn để chúng thôi có thể cung cấp thông tin cho bạn một cách nhanh nhất!", this, "Notification",
+                    "skipNotificationCheck");
         }
     }
 
@@ -427,33 +421,35 @@ public class MainActivity extends AppCompatActivity {
             if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 getLocation();
             } else {
-                showDialogPermission("Hãy cho ứng dụng truy cập vào vị trí của bạn để trải nghiệm tốt hơn!");
+                showDialogPermission("Hãy cho ứng dụng truy cập vào vị trí của bạn để trải nghiệm tốt hơn!", this, "Location", "skipLocationCheck");
             }
         }
     }
 
-    private void showDialogPermission(String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    private void showDialogPermission(String message, Context context, String name, String key) {
+        SharedPreferences settings = getSharedPreferences(name, Context.MODE_PRIVATE);
+        boolean skipMessage = settings.getBoolean(key, false);
+        if (!skipMessage) {
+            final SharedPreferences.Editor editor = settings.edit();
+            final AppCompatCheckBox dontShowAgain = new AppCompatCheckBox(context);
+            dontShowAgain.setText("Không hiện hộp thoại này nữa!");
+            dontShowAgain.setButtonTintList(ColorStateList.valueOf(getResources().getColor(R.color.primaryColor, null)));
+            dontShowAgain.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                editor.putBoolean(key, isChecked);
+                editor.apply();
+            });
 
-        builder.setMessage(message)
-                .setCancelable(false)
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        openSettings();
-                        dialog.cancel();
-                    }
-                })
-                .setNegativeButton("Để sau", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
+            AlertDialog alertDialog =  new AlertDialog.Builder(context)
+                    .setTitle("Thông báo")
+                    .setMessage(message)
+                    .setView(dontShowAgain)
+                    .setPositiveButton("Đi đến cài đặt", (dialog, which) -> openSettings())
+                    .setNegativeButton("Đóng", null)
+                    .show();
 
-        AlertDialog alertDialog = builder.create();
-        alertDialog.setTitle("Thông báo!");
-        alertDialog.show();
+            TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+            textView.setTypeface(Common.setFontKoho(getAssets()));
+        }
     }
 
     private void openSettings() {

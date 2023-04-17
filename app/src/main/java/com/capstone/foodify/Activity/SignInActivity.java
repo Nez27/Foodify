@@ -32,7 +32,6 @@ import com.google.firebase.auth.SignInMethodQueryResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import io.paperdb.Paper;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -54,9 +53,6 @@ public class SignInActivity extends AppCompatActivity {
         //Init firebase app
         FirebaseApp.initializeApp(SignInActivity.this);
         setContentView(R.layout.activity_sign_in);
-
-        //Init Paper
-        Paper.init(this);
 
         if(Common.CURRENT_USER != null)
             startActivity(new Intent(this, MainActivity.class));
@@ -193,8 +189,6 @@ public class SignInActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
 
-                            //Save user
-//                            Paper.book().write("user", user);
 
                             user.getIdToken(true)
                                     .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {

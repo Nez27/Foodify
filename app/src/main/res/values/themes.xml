@@ -12,6 +12,9 @@
         <item name="windowNoTitle">true</item>
         <item name="android:textColorHint">@color/grayLight</item>
         <item name="android:datePickerDialogTheme">@style/MyDatePickerDialogTheme</item>
+        <item name="android:textViewStyle">@style/KohoViewStyle</item>
+        <item name="android:fontFamily">@font/koho</item>
+        <item name="textAllCaps">false</item>
     </style>
 
     <style name="CustomToolbarTheme" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -58,6 +61,10 @@
     <style name="AppSearchView" parent="Widget.AppCompat.SearchView" >
         <item name="android:textSize">18sp</item>
         <item name="fontFamily">@font/koho</item>
+    </style>
+
+    <style name="KohoViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">@font/koho</item>
     </style>
 
 </resources>

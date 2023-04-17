@@ -1,11 +1,5 @@
 package com.capstone.foodify.Activity;
 
-import androidx.annotation.IntRange;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -18,14 +12,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.IntRange;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.capstone.foodify.API.FoodApiToken;
+import com.capstone.foodify.Adapter.OrderDetailAdapter;
 import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.Basket;
 import com.capstone.foodify.Model.Order;
 import com.capstone.foodify.Model.OrderDetail;
-import com.capstone.foodify.Adapter.OrderDetailAdapter;
 import com.capstone.foodify.Model.Response.CustomResponse;
-import com.capstone.foodify.Model.User;
 import com.capstone.foodify.R;
 import com.sjapps.library.customdialog.BasicDialog;
 import com.sjapps.library.customdialog.DialogButtonEvents;
@@ -34,8 +33,6 @@ import com.thecode.aestheticdialogs.DialogStyle;
 import com.thecode.aestheticdialogs.DialogType;
 import com.thecode.aestheticdialogs.OnDialogClickListener;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 

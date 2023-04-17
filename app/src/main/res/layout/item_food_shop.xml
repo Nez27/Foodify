@@ -15,10 +15,9 @@
 
         <TextView
             android:textColor="@color/white"
-            android:fontFamily="@font/opensans"
+            android:fontFamily="@font/koho_bold"
             android:text="@string/delete"
             android:textSize="20sp"
-            android:textStyle="bold"
             android:layout_toStartOf="@id/img_delete"
             android:layout_centerVertical="true"
             android:layout_marginEnd="5dp"
@@ -70,7 +69,7 @@
                 android:text="@string/food_name"
                 android:textSize="16sp"
                 android:textColor="@color/black"
-                android:fontFamily="@font/opensans"
+                android:fontFamily="@font/koho_bold"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:layout_marginStart="5dp"
@@ -101,7 +100,7 @@
                         android:text="Description"
                         android:textSize="14sp"
                         android:textColor="@color/gray"
-                        android:fontFamily="@font/opensans"
+                        android:fontFamily="@font/koho_bold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
@@ -120,9 +119,9 @@
                         <TextView
                             android:id="@+id/price_text_view"
                             android:text="$5.00"
-                            android:textSize="20sp"
+                            android:textSize="18sp"
                             android:textColor="@color/primaryColor"
-                            android:fontFamily="@font/bebas"
+                            android:fontFamily="@font/koho_bold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             />

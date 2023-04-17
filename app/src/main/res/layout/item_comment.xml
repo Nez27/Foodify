@@ -23,7 +23,7 @@
             <TextView
                 android:id="@+id/user_name_text_view"
                 android:text="User A"
-                android:fontFamily="@font/opensans"
+                android:fontFamily="@font/koho_bold"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:layout_width="wrap_content"
@@ -50,7 +50,7 @@
             <TextView
                 android:id="@+id/comment_user"
                 android:text="Food is good!"
-                android:fontFamily="@font/opensans"
+                android:fontFamily="@font/koho"
                 android:textSize="15sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

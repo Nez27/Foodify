@@ -2,6 +2,8 @@ package com.capstone.foodify.Activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -42,6 +44,7 @@ import com.capstone.foodify.Fragment.HomeFragment;
 import com.capstone.foodify.Model.Response.CustomResponse;
 import com.capstone.foodify.Model.User;
 import com.capstone.foodify.R;
+import com.capstone.foodify.RefreshTokenService;
 import com.capstone.foodify.ViewPagerAdapter;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -92,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
     private static final long MAX_WAIT_TIME_IN_MILLISECONDS = 1000;
     private static final int LOCATION_REQUEST_CODE = 100;
     private static final String TAG = "MainActivity";
-
+    private static final int JOB_ID = 123;
     private FusedLocationProviderClient mFusedLocationClient;
     private SettingsClient mSettingsClient;
     private LocationRequest mLocationRequest;
@@ -112,6 +115,8 @@ public class MainActivity extends AppCompatActivity {
         user = mAuth.getCurrentUser();
 
         if (user != null && Common.CURRENT_USER == null) {
+
+            Common.FIREBASE_USER = user;
 
             progressLayout.setVisibility(View.VISIBLE);
             user.getIdToken(true)
@@ -228,10 +233,26 @@ public class MainActivity extends AppCompatActivity {
 
         startPowerSaverIntent(this);
         checkNotificationPermission();
-
+        startRefreshTokenService();
 
         getLocation();
 
+    }
+
+    private void startRefreshTokenService() {
+        ComponentName componentName = new ComponentName(this, RefreshTokenService.class);
+
+        JobInfo jobInfo = new JobInfo.Builder(JOB_ID, componentName)
+                .setPeriodic(59 * 60 * 1000)
+                .build();
+
+        JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+        jobScheduler.schedule(jobInfo);
+    }
+
+    private void stopRefreshTokenService() {
+        JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+        jobScheduler.cancel(JOB_ID);
     }
 
     private void getLocation() {
@@ -320,6 +341,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager2.setAdapter(viewPagerAdapter);
 
         viewPager2.setUserInputEnabled(false);
+
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @SuppressLint("NonConstantResourceId")
             @Override
@@ -509,6 +531,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        stopRefreshTokenService();
+    }
+
     //Check auto start permission
     public static List<Intent> POWER_MANAGER_INTENTS = Arrays.asList(
             new Intent().setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity")),
@@ -558,8 +587,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
-
     private static boolean isCallable(Context context, Intent intent) {
         List<ResolveInfo> list = context.getPackageManager().queryIntentActivities(intent,
                 PackageManager.MATCH_DEFAULT_ONLY);

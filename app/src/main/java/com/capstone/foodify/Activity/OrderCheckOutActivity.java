@@ -77,7 +77,7 @@ import vn.zalopay.sdk.listeners.PayOrderListener;
 public class OrderCheckOutActivity extends AppCompatActivity {
     private static final String TAG = "OrderCheckOutActivity";
     private static final String TAKE_FOOD_FROM_SHOP = "Đến shop lấy";
-    private static final String ZALO_PAYMENT_METHOD = "Zalo Pay";
+    private static final String ZALO_PAYMENT_METHOD = "ZALO PAY";
     private static final String CASH_PAYMENT = "CASH";
     private static Double LAT_SHOP = 0.0;
     private static Double LNG_SHOP = 0.0;
@@ -840,7 +840,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
     private static class MySpinnerAdapter extends ArrayAdapter<String> {
         // Initialise custom font, for example:
         Typeface font = Typeface.createFromAsset(getContext().getAssets(),
-                "font/bebas.ttf");
+                "font/koho_bold.ttf");
 
         // (In reality I used a manager which caches the Typeface objects)
         // Typeface font = FontManager.getInstance().getFont(getContext(), BLAMBOT);

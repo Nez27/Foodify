@@ -26,7 +26,7 @@
     </style>
 
     <style name="TextLabel" parent="TextAppearance.Design.Hint">
-        <item name="android:fontFamily">@font/bebas</item>
+        <item name="android:fontFamily">@font/koho_bold</item>
     </style>
 
 
@@ -50,5 +50,14 @@
         <item name="colorOnPrimary">@color/primaryColor</item>
     </style>
 
+    <style name="tab_text" parent="@android:style/TextAppearance.Widget.TabWidget">
+        <item name="android:fontFamily">@font/koho</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="AppSearchView" parent="Widget.AppCompat.SearchView" >
+        <item name="android:textSize">18sp</item>
+        <item name="fontFamily">@font/koho</item>
+    </style>
 
 </resources>

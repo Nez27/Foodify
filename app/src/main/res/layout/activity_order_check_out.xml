@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="35dp"
-                android:fontFamily="@font/bebas"
+                android:fontFamily="@font/koho_bold"
                 android:text="Chi tiết đơn"
                 android:textColor="@color/black"
                 android:textSize="30sp"
@@ -68,7 +68,7 @@
                 android:text="Thông tin giao hàng"
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="10dp"
-                android:fontFamily="@font/bebas"
+                android:fontFamily="@font/koho_bold"
                 android:textColor="@color/black"
                 android:textSize="22sp"
                 android:layout_width="wrap_content"
@@ -92,9 +92,8 @@
                 >
                 <TextView
                     android:text="Tên:"
-                    android:fontFamily="@font/opensans"
+                    android:fontFamily="@font/koho"
                     android:textColor="@color/black"
-                    android:textStyle="bold"
                     android:layout_marginEnd="5dp"
                     android:textSize="15sp"
                     android:layout_width="wrap_content"
@@ -103,8 +102,7 @@
 
                 <TextView
                     android:text="Nguyễn Văn A"
-                    android:fontFamily="@font/opensans"
-                    android:textStyle="bold"
+                    android:fontFamily="@font/koho"
                     android:textColor="@color/black"
                     android:textSize="15sp"
                     android:layout_width="wrap_content"
@@ -128,9 +126,8 @@
                 >
                 <TextView
                     android:text="Số điện thoại: "
-                    android:fontFamily="@font/opensans"
+                    android:fontFamily="@font/koho"
                     android:textColor="@color/black"
-                    android:textStyle="bold"
                     android:layout_marginEnd="5dp"
                     android:textSize="15sp"
                     android:layout_width="wrap_content"
@@ -139,8 +136,7 @@
 
                 <TextView
                     android:text="0987654321"
-                    android:fontFamily="@font/opensans"
-                    android:textStyle="bold"
+                    android:fontFamily="@font/koho"
                     android:textColor="@color/black"
                     android:textSize="15sp"
                     android:layout_width="wrap_content"
@@ -153,8 +149,7 @@
             <TextView
                 android:id="@+id/textView3"
                 android:text="Địa chỉ nhận hàng:"
-                android:fontFamily="@font/opensans"
-                android:textStyle="bold"
+                android:fontFamily="@font/koho"
                 android:layout_marginTop="5dp"
                 android:layout_marginStart="10dp"
                 android:textColor="@color/black"
@@ -182,6 +177,7 @@
                     android:buttonTint="@color/primaryColor"
                     android:layout_height="wrap_content"
                     android:text="Theo danh sách địa chỉ của bạn:"
+                    android:fontFamily="@font/koho"
                     android:onClick="onRadioButtonClicked"
                     />
 
@@ -197,11 +193,13 @@
                     android:layout_height="wrap_content"
                     android:buttonTint="@color/primaryColor"
                     android:onClick="onRadioButtonClicked"
+                    android:fontFamily="@font/koho"
                     android:text="Lấy vị trí thiết bị của bạn" />
 
                 <EditText
                     android:id="@+id/edt_address_detect"
                     android:hint="Đang lấy vị trí...."
+                    android:fontFamily="@font/koho"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:enabled="false"
@@ -214,6 +212,7 @@
                     android:buttonTint="@color/primaryColor"
                     android:layout_height="wrap_content"
                     android:text="Tự nhập thủ công"
+                    android:fontFamily="@font/koho"
                     android:onClick="onRadioButtonClicked"
                     />
 
@@ -298,6 +297,7 @@
                     android:buttonTint="@color/primaryColor"
                     android:layout_height="wrap_content"
                     android:text="Đến shop lấy"
+                    android:fontFamily="@font/koho"
                     android:onClick="onRadioButtonClicked"
                     />
             </RadioGroup>
@@ -306,6 +306,7 @@
                 android:id="@+id/confirm_address_button"
                 android:text="XÁC NHẬN"
                 android:textSize="14sp"
+                android:fontFamily="@font/koho_bold"
                 android:textAllCaps="false"
                 android:backgroundTint="@color/primaryColor"
                 android:layout_width="120dp"
@@ -342,9 +343,8 @@
                 >
                 <TextView
                     android:text="Khoảng cách: "
-                    android:fontFamily="@font/opensans"
+                    android:fontFamily="@font/koho_bold"
                     android:textColor="@color/black"
-                    android:textStyle="bold"
                     android:layout_marginEnd="5dp"
                     android:textSize="15sp"
                     android:layout_width="wrap_content"
@@ -354,8 +354,7 @@
                 <TextView
                     android:id="@+id/txt_distance"
                     android:text="- km"
-                    android:fontFamily="@font/opensans"
-                    android:textStyle="bold"
+                    android:fontFamily="@font/koho_bold"
                     android:textColor="@color/black"
                     android:textSize="15sp"
                     android:layout_width="wrap_content"
@@ -378,9 +377,8 @@
                 >
                 <TextView
                     android:text="Phí ship: "
-                    android:fontFamily="@font/opensans"
+                    android:fontFamily="@font/koho_bold"
                     android:textColor="@color/black"
-                    android:textStyle="bold"
                     android:layout_marginEnd="5dp"
                     android:textSize="15sp"
                     android:layout_width="wrap_content"
@@ -390,8 +388,7 @@
                 <TextView
                     android:id="@+id/txt_ship_cost"
                     android:text="0 đ"
-                    android:fontFamily="@font/opensans"
-                    android:textStyle="bold"
+                    android:fontFamily="@font/koho_bold"
                     android:textColor="@color/black"
                     android:textSize="15sp"
                     android:layout_width="wrap_content"
@@ -414,9 +411,8 @@
                 >
                 <TextView
                     android:text="Tổng: "
-                    android:fontFamily="@font/opensans"
+                    android:fontFamily="@font/koho_bold"
                     android:textColor="@color/primaryColor"
-                    android:textStyle="bold"
                     android:layout_marginEnd="5dp"
                     android:textSize="20sp"
                     android:layout_width="wrap_content"
@@ -426,8 +422,7 @@
                 <TextView
                     android:id="@+id/txt_total"
                     android:text="500.000 VNĐ"
-                    android:fontFamily="@font/opensans"
-                    android:textStyle="bold"
+                    android:fontFamily="@font/koho_bold"
                     android:textColor="@color/primaryColor"
                     android:textSize="20sp"
                     android:layout_width="wrap_content"
@@ -454,7 +449,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_gravity="center"
                     android:backgroundTint="#008FE5"
-                    android:fontFamily="@font/opensans"
+                    android:fontFamily="@font/koho_bold"
                     android:gravity="center"
                     android:text="Thanh toán bằng ZaloPay"
                     android:textAllCaps="false"
@@ -469,7 +464,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_gravity="center"
-                    android:fontFamily="@font/opensans"
+                    android:fontFamily="@font/koho_bold"
                     android:gravity="center"
                     android:text="Thanh toán khi nhận hàng"
                     android:textAllCaps="false"

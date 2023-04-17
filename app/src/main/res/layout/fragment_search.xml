@@ -31,6 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:queryBackground="@android:color/transparent"
+                android:theme="@style/AppSearchView"
                 app:queryHint="Tìm kiếm tại đây..."
                 android:background="@color/white"
                 app:iconifiedByDefault="false"
@@ -79,7 +80,7 @@
 
             <TextView
                 android:text="Không có kết quả cần tìm. Vui lòng tìm thử với từ khoá khác."
-                android:fontFamily="@font/opensans"
+                android:fontFamily="@font/koho"
                 android:textColor="@color/gray"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
@@ -100,7 +101,7 @@
         <TextView
             android:id="@+id/end_of_list_text"
             android:text="Đã hết"
-            android:fontFamily="@font/opensans"
+            android:fontFamily="@font/koho"
             android:textColor="@color/grayLight"
             android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/progress_bar"

@@ -78,7 +78,7 @@
                         android:textSize="30sp"
                         android:text="Food Name"
                         android:textColor="@color/black"
-                        android:fontFamily="@font/bebas"
+                        android:fontFamily="@font/koho_bold"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -98,7 +98,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="-89%"
-                            android:textSize="18sp"
+                            android:fontFamily="@font/koho"
+                            android:textSize="14sp"
                             android:textColor="@color/red"
                             android:layout_gravity="right"
                             />
@@ -128,7 +129,7 @@
                     android:textSize="20sp"
                     android:text="Shop Name"
                     android:textColor="@color/secondary"
-                    android:fontFamily="@font/opensans"
+                    android:fontFamily="@font/koho"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@id/linear_layout_1"
@@ -161,6 +162,7 @@
                     <TextView
                         android:id="@+id/count_rating_text_view"
                         android:textSize="13sp"
+                        android:fontFamily="@font/koho"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="235 đánh giá" />
@@ -169,6 +171,7 @@
                         android:id="@+id/count_sold"
                         android:textSize="13sp"
                         android:layout_marginTop="5dp"
+                        android:fontFamily="@font/koho"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
@@ -188,7 +191,7 @@
                     <TextView
                         android:text="Danh mục:"
                         android:textSize="18sp"
-                        android:fontFamily="@font/bebas"
+                        android:fontFamily="@font/koho_bold"
                         android:textColor="@color/black"
                         android:layout_marginEnd="10dp"
                         android:layout_width="wrap_content"
@@ -207,7 +210,7 @@
                     android:id="@+id/description_text_view"
                     android:text="Mô tả"
                     android:textSize="18sp"
-                    android:fontFamily="@font/bebas"
+                    android:fontFamily="@font/koho_bold"
                     android:textColor="@color/black"
                     android:layout_marginTop="20dp"
                     android:layout_width="wrap_content"
@@ -218,7 +221,7 @@
 
                 <TextView
                     android:id="@+id/content_description_text_view"
-                    android:fontFamily="@font/opensans"
+                    android:fontFamily="@font/koho"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -245,7 +248,7 @@
                         >
                         <TextView
                             android:text="Số lượng"
-                            android:fontFamily="@font/bebas"
+                            android:fontFamily="@font/koho_bold"
                             android:textColor="@color/primaryColor"
                             android:textSize="15sp"
                             android:layout_width="wrap_content"
@@ -274,7 +277,7 @@
                         <TextView
                             android:id="@+id/total_text_view"
                             android:text="Giá"
-                            android:fontFamily="@font/bebas"
+                            android:fontFamily="@font/koho_bold"
                             android:textColor="@color/black"
                             android:textSize="15sp"
                             android:layout_width="wrap_content"
@@ -285,9 +288,9 @@
                         <TextView
                             android:id="@+id/price"
                             android:text="25.000 VND"
-                            android:fontFamily="@font/bebas"
+                            android:fontFamily="@font/koho_bold"
                             android:textColor="@color/primaryColor"
-                            android:textSize="30sp"
+                            android:textSize="25sp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             />
@@ -304,10 +307,10 @@
                     android:layout_marginTop="40dp"
                     android:layout_marginStart="40dp"
                     android:layout_marginEnd="40dp"
-                    android:fontFamily="@font/bebas"
+                    android:fontFamily="@font/koho_bold"
                     android:padding="10dp"
                     android:text="Add to basket - 15000 VND"
-                    android:textSize="18sp"
+                    android:textSize="13sp"
                     app:layout_constraintTop_toBottomOf="@id/constraintLayout"
                     />
 
@@ -334,7 +337,7 @@
                         android:text="Bình luận"
                         android:backgroundTint="@color/yellow"
                         android:textColor="@color/black"
-                        android:fontFamily="@font/opensans"
+                        android:fontFamily="@font/koho"
                         android:textAllCaps="false"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -365,7 +368,7 @@
                         <TextView
                             android:id="@+id/user_name_text_view"
                             android:text="User A"
-                            android:fontFamily="@font/opensans"
+                            android:fontFamily="@font/koho"
                             android:textColor="@color/black"
                             android:textSize="16sp"
                             android:layout_width="wrap_content"
@@ -392,7 +395,7 @@
                         <TextView
                             android:id="@+id/comment_user"
                             android:text="Food is good!"
-                            android:fontFamily="@font/opensans"
+                            android:fontFamily="@font/koho"
                             android:textSize="15sp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -457,7 +460,7 @@
                 <TextView
                     android:id="@+id/end_of_list_text"
                     android:text="Đã hết"
-                    android:fontFamily="@font/opensans"
+                    android:fontFamily="@font/koho"
                     android:textColor="@color/grayLight"
                     android:visibility="gone"
                     android:layout_marginTop="5dp"

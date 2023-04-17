@@ -359,12 +359,12 @@ public class AccountAndProfileActivity extends AppCompatActivity {
         txt_verify_email = findViewById(R.id.textview_verify_email);
     }
     private void setFontUI() {
-        textInput_email.setTypeface(Common.setFontBebas(getAssets()));
-        textInput_phone.setTypeface(Common.setFontBebas(getAssets()));
-        textInput_fullName.setTypeface(Common.setFontBebas(getAssets()));
-        textInput_birthDay.setTypeface(Common.setFontBebas(getAssets()));
+        textInput_email.setTypeface(Common.setFontKohoBold(getAssets()));
+        textInput_phone.setTypeface(Common.setFontKohoBold(getAssets()));
+        textInput_fullName.setTypeface(Common.setFontKohoBold(getAssets()));
+        textInput_birthDay.setTypeface(Common.setFontKohoBold(getAssets()));
 
-        edt_birthday.setTypeface(Common.setFontBebas(getAssets()));
+        edt_birthday.setTypeface(Common.setFontKohoBold(getAssets()));
     }
     private void chooseDateOfBirth() {
         //Get date, month, year from user

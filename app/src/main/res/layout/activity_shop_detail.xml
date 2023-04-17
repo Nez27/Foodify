@@ -64,7 +64,7 @@
                     <TextView
                         android:id="@+id/student_shop_text_view"
                         android:text="Shop sinh viên"
-                        android:fontFamily="@font/bebas"
+                        android:fontFamily="@font/koho_bold"
                         android:textColor="@color/red"
                         android:layout_marginTop="20dp"
                         android:layout_width="wrap_content"
@@ -77,9 +77,9 @@
                     <TextView
                         android:id="@+id/txt_shop_name"
                         android:text="Shop name"
-                        android:fontFamily="@font/bebas"
+                        android:fontFamily="@font/koho_bold"
                         android:textColor="@color/primaryColor"
-                        android:textSize="35sp"
+                        android:textSize="30sp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:layout_constraintStart_toStartOf="parent"
@@ -89,7 +89,7 @@
                         android:id="@+id/description_text_view"
                         android:text="Mô tả"
                         android:textSize="18sp"
-                        android:fontFamily="@font/bebas"
+                        android:fontFamily="@font/koho_bold"
                         android:textColor="@color/black"
                         android:layout_marginTop="20dp"
                         android:layout_width="wrap_content"
@@ -101,7 +101,7 @@
                     <TextView
                         android:id="@+id/content_description_text_view"
                         android:textColor="@color/gray"
-                        android:fontFamily="@font/opensans"
+                        android:fontFamily="@font/koho"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
@@ -121,7 +121,7 @@
                     <TextView
                         android:id="@+id/textView"
                         android:text="Danh sách các món ăn"
-                        android:fontFamily="@font/bebas"
+                        android:fontFamily="@font/koho_bold"
                         android:textColor="@color/black"
                         android:textSize="20sp"
                         android:layout_marginTop="10dp"
@@ -153,7 +153,7 @@
                     <TextView
                         android:id="@+id/end_of_list_text"
                         android:text="Đã hết"
-                        android:fontFamily="@font/opensans"
+                        android:fontFamily="@font/koho"
                         android:textColor="@color/grayLight"
                         android:visibility="gone"
                         app:layout_constraintTop_toBottomOf="@id/progress_bar"
@@ -185,7 +185,7 @@
 
                     <TextView
                         android:gravity="center"
-                        android:fontFamily="@font/opensans"
+                        android:fontFamily="@font/koho"
                         android:text="Oops! Hiện cửa hàng này chưa có món ăn nào! Vui lòng quay lại sau!"
                         android:layout_marginTop="10dp"
                         android:layout_marginStart="30dp"

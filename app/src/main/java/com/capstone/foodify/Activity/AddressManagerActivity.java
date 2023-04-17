@@ -359,7 +359,7 @@ public class AddressManagerActivity extends AppCompatActivity {
         initComponent(view);
 
         //Set font
-        textInput_address.setTypeface(Common.setFontOpenSans(getAssets()));
+        textInput_address.setTypeface(Common.setFontKoho(getAssets()));
 
         //Set event when click on district spinner
         districtSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -597,7 +597,7 @@ public class AddressManagerActivity extends AppCompatActivity {
     private static class MySpinnerAdapter extends ArrayAdapter<String> {
         // Initialise custom font, for example:
         Typeface font = Typeface.createFromAsset(getContext().getAssets(),
-                "font/bebas.ttf");
+                "font/koho_bold.ttf");
 
         // (In reality I used a manager which caches the Typeface objects)
         // Typeface font = FontManager.getInstance().getFont(getContext(), BLAMBOT);

@@ -15,11 +15,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.capstone.foodify.API.FoodApiToken;
 import com.capstone.foodify.Common;
-import com.capstone.foodify.Fragment.HomeFragment;
 import com.capstone.foodify.Model.User;
 import com.capstone.foodify.R;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -283,8 +281,8 @@ public class SignInActivity extends AppCompatActivity {
 
     }
     private void setFontUI() {
-        textInput_email.setTypeface(Common.setFontBebas(getAssets()));
-        textInput_password.setTypeface(Common.setFontBebas(getAssets()));
+        textInput_email.setTypeface(Common.setFontKohoBold(getAssets()));
+        textInput_password.setTypeface(Common.setFontKohoBold(getAssets()));
     }
 
     // this event will enable the back

@@ -2,29 +2,20 @@ package com.capstone.foodify;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
-import android.net.NetworkInfo;
-import android.os.Build;
-import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 
 import com.capstone.foodify.API.FoodApiToken;
-import com.capstone.foodify.Activity.MainActivity;
-import com.capstone.foodify.Activity.SignInActivity;
-import com.capstone.foodify.Fragment.HomeFragment;
 import com.capstone.foodify.Model.Basket;
 import com.capstone.foodify.Model.Food;
 import com.capstone.foodify.Model.User;
 import com.google.firebase.appdistribution.FirebaseAppDistribution;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.thecode.aestheticdialogs.AestheticDialog;
 import com.thecode.aestheticdialogs.DialogStyle;
@@ -45,6 +36,7 @@ public class Common {
     public static final String BASE_URL = "https://foodify-backend-production.up.railway.app/api/";
     public static String FCM_TOKEN = null;
     public static Location CURRENT_LOCATION = null;
+    public static FirebaseUser FIREBASE_USER = null;
     public static final String MAP_API = "AIzaSyAY14Ic32UP26Hg6GILznOfbBihiY5BUxw";
     public static final String FORMAT_DATE="dd-MM-yyyy";
     public static final String VALID_EMAIL_ADDRESS_REGEX = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
@@ -64,12 +56,12 @@ public class Common {
         return fmt.format(price);
     }
 
-    public static Typeface setFontBebas(AssetManager assetManager){
-        return Typeface.createFromAsset(assetManager, "font/bebas.ttf");
+    public static Typeface setFontKohoBold(AssetManager assetManager){
+        return Typeface.createFromAsset(assetManager, "font/koho_bold.ttf");
     }
 
-    public static Typeface setFontOpenSans(AssetManager assetManager){
-        return Typeface.createFromAsset(assetManager, "font/opensans.ttf");
+    public static Typeface setFontKoho(AssetManager assetManager){
+        return Typeface.createFromAsset(assetManager, "font/koho.ttf");
     }
 
     public static void reloadUser(Activity activity){
@@ -81,6 +73,10 @@ public class Common {
                     if(userData != null){
                         Common.CURRENT_USER =  userData;
                     }
+                } else if(response.code() == 401){
+                    //Unauthorized
+
+
                 }
             }
 

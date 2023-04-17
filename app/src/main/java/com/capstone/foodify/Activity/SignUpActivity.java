@@ -24,7 +24,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.capstone.foodify.API.FoodApi;
 import com.capstone.foodify.Common;
@@ -569,7 +568,7 @@ public class SignUpActivity extends AppCompatActivity {
     private static class MySpinnerAdapter extends ArrayAdapter<String> {
         // Initialise custom font, for example:
         Typeface font = Typeface.createFromAsset(getContext().getAssets(),
-                "font/bebas.ttf");
+                "font/koho_bold.ttf");
 
         // (In reality I used a manager which caches the Typeface objects)
         // Typeface font = FontManager.getInstance().getFont(getContext(), BLAMBOT);
@@ -620,13 +619,13 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void setFontUI() {
-        textInput_password.setTypeface(Common.setFontBebas(getAssets()));
-        textInput_phone.setTypeface(Common.setFontBebas(getAssets()));
-        textInput_address.setTypeface(Common.setFontBebas(getAssets()));
-        textInput_confirmPassword.setTypeface(Common.setFontBebas(getAssets()));
-        textInput_fullName.setTypeface(Common.setFontBebas(getAssets()));
-        textInput_birthDay.setTypeface(Common.setFontBebas(getAssets()));
-        textInput_email.setTypeface(Common.setFontBebas(getAssets()));
-        textInput_id_card.setTypeface(Common.setFontBebas(getAssets()));
+        textInput_password.setTypeface(Common.setFontKohoBold(getAssets()));
+        textInput_phone.setTypeface(Common.setFontKohoBold(getAssets()));
+        textInput_address.setTypeface(Common.setFontKohoBold(getAssets()));
+        textInput_confirmPassword.setTypeface(Common.setFontKohoBold(getAssets()));
+        textInput_fullName.setTypeface(Common.setFontKohoBold(getAssets()));
+        textInput_birthDay.setTypeface(Common.setFontKohoBold(getAssets()));
+        textInput_email.setTypeface(Common.setFontKohoBold(getAssets()));
+        textInput_id_card.setTypeface(Common.setFontKohoBold(getAssets()));
     }
 }

@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.os.Bundle;
@@ -27,10 +26,8 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.thecode.aestheticdialogs.AestheticDialog;
 import com.thecode.aestheticdialogs.DialogStyle;
 import com.thecode.aestheticdialogs.DialogType;
-import com.thecode.aestheticdialogs.OnDialogClickListener;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -217,8 +214,8 @@ public class ChangePasswordActivity extends AppCompatActivity {
     }
 
     private void setFontUI() {
-        textInput_password.setTypeface(Common.setFontBebas(getAssets()));
-        textInput_old_password.setTypeface(Common.setFontBebas(getAssets()));
-        textInput_password_confirm.setTypeface(Common.setFontBebas(getAssets()));
+        textInput_password.setTypeface(Common.setFontKohoBold(getAssets()));
+        textInput_old_password.setTypeface(Common.setFontKohoBold(getAssets()));
+        textInput_password_confirm.setTypeface(Common.setFontKohoBold(getAssets()));
     }
 }

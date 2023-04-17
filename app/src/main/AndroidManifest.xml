@@ -49,6 +49,10 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="foodify-notification"/>
+        
+        <service android:name=".RefreshTokenService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            />
 
         <activity
             android:name=".Activity.TrackingOrderActivity"

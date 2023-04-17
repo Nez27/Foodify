@@ -39,9 +39,8 @@
             <TextView
                 android:id="@+id/text_view_header"
                 android:text="Quên chưa đặt món rồi nè bạn ơi!"
-                android:fontFamily="@font/opensans"
+                android:fontFamily="@font/koho_bold"
                 android:textSize="18sp"
-                android:textStyle="bold"
                 android:textColor="@color/black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -55,9 +54,8 @@
                 android:id="@+id/text_view_description"
                 android:textAlignment="center"
                 android:text="Bạn sẽ nhìn thấy các món ăn tại đây sau khi bỏ những món ăn bạn muốn vào giỏ hàng."
-                android:fontFamily="@font/opensans"
+                android:fontFamily="@font/koho"
                 android:textSize="15sp"
-                android:textStyle="bold"
                 android:textColor="@color/gray"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="40dp"
@@ -110,7 +108,7 @@
                 <TextView
                     android:text="Tổng cộng: "
                     android:textSize="20sp"
-                    android:fontFamily="@font/opensans"
+                    android:fontFamily="@font/koho_bold"
                     android:textColor="@android:color/white"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
@@ -118,7 +116,7 @@
                 <TextView
                     android:id="@+id/total_text_view"
                     android:text="900.000 ₫"
-                    android:fontFamily="@font/opensans"
+                    android:fontFamily="@font/koho_bold"
                     android:textSize="24sp"
                     android:textColor="@android:color/white"
                     android:layout_width="wrap_content"
@@ -138,7 +136,7 @@
                 android:layout_marginRight="8dp"
                 android:layout_marginBottom="8dp"
                 android:text="Đặt hàng"
-                android:fontFamily="@font/bebas"
+                android:fontFamily="@font/koho_bold"
                 android:textColor="@android:color/white"
                 />
         </RelativeLayout>

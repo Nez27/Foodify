@@ -15,10 +15,9 @@
 
         <TextView
             android:textColor="@color/white"
-            android:fontFamily="@font/opensans"
+            android:fontFamily="@font/koho"
             android:text="@string/delete"
             android:textSize="15sp"
-            android:textStyle="bold"
             android:layout_toStartOf="@id/img_delete"
             android:layout_centerVertical="true"
             android:layout_marginEnd="5dp"
@@ -55,6 +54,7 @@
             android:src="@drawable/food"
             android:scaleType="centerCrop"
             app:riv_corner_radius="10dip"
+            android:layout_gravity="center_vertical"
             tools:ignore="ContentDescription" />
 
         <LinearLayout
@@ -67,10 +67,10 @@
             <TextView
                 android:id="@+id/food_name_text_view"
                 android:text="Food Name"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:textColor="@color/black"
-                android:fontFamily="@font/opensans"
-                android:layout_width="wrap_content"
+                android:fontFamily="@font/koho_bold"
+                android:layout_width="match_parent"
                 android:layout_height="47dp"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="5dp"
@@ -83,9 +83,9 @@
             <TextView
                 android:id="@+id/shop_name_text_view"
                 android:text="Shop Name"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textColor="@color/secondary"
-                android:fontFamily="@font/opensans"
+                android:fontFamily="@font/koho_bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
@@ -105,9 +105,9 @@
                 <TextView
                     android:id="@+id/price_text_view"
                     android:text="$5.00"
-                    android:textSize="25sp"
+                    android:textSize="20sp"
                     android:textColor="@color/primaryColor"
-                    android:fontFamily="@font/bebas"
+                    android:fontFamily="@font/koho_bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
@@ -128,12 +128,12 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.1"
+            android:layout_weight="0.12"
             >
 
             <ImageView
                 android:id="@+id/basket_icon"
-                android:layout_width="20dp"
+                android:layout_width="25dp"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/basket_icon"
                 app:layout_constraintEnd_toEndOf="parent"

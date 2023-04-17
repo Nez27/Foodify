@@ -10,15 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/red"
-        android:layout_margin="7dp"
+        android:layout_margin="5dp"
         >
 
         <TextView
             android:textColor="@color/white"
-            android:fontFamily="@font/opensans"
+            android:fontFamily="@font/koho"
             android:text="@string/delete"
             android:textSize="15sp"
-            android:textStyle="bold"
             android:layout_toStartOf="@id/img_delete"
             android:layout_centerVertical="true"
             android:layout_marginEnd="5dp"
@@ -45,14 +44,14 @@
         android:layout_height="match_parent"
         android:orientation="horizontal"
         android:background="@color/white"
-        android:layout_margin="7dp"
+        android:layout_margin="5dp"
         android:gravity="center"
         >
 
         <ImageView
             android:id="@+id/image_view"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="105dp"
+            android:layout_height="105dp"
             android:src="@drawable/food"
             android:scaleType="centerCrop"
             app:riv_corner_radius="10dip"
@@ -69,9 +68,9 @@
             <TextView
                 android:id="@+id/food_name_text_view"
                 android:text="@string/food_name"
-                android:textSize="15sp"
+                android:textSize="16sp"
                 android:textColor="@color/black"
-                android:fontFamily="@font/opensans"
+                android:fontFamily="@font/koho_bold"
                 android:layout_width="match_parent"
                 android:layout_height="47dp"
                 android:layout_marginStart="5dp"
@@ -101,7 +100,7 @@
                         android:text="Shop Name"
                         android:textSize="14sp"
                         android:textColor="@color/secondary"
-                        android:fontFamily="@font/opensans"
+                        android:fontFamily="@font/koho_bold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
@@ -120,9 +119,9 @@
                         <TextView
                             android:id="@+id/price_text_view"
                             android:text="$5.00"
-                            android:textSize="23sp"
+                            android:textSize="22sp"
                             android:textColor="@color/primaryColor"
-                            android:fontFamily="@font/bebas"
+                            android:fontFamily="@font/koho_bold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             />
@@ -162,6 +161,7 @@
                     <TextView
                         android:id="@+id/value"
                         android:text="5"
+                        android:fontFamily="@font/koho"
                         android:textSize="20sp"
                         android:textColor="@color/primaryColor"
                         android:layout_width="0dp"

@@ -26,9 +26,8 @@
             android:id="@+id/text_view_address"
             android:text="Hẻm 215, đường Phạm Như Xương, phường Hoà Khánh Nam, quận Liên Chiểu, thành phố Đà Nẵng"
             android:textSize="16sp"
-            android:fontFamily="@font/opensans"
+            android:fontFamily="@font/koho_italic"
             android:textColor="@color/gray"
-            android:textStyle="italic|bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             />
@@ -42,9 +41,8 @@
             <TextView
                 android:id="@+id/blank_text_view"
                 android:textSize="13sp"
-                android:fontFamily="@font/opensans"
+                android:fontFamily="@font/koho"
                 android:textColor="@color/primaryColor"
-                android:textStyle="bold"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.6"

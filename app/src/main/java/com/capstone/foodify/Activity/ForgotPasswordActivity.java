@@ -6,42 +6,26 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.capstone.foodify.API.FoodApi;
 import com.capstone.foodify.Common;
-import com.capstone.foodify.Model.Response.CustomResponse;
-import com.capstone.foodify.Model.User;
 import com.capstone.foodify.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.auth.PhoneAuthOptions;
-import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.auth.SignInMethodQueryResult;
-import com.thecode.aestheticdialogs.AestheticDialog;
 import com.thecode.aestheticdialogs.DialogStyle;
 import com.thecode.aestheticdialogs.DialogType;
-import com.thecode.aestheticdialogs.OnDialogClickListener;
 
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -165,7 +149,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     }
     private void setFontUI() {
 
-        textInput_email.setTypeface(Common.setFontBebas(getAssets()));
+        textInput_email.setTypeface(Common.setFontKohoBold(getAssets()));
     }
 
     private void initComponent() {

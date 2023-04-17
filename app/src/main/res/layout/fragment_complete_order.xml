@@ -46,7 +46,7 @@
                 <TextView
                     android:id="@+id/end_of_list_text"
                     android:text="Đã hết"
-                    android:fontFamily="@font/opensans"
+                    android:fontFamily="@font/koho"
                     android:textColor="@color/grayLight"
                     android:visibility="gone"
                     app:layout_constraintTop_toBottomOf="@id/progress_bar"
@@ -79,7 +79,7 @@
             android:layout_gravity="center"
             />
         <TextView
-            android:fontFamily="@font/opensans"
+            android:fontFamily="@font/koho"
             android:textColor="@color/gray"
             android:text="Không có đơn hàng nào ở đây cả!"
             android:layout_marginTop="10dp"

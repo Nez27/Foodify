@@ -36,10 +36,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="30dp"
-                android:fontFamily="@font/bebas"
+                android:fontFamily="@font/koho_bold"
                 android:text="@string/sign_up_text"
                 android:textColor="@color/black"
-                android:textSize="50sp"
+                android:textSize="45sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/back_image" />
 
@@ -50,7 +50,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                android:hint="@string/email_text"
+                android:hint="Email"
                 app:boxBackgroundColor="@color/white"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView"
@@ -59,6 +59,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edt_email"
+                    android:fontFamily="@font/koho"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:inputType="textEmailAddress" />
@@ -72,7 +73,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                android:hint="@string/phone_text"
+                android:hint="Số điện thoại"
                 app:boxBackgroundColor="@color/white"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textInput_email"
@@ -81,6 +82,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edt_phone"
+                    android:fontFamily="@font/koho"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:inputType="phone" />
@@ -103,6 +105,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edt_fullName"
+                    android:fontFamily="@font/koho"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:inputType="text" />
@@ -125,6 +128,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edt_id_card"
+                    android:fontFamily="@font/koho"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:inputType="text" />
@@ -138,7 +142,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginTop="20dp"
-                android:hint="@string/birthday_text"
+                android:hint="Ngày tháng năm sinh"
                 app:boxBackgroundColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -148,6 +152,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edt_birthDay"
+                    android:fontFamily="@font/koho"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:clickable="false"
@@ -166,7 +171,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="20dp"
-                android:hint="@string/address_text"
+                android:hint="Địa chỉ"
                 app:boxBackgroundColor="@color/white"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textInput_birthDay"
@@ -175,6 +180,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edt_address"
+                    android:fontFamily="@font/koho"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:inputType="text" />
@@ -251,6 +257,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edt_password"
+                    android:fontFamily="@font/koho"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:inputType="textPassword" />
@@ -264,7 +271,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginTop="20dp"
-                android:hint="@string/repeat_password_text"
+                android:hint="Xác nhận mật khẩu"
                 app:boxBackgroundColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -276,6 +283,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edt_confirmPassword"
+                    android:fontFamily="@font/koho"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:inputType="textPassword" />
@@ -297,9 +305,10 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/sign_up_button"
                 style="@style/DefaultSolid"
-                android:fontFamily="@font/bebas"
+                android:fontFamily="@font/koho_bold"
                 android:text="@string/sign_up_text"
-                android:textSize="20sp"
+                android:textAllCaps="false"
+                android:textSize="18sp"
                 android:padding="10dp"
                 android:layout_marginStart="40dp"
                 android:layout_marginEnd="40dp"
@@ -325,20 +334,22 @@
                 >
                 <TextView
                     android:id="@+id/textView2"
+                    android:fontFamily="@font/koho"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/already_have_account"
                     android:textColor="@color/gray"
-                    android:textStyle="bold" />
+                    />
 
                 <TextView
                     android:id="@+id/signIn_textView"
+                    android:fontFamily="@font/koho"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:text="@string/sign_in_text"
                     android:textColor="@color/secondary"
-                    android:textStyle="bold" />
+                    />
 
             </LinearLayout>
 

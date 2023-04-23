@@ -187,8 +187,40 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <LinearLayout
-                android:id="@+id/linearLayout_district_ward"
+            <Spinner
+                android:id="@+id/ward"
+                android:textAlignment="viewEnd"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:gravity="end"
+                android:paddingEnd="25dp"
+                android:contentDescription="ward"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintTop_toBottomOf="@id/textInput_address"
+                />
+
+            <TextView
+                android:id="@+id/errorTextWard"
+                android:text="Bạn chưa chọn phường!"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:textSize="12sp"
+                android:textColor="#b00020"
+                app:layout_constraintTop_toBottomOf="@id/ward"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:visibility="gone"
+                />
+
+            <Spinner
+                android:id="@+id/district"
+                android:textAlignment="viewEnd"
+                android:gravity="end"
+                android:paddingEnd="25dp"
+                android:contentDescription="district"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginRight="20dp"
@@ -196,43 +228,18 @@
                 android:layout_marginTop="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textInput_address"
-                android:orientation="horizontal"
-                >
-
-                <Spinner
-                    android:id="@+id/district"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:textAlignment="viewEnd"
-                    android:gravity="end"
-                    android:paddingEnd="25dp"
-                    android:contentDescription="district"
-                    android:layout_weight="0.4"
-                    />
-
-                <Spinner
-                    android:id="@+id/ward"
-                    android:textAlignment="viewEnd"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:gravity="end"
-                    android:paddingEnd="25dp"
-                    android:contentDescription="ward"
-                    android:layout_weight="0.6"
-                    />
-
-            </LinearLayout>
+                app:layout_constraintTop_toBottomOf="@+id/ward"
+                />
 
             <TextView
-                android:id="@+id/errorTextDistrictWard"
-                android:text="Bạn chưa chọn quận huyện!"
+                android:id="@+id/errorTextDistrict"
+                android:text="Bạn chưa chọn quận!"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:textSize="12sp"
                 android:textColor="#b00020"
-                app:layout_constraintTop_toBottomOf="@id/linearLayout_district_ward"
+                app:layout_constraintTop_toBottomOf="@id/district"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:visibility="gone"
@@ -249,7 +256,7 @@
                 app:boxBackgroundColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout_district_ward"
+                app:layout_constraintTop_toBottomOf="@+id/district"
                 app:passwordToggleEnabled="true"
                 app:passwordToggleTint="@color/primaryColor"
                 app:startIconDrawable="@drawable/baseline_vpn_key_24"

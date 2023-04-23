@@ -3,6 +3,7 @@ package com.capstone.foodify.Adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -148,7 +149,9 @@ public class FoodFavoriteAdapter extends  RecyclerView.Adapter<FoodFavoriteAdapt
         FoodApiToken.apiService.removeFoodFromFavorite(Common.CURRENT_USER.getId(), Integer.parseInt(food.getId())).enqueue(new Callback<Food>() {
             @Override
             public void onResponse(Call<Food> call, Response<Food> response) {
-                Toast.makeText(context, "Đã xoá " + food.getName() + " khỏi danh sách yêu thích!", Toast.LENGTH_SHORT).show();
+                if(response.code() != 200){
+                    Log.e("Food favorite", "Error remove favorite food. Error code: " + response.code());
+                }
             }
 
             @Override

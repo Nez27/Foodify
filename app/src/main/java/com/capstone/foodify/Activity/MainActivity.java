@@ -44,8 +44,8 @@ import com.capstone.foodify.Fragment.HomeFragment;
 import com.capstone.foodify.Model.Response.CustomResponse;
 import com.capstone.foodify.Model.User;
 import com.capstone.foodify.R;
-import com.capstone.foodify.RefreshTokenService;
-import com.capstone.foodify.ViewPagerAdapter;
+import com.capstone.foodify.Service.RefreshTokenService;
+import com.capstone.foodify.Fragment.ViewPagerAdapter;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -230,6 +230,17 @@ public class MainActivity extends AppCompatActivity {
 
         getLocation();
 
+
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(!slider || !shop || !recentFood || !recommendFood){
+                    Common.showErrorServerNotification(MainActivity.this, "Đã có lỗi từ hệ thống, vui lòng thử lại sau!");
+                }
+            }
+        }, 10000);
     }
 
     private void startRefreshTokenService() {

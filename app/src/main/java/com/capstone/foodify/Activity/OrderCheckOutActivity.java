@@ -86,7 +86,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
     private ImageView back_image;
     private OrderDetailAdapter adapter;
     private RecyclerView recyclerView;
-    private TextView txt_userName, txt_phone, edt_address_detect, errorTextDistrictWard, txt_total, txt_distance, txt_ship_cost;
+    private TextView txt_userName, txt_phone, edt_address_detect, errorTextDistrict, errorTextWard, txt_total, txt_distance, txt_ship_cost;
     private TextInputLayout textInput_address;
     private EditText edt_address;
     private Spinner spn_list_address, spn_district, spn_ward;
@@ -117,7 +117,8 @@ public class OrderCheckOutActivity extends AppCompatActivity {
         manual_input_address = findViewById(R.id.manual_input_address);
         edt_address = findViewById(R.id.edt_address);
         address_option = findViewById(R.id.address_option);
-        errorTextDistrictWard = findViewById(R.id.errorTextDistrictWard);
+        errorTextDistrict = findViewById(R.id.errorTextDistrict);
+        errorTextWard = findViewById(R.id.errorTextWard);
         textInput_address = findViewById(R.id.textInput_address);
         txt_total = findViewById(R.id.txt_total);
         take_food_from_shop = findViewById(R.id.take_food_from_shop);
@@ -607,18 +608,22 @@ public class OrderCheckOutActivity extends AppCompatActivity {
             textInput_address.setErrorEnabled(false);
         }
 
-        //Check district and ward
-        if(spn_district.getSelectedItem().toString().equals("---Quận") || spn_ward.getSelectedItem().toString().equals("---Phường")){
+        //Check ward
+        if(spn_ward.getSelectedItem().toString().equals("---Phường")){
+            errorTextWard.setVisibility(View.VISIBLE);
 
-            if(!spn_district.getSelectedItem().toString().equals("Huyện Hoàng Sa")){
-                errorTextDistrictWard.setVisibility(View.VISIBLE);
-                dataHasValidate = false;
-            } else{
-                errorTextDistrictWard.setVisibility(View.GONE);
-            }
-
+            dataHasValidate = false;
         } else {
-            errorTextDistrictWard.setVisibility(View.GONE);
+            errorTextWard.setVisibility(View.GONE);
+        }
+
+        //Check district
+        if(spn_district.getSelectedItem().toString().equals("---Quận")){
+            errorTextDistrict.setVisibility(View.VISIBLE);
+
+            dataHasValidate = false;
+        } else {
+            errorTextDistrict.setVisibility(View.GONE);
         }
 
         return dataHasValidate;
@@ -832,7 +837,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
     }
 
     private void setAdapter(ArrayList<String> data, String defaultItem, Spinner dataSpinner){
-        OrderCheckOutActivity.MySpinnerAdapter adapterWard = new OrderCheckOutActivity.MySpinnerAdapter(getApplicationContext(), android.R.layout.simple_spinner_item, data);
+        OrderCheckOutActivity.MySpinnerAdapter adapterWard = new OrderCheckOutActivity.MySpinnerAdapter(getApplicationContext(), R.layout.spinner_text_view, data);
         dataSpinner.setAdapter(adapterWard); // this will set list of values to spinner
         dataSpinner.setSelection(data.indexOf(defaultItem));//set selected value in spinner
     }

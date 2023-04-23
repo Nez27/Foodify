@@ -9,8 +9,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.capstone.foodify.Common;
 import com.capstone.foodify.Model.Comment;
 import com.capstone.foodify.R;
+import com.makeramen.roundedimageview.RoundedImageView;
+import com.squareup.picasso.Picasso;
 import com.willy.ratingbar.ScaleRatingBar;
 
 import java.util.List;
@@ -43,6 +46,13 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         holder.name.setText(comment.getUser().getFullName());
         holder.ratingScore.setRating(comment.getRating());
         holder.content.setText(comment.getContent());
+
+        //Bind image avatar user
+        if(comment.getUser().getImageUrl() == null){
+            holder.profile_avatar.setImageResource(R.drawable.profile_avatar);
+        } else {
+            Picasso.get().load(Common.CURRENT_USER.getImageUrl()).into(holder.profile_avatar);
+        }
     }
 
     @Override
@@ -54,8 +64,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
     public class CommentViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView name, content;
-        private ScaleRatingBar ratingScore;
+        private final TextView name, content;
+        private final ScaleRatingBar ratingScore;
+        private final RoundedImageView profile_avatar;
 
         public CommentViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -63,6 +74,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             name = itemView.findViewById(R.id.user_name_text_view);
             ratingScore = itemView.findViewById(R.id.rating_bar);
             content = itemView.findViewById(R.id.comment_user);
+
+            profile_avatar = itemView.findViewById(R.id.profile_avatar);
         }
     }
 }

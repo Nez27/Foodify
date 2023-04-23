@@ -48,7 +48,7 @@ public interface FoodApi {
     @GET("products/search/enable")
     Call<Foods> searchFoodByName(@Query("productName") String name, @Query("pageNo") int pageNo, @Query("pageSize") int pageSize, @Query("sortBy") String sortBy, @Query("sortDir") String sortDir);
 
-    @GET("products")
+    @GET("products/random")
     Call<Foods> listFood(@Query("pageNo") int pageNo, @Query("pageSize") int pageSize, @Query("sortBy") String sortBy, @Query("sortDir") String sortDir);
 
     @GET("categories/randoms?pageNo=0&pageSize=7")

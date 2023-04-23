@@ -58,7 +58,7 @@ public class AddressManagerActivity extends AppCompatActivity {
     private Button add_address_button;
     private TextInputLayout textInput_address;
     private ImageView back_image, edit_btn;
-    private TextView txt_Address, errorTextDistrictWard;
+    private TextView txt_Address, errorTextDistrict, errorTextWard;
     private List<Address> listAddress = new ArrayList<>();
     private Spinner wardSpinner, districtSpinner;
     private EditText edt_address;
@@ -490,7 +490,8 @@ public class AddressManagerActivity extends AppCompatActivity {
         wardSpinner = view.findViewById(R.id.ward);
         districtSpinner = view.findViewById(R.id.district);
         edt_address = view.findViewById(R.id.edt_address);
-        errorTextDistrictWard = view.findViewById(R.id.errorTextDistrictWard);
+        errorTextDistrict = view.findViewById(R.id.errorTextDistrict);
+        errorTextWard = view.findViewById(R.id.errorTextWard);
         progressLayoutDialog = view.findViewById(R.id.progress_layout);
         default_address_checkbox = view.findViewById(R.id.checkbox_default_address);
     }
@@ -507,18 +508,22 @@ public class AddressManagerActivity extends AppCompatActivity {
             textInput_address.setErrorEnabled(false);
         }
 
-        //Check district and ward
-        if(district.equals("---Quận") || ward.equals("---Phường")){
+        //Check ward
+        if(ward.equals("---Phường")){
+            errorTextWard.setVisibility(View.VISIBLE);
 
-            if(!district.equals("Huyện Hoàng Sa")){
-                errorTextDistrictWard.setVisibility(View.VISIBLE);
-                dataHasValidate = false;
-            } else{
-                errorTextDistrictWard.setVisibility(View.GONE);
-            }
-
+            dataHasValidate = false;
         } else {
-            errorTextDistrictWard.setVisibility(View.GONE);
+            errorTextWard.setVisibility(View.GONE);
+        }
+
+        //Check district
+        if(district.equals("---Quận")){
+            errorTextDistrict.setVisibility(View.VISIBLE);
+
+            dataHasValidate = false;
+        } else {
+            errorTextDistrict.setVisibility(View.GONE);
         }
 
         return dataHasValidate;
@@ -589,7 +594,7 @@ public class AddressManagerActivity extends AppCompatActivity {
     }
 
     private void setAdapter(ArrayList<String> data, String defaultItem, Spinner dataSpinner){
-        MySpinnerAdapter adapterWard = new MySpinnerAdapter(getApplicationContext(), android.R.layout.simple_spinner_item, data);
+        MySpinnerAdapter adapterWard = new MySpinnerAdapter(getApplicationContext(), R.layout.spinner_text_view, data);
         dataSpinner.setAdapter(adapterWard); // this will set list of values to spinner
         dataSpinner.setSelection(data.indexOf(defaultItem));//set selected value in spinner
     }

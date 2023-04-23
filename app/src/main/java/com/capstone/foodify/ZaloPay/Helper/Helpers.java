@@ -31,5 +31,5 @@ public class Helpers {
     @NotNull
     public static String getMac(@NotNull String key, @NotNull String data) throws NoSuchAlgorithmException, InvalidKeyException {
         return Objects.requireNonNull(HMacUtil.HMacHexStringEncode(HMacUtil.HMACSHA256, key, data));
-     }
+    }
 }

@@ -50,7 +50,7 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="foodify-notification"/>
         
-        <service android:name=".RefreshTokenService"
+        <service android:name=".Service.RefreshTokenService"
             android:permission="android.permission.BIND_JOB_SERVICE"
             />
 
@@ -139,7 +139,7 @@
         </activity>
 
         <service
-            android:name=".NotificationService"
+            android:name=".Service.NotificationService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

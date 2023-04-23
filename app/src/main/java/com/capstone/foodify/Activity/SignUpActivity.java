@@ -66,7 +66,7 @@ public class SignUpActivity extends AppCompatActivity {
             textInput_address, textInput_confirmPassword, textInput_fullName, textInput_birthDay;
     final Calendar myCalendar= Calendar.getInstance();
     private EditText edt_birthday, edt_phone, edt_passWord, edt_confirmPassword, edt_fullName, edt_address, edt_email, edt_id_card;
-    private TextView signIn_textView, errorText, errorTextDistrictWard;
+    private TextView signIn_textView, errorText, errorTextDistrict, errorTextWard;
     private Spinner wardSpinner, districtSpinner;
     private ImageView back_image;
     private MaterialButton signUpButton;
@@ -102,7 +102,8 @@ public class SignUpActivity extends AppCompatActivity {
 
         signIn_textView = (TextView) findViewById(R.id.signIn_textView);
         errorText = findViewById(R.id.errorText);
-        errorTextDistrictWard = findViewById(R.id.errorTextDistrictWard);
+        errorTextDistrict = findViewById(R.id.errorTextDistrict);
+        errorTextWard = findViewById(R.id.errorTextWard);
 
         back_image = (ImageView) findViewById(R.id.back_image);
 
@@ -383,15 +384,23 @@ public class SignUpActivity extends AppCompatActivity {
             textInput_address.setErrorEnabled(false);
         }
 
-        //Check district and ward
-        if(district.equals("---Quận") || ward.equals("---Phường")){
-            errorTextDistrictWard.setVisibility(View.VISIBLE);
+        //Check ward
+        if(ward.equals("---Phường")){
+            errorTextWard.setVisibility(View.VISIBLE);
 
             dataHasValidate = false;
         } else {
-            errorTextDistrictWard.setVisibility(View.GONE);
+            errorTextWard.setVisibility(View.GONE);
         }
 
+        //Check district
+        if(district.equals("---Quận")){
+            errorTextDistrict.setVisibility(View.VISIBLE);
+
+            dataHasValidate = false;
+        } else {
+            errorTextDistrict.setVisibility(View.GONE);
+        }
 
 
         //Check password
@@ -560,7 +569,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void setAdapter(ArrayList<String> data, String defaultItem, Spinner dataSpinner){
-        MySpinnerAdapter adapterWard = new MySpinnerAdapter(getApplicationContext(), android.R.layout.simple_spinner_item, data);
+        MySpinnerAdapter adapterWard = new MySpinnerAdapter(getApplicationContext(), R.layout.spinner_text_view, data);
         dataSpinner.setAdapter(adapterWard); // this will set list of values to spinner
         dataSpinner.setSelection(data.indexOf(defaultItem));//set selected value in spinner
     }

@@ -49,11 +49,13 @@ import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.mcdev.quantitizerlibrary.AnimationStyle;
 import com.mcdev.quantitizerlibrary.HorizontalQuantitizer;
 import com.mcdev.quantitizerlibrary.QuantitizerListener;
 import com.sjapps.library.customdialog.BasicDialog;
 import com.sjapps.library.customdialog.DialogButtonEvents;
+import com.squareup.picasso.Picasso;
 import com.thecode.aestheticdialogs.DialogStyle;
 import com.thecode.aestheticdialogs.DialogType;
 import com.willy.ratingbar.RotationRatingBar;
@@ -83,6 +85,7 @@ public class FoodDetailActivity extends AppCompatActivity {
     private Food food;
     private TextView foodName_txt, shopName_txt, discount_txt, price_txt, countRating_txt, description_content_txt, endOfListText,
             userNameComment, contentComment, count_sold_txt;
+    private RoundedImageView profile_avatar;
     private ConstraintLayout content_view;
     private Button add_to_basket_button;
     private float totalPrice, price;
@@ -147,6 +150,7 @@ public class FoodDetailActivity extends AppCompatActivity {
         list_category = findViewById(R.id.list_category);
         count_sold_txt = findViewById(R.id.count_sold);
         swipeRefreshLayout = findViewById(R.id.swipe_refresh);
+        profile_avatar = findViewById(R.id.profile_avatar);
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -536,6 +540,13 @@ public class FoodDetailActivity extends AppCompatActivity {
         shopName_txt.setText(food.getShop().getName());
         description_content_txt.setText(food.getDescription());
         ratingBar.setRating(food.getAverageRating());
+
+        //Set image for user
+        if(Common.CURRENT_USER.getImageUrl().isEmpty()){
+            profile_avatar.setImageResource(R.drawable.profile_avatar);
+        } else {
+            Picasso.get().load(Common.CURRENT_USER.getImageUrl()).into(profile_avatar);
+        }
 
         if(food.getReviewCount() == null || Integer.parseInt(food.getReviewCount()) == 0){
             countRating_txt.setText("Chưa có bình luận nào!");

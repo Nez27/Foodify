@@ -22,7 +22,7 @@
                 android:text="Order #123456789"
                 android:fontFamily="@font/koho_bold"
                 android:textColor="@color/primaryColor"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"

@@ -1,5 +1,6 @@
 package com.capstone.foodify.Model;
 
+import com.capstone.foodify.Common;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -27,7 +28,7 @@ public class User implements Serializable {
         this.email = email;
         this.fullName = fullName;
         this.identifiedCode = identifiedCode;
-        this.imageUrl = "";
+        this.imageUrl = Common.DEFAULT_IMAGE_URL;
         this.phoneNumber = phoneNumber;
         this.roleName = "ROLE_USER";
         this.isLocked = false;

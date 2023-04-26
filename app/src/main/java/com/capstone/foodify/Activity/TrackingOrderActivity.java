@@ -151,6 +151,7 @@ public class TrackingOrderActivity extends FragmentActivity implements OnMapRead
         mMap.getUiSettings().setMapToolbarEnabled(true);
         mMap.getUiSettings().setCompassEnabled(true);
 
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(16.054407,108.202164), 10));
 
         trackingLocation();
     }
@@ -173,7 +174,7 @@ public class TrackingOrderActivity extends FragmentActivity implements OnMapRead
                 if(shippingMarker == null){
                     shippingMarker = mMap.addMarker(new MarkerOptions()
                             .position(latLng)
-                            .title("Người giao")
+                            .title("Shipper")
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.shipper)));
                 } else {
                     shippingMarker.setPosition(latLng);

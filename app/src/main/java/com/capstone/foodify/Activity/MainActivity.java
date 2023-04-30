@@ -1,5 +1,7 @@
 package com.capstone.foodify.Activity;
 
+import static com.capstone.foodify.Common.firebaseAppDistribution;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.job.JobInfo;
@@ -65,6 +67,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.appdistribution.AppDistributionRelease;
+import com.google.firebase.appdistribution.InterruptionLevel;
 import com.google.firebase.appdistribution.OnProgressListener;
 import com.google.firebase.appdistribution.UpdateProgress;
 import com.google.firebase.auth.FirebaseAuth;
@@ -170,8 +173,15 @@ public class MainActivity extends AppCompatActivity {
         //Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
+//        firebaseAppDistribution.showFeedbackNotification(
+//                // Text providing notice to your testers about collection and
+//                // processing of their feedback data
+//                "Cảm ơn đóng góp ý kiến của các bạn.",
+//                // The level of interruption for the notification
+//                InterruptionLevel.HIGH);
 
-        if(Common.firebaseAppDistribution.isTesterSignedIn()){
+
+        if(firebaseAppDistribution.isTesterSignedIn()){
 
             //Customise progress dialog
             ProgressDialog progressDialog = new ProgressDialog(this);
@@ -183,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
             progressDialog.setProgressTintList(getColorStateList(R.color.primaryColor));
             progressDialog.setSecondaryProgressTintList(getColorStateList(R.color.primaryLightColor));
 
-            Common.firebaseAppDistribution.checkForNewRelease().addOnCompleteListener(new OnCompleteListener<AppDistributionRelease>() {
+            firebaseAppDistribution.checkForNewRelease().addOnCompleteListener(new OnCompleteListener<AppDistributionRelease>() {
                 @Override
                 public void onComplete(@NonNull Task<AppDistributionRelease> task) {
                     if(task.isSuccessful()){
@@ -196,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-            Common.firebaseAppDistribution.updateIfNewReleaseAvailable().addOnProgressListener(new OnProgressListener() {
+            firebaseAppDistribution.updateIfNewReleaseAvailable().addOnProgressListener(new OnProgressListener() {
                 @Override
                 public void onProgressUpdate(@NonNull UpdateProgress updateProgress) {
                     double totalBytes = updateProgress.getApkFileTotalBytes();

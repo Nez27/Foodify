@@ -12,6 +12,7 @@ public class Shop implements Serializable {
     private int userId;
     private double lat;
     private double lng;
+    private User user;
 
     public int getId() {
         return id;
@@ -83,5 +84,13 @@ public class Shop implements Serializable {
 
     public void setLng(double lng) {
         this.lng = lng;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

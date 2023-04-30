@@ -30,7 +30,9 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:theme"
         tools:targetApi="31">
-
+        <activity
+            android:name=".Activity.WebViewActivity"
+            android:exported="false" />
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -45,25 +47,24 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAY14Ic32UP26Hg6GILznOfbBihiY5BUxw" />
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="foodify-notification"/>
-        
-        <service android:name=".Service.RefreshTokenService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            />
+            android:value="foodify-notification" />
+
+        <service
+            android:name=".Service.RefreshTokenService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <activity
             android:name=".Activity.TrackingOrderActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_tracking_order" />
+            android:label="@string/title_activity_tracking_order"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.OrderCheckOutActivity"
             android:exported="true"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -77,59 +78,59 @@
         </activity>
         <activity
             android:name=".Activity.FavoriteFoodActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.ShopDetailActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.OrderDetailActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.OrderActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.AddressManagerActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.ChangePasswordActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.AccountAndProfileActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.FoodDetailActivity"
-            android:screenOrientation="portrait"
             android:exported="false"
-            android:noHistory="true" />
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.VerifyAccountActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.ForgotPasswordActivity"
-            android:screenOrientation="portrait"
             android:exported="false"
-            android:noHistory="true" />
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.SignInActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.SignUpActivity"
-            android:screenOrientation="portrait"
             android:exported="false"
-            android:noHistory="true" />
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.MainActivity"
-            android:screenOrientation="portrait"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Foodify.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

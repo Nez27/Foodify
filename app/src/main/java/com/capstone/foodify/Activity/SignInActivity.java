@@ -2,10 +2,12 @@ package com.capstone.foodify.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +30,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.SignInMethodQueryResult;
+import com.thecode.aestheticdialogs.AestheticDialog;
+import com.thecode.aestheticdialogs.DialogStyle;
+import com.thecode.aestheticdialogs.DialogType;
+import com.thecode.aestheticdialogs.OnDialogClickListener;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -46,6 +52,22 @@ public class SignInActivity extends AppCompatActivity {
     private ImageView back_image;
     private ConstraintLayout progressLayout;
     private String email, password = null;
+    private TextView txt_countdown, txt_verify_email;
+    private LinearLayout countdown_layout;
+
+    private final CountDownTimer count = new CountDownTimer(60000, 1000) {
+        @Override
+        public void onTick(long millisUntilFinished) {
+            txt_countdown.setText(millisUntilFinished / 1000 + " giây");
+        }
+
+        @Override
+        public void onFinish() {
+            countdown_layout.setVisibility(View.GONE);
+
+            txt_verify_email.setVisibility(View.VISIBLE);
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -189,69 +211,102 @@ public class SignInActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
 
+                            assert user != null;
+                            if(user.isEmailVerified()){
+                                //Email verify already
+                                user.getIdToken(true)
+                                        .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<GetTokenResult> task) {
+                                                if(task.isSuccessful()){
+                                                    Common.TOKEN = task.getResult().getToken();
 
-                            user.getIdToken(true)
-                                    .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<GetTokenResult> task) {
-                                            if(task.isSuccessful()){
-                                                Common.TOKEN = task.getResult().getToken();
+                                                    //Get user from database
+                                                    FoodApiToken.apiService.getUserFromEmail(user.getEmail()).enqueue(new Callback<User>() {
+                                                        @Override
+                                                        public void onResponse(Call<User> call, Response<User> response) {
+                                                            if(response.code() == 200){
 
-                                                //Get user from database
-                                                FoodApiToken.apiService.getUserFromEmail(user.getEmail()).enqueue(new Callback<User>() {
-                                                    @Override
-                                                    public void onResponse(Call<User> call, Response<User> response) {
-                                                        if(response.code() == 200){
+                                                                User userData = response.body();
+                                                                if(userData != null){
 
-                                                            User userData = response.body();
-                                                            if(userData != null){
+                                                                    //Check user is lock or not
+                                                                    if(!userData.isLocked()){
 
-                                                                //Check user is lock or not
-                                                                if(!userData.isLocked()){
+                                                                        //Check role account
+                                                                        if(userData.getRole().getRoleName().equals("ROLE_USER")){
+                                                                            Common.CURRENT_USER = userData;
 
-                                                                    //Check role account
-                                                                    if(userData.getRole().getRoleName().equals("ROLE_USER")){
-                                                                        Common.CURRENT_USER = userData;
+                                                                            //Dismiss progress bar
+                                                                            progressLayout.setVisibility(View.GONE);
 
-                                                                        //Dismiss progress bar
-                                                                        progressLayout.setVisibility(View.GONE);
+                                                                            startActivity(new Intent(SignInActivity.this, MainActivity.class));
+                                                                            finish();
+                                                                        } else {
+                                                                            Toast.makeText(SignInActivity.this, "Tài khoản không hợp lệ! Vui lòng kiểm tra lại!", Toast.LENGTH_SHORT).show();
+                                                                            FirebaseAuth.getInstance().signOut();
 
-                                                                        startActivity(new Intent(SignInActivity.this, MainActivity.class));
-                                                                        finish();
-                                                                    } else {
-                                                                        Toast.makeText(SignInActivity.this, "Tài khoản không hợp lệ! Vui lòng kiểm tra lại!", Toast.LENGTH_SHORT).show();
+                                                                            //Dismiss progress bar
+                                                                            progressLayout.setVisibility(View.GONE);
+                                                                        }
+                                                                    }
+                                                                    else{
+                                                                        showNotification(DialogStyle.RAINBOW, DialogType.ERROR, "Tài khoản của bạn bị khoá!");
                                                                         FirebaseAuth.getInstance().signOut();
 
                                                                         //Dismiss progress bar
                                                                         progressLayout.setVisibility(View.GONE);
                                                                     }
                                                                 }
-                                                                else{
-                                                                    Toast.makeText(SignInActivity.this, "Tài khoản của bạn đã bị khoá!", Toast.LENGTH_SHORT).show();
-                                                                    FirebaseAuth.getInstance().signOut();
-
-                                                                    //Dismiss progress bar
-                                                                    progressLayout.setVisibility(View.GONE);
-                                                                }
                                                             }
                                                         }
-                                                    }
 
-                                                    @Override
-                                                    public void onFailure(Call<User> call, Throwable t) {
-                                                        System.out.println("ERROR: " + t);
-                                                        Common.showErrorServerNotification(SignInActivity.this, "Không thể đăng nhập tài khoản! Vui lòng thử lại sau!");
-                                                    }
-                                                });
-                                            } else {
-                                                Toast.makeText(SignInActivity.this, "Error when taking token!", Toast.LENGTH_SHORT).show();
+                                                        @Override
+                                                        public void onFailure(Call<User> call, Throwable t) {
+                                                            System.out.println("ERROR: " + t);
+                                                            Common.showErrorServerNotification(SignInActivity.this, "Không thể đăng nhập tài khoản! Vui lòng thử lại sau!");
+                                                        }
+                                                    });
+                                                } else {
+                                                    Toast.makeText(SignInActivity.this, "Error when taking token!", Toast.LENGTH_SHORT).show();
+                                                }
                                             }
-                                        }
-                                    });
+                                        });
+                            } else {
+                                //Email user not verify
+
+                                //Count down resend code
+                                countdown_layout.setVisibility(View.VISIBLE);
+                                count.start();
+                                //Send email verify
+                                user.sendEmailVerification();
+
+                                txt_verify_email.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        //When user click on the text
+
+                                        //Count down resend code
+                                        countdown_layout.setVisibility(View.VISIBLE);
+                                        count.start();
+
+                                        //Send email verify
+                                        user.sendEmailVerification();
+
+                                        txt_verify_email.setVisibility(View.GONE);
+                                    }
+                                });
+
+                                //Log out user
+                                mAuth.signOut();
+
+                                showNotification(DialogStyle.FLAT, DialogType.WARNING, "Tài khoản chưa được xác thực, vui lòng kiểm tra email và làm theo hướng dẫn để tiếp tục!");
+
+                                progressLayout.setVisibility(View.GONE);
+                            }
                         } else {
-                            // If sign in fails, display a message to the user.
-                            Toast.makeText(SignInActivity.this, "Thông tin đăng nhập không đúng! Vui lòng kiểm tra và thử lại!",
-                                    Toast.LENGTH_SHORT).show();
+
+                            showNotification(DialogStyle.RAINBOW, DialogType.WARNING, "Thông tin đăng nhập không đúng! Vui lòng kiểm tra và thử lại!");
 
                             //Dismiss progress bar
                             progressLayout.setVisibility(View.GONE);
@@ -273,6 +328,11 @@ public class SignInActivity extends AppCompatActivity {
 
         progressLayout = findViewById(R.id.progress_layout);
 
+        txt_countdown = findViewById(R.id.textview_countdown);
+        txt_verify_email = findViewById(R.id.textview_verify_email);
+
+        countdown_layout = findViewById(R.id.countdown_layout);
+
     }
     private void setFontUI() {
         textInput_email.setTypeface(Common.setFontKohoBold(getAssets()));
@@ -281,4 +341,17 @@ public class SignInActivity extends AppCompatActivity {
 
     // this event will enable the back
     // function to the button on press
+
+    private void showNotification(DialogStyle dialogStyle, DialogType dialogType, String message){
+        new AestheticDialog.Builder(SignInActivity.this, dialogStyle, dialogType)
+                .setTitle("THÔNG BÁO!")
+                .setMessage(message)
+                .setCancelable(false)
+                .setOnClickListener(new OnDialogClickListener() {
+                    @Override
+                    public void onClick(@NonNull AestheticDialog.Builder builder) {
+                        builder.dismiss();
+                    }
+                }).show();
+    }
 }

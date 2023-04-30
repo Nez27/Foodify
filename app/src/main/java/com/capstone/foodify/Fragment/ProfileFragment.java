@@ -1,7 +1,5 @@
 package com.capstone.foodify.Fragment;
 
-import static com.capstone.foodify.Common.firebaseAppDistribution;
-
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +16,7 @@ import com.capstone.foodify.Activity.AddressManagerActivity;
 import com.capstone.foodify.Activity.FavoriteFoodActivity;
 import com.capstone.foodify.Activity.MainActivity;
 import com.capstone.foodify.Activity.OrderActivity;
+import com.capstone.foodify.Activity.WebViewActivity;
 import com.capstone.foodify.Common;
 import com.capstone.foodify.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,7 +28,7 @@ import com.squareup.picasso.Picasso;
 
 public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
-    LinearLayout account_and_profile, manage_address, favorite_food, order_history, feed_back, log_out;
+    LinearLayout account_and_profile, manage_address, favorite_food, order_history, register_beta_app, log_out;
     PopupDialog popupDialog;
     TextView user_name;
     RoundedImageView profile_avatar;
@@ -84,10 +83,10 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        feed_back.setOnClickListener(new View.OnClickListener() {
+        register_beta_app.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                firebaseAppDistribution.startFeedback("Cảm ơn vì sự đóng góp ý kiến từ các bạn!");
+                startActivity(new Intent(getActivity(), WebViewActivity.class));
             }
         });
 
@@ -135,7 +134,7 @@ public class ProfileFragment extends Fragment {
         log_out = rootView.findViewById(R.id.log_out);
         user_name = rootView.findViewById(R.id.user_name);
         profile_avatar = rootView.findViewById(R.id.profile_avatar);
-        feed_back = rootView.findViewById(R.id.feedback);
+        register_beta_app = rootView.findViewById(R.id.feedback);
     }
 
     @Override

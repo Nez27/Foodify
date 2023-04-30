@@ -47,7 +47,7 @@ public class ShopDetailActivity extends AppCompatActivity {
     private static boolean LAST_PAGE = false;
     private int shopId;
     private List<Food> listFood = new ArrayList<>();
-    private TextView content_description_text_view, student_shop_text_view, end_of_list_text_view, txt_shop_name;
+    private TextView content_description_text_view, student_shop_text_view, end_of_list_text_view, txt_shop_name, phone_number_shop;
     private ImageView imageShop, back_image;
     private RecyclerView recycler_view_food_shop;
     private FoodShopAdapter adapter;
@@ -160,6 +160,7 @@ public class ShopDetailActivity extends AppCompatActivity {
         txt_shop_name = findViewById(R.id.txt_shop_name);
         empty_layout = findViewById(R.id.empty_layout);
         swipeRefreshLayout = findViewById(R.id.swipe_refresh);
+        phone_number_shop = findViewById(R.id.phone_number_shop);
     }
 
     private void getListFood(int shopId){
@@ -231,6 +232,7 @@ public class ShopDetailActivity extends AppCompatActivity {
         Picasso.get().load(shop.getImageUrl()).into(imageShop);
         txt_shop_name.setText(shop.getName());
         content_description_text_view.setText(shop.getDescription());
+        phone_number_shop.setText("SĐT: " + shop.getUser().getPhoneNumber());
 
         //If shop is studentShop, enable tag student shop
         if(shop.isStudent()){

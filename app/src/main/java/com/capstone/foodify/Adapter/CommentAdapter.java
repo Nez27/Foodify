@@ -48,10 +48,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         holder.content.setText(comment.getContent());
 
         //Bind image avatar user
-        if(comment.getUser().getImageUrl() == null){
-            holder.profile_avatar.setImageResource(R.drawable.profile_avatar);
-        } else {
-            Picasso.get().load(Common.CURRENT_USER.getImageUrl()).into(holder.profile_avatar);
+        if(comment.getUser().getImageUrl() != null){
+            Picasso.get().load(comment.getUser().getImageUrl()).into(holder.profile_avatar);
         }
     }
 

@@ -215,19 +215,22 @@ public class AccountAndProfileActivity extends AppCompatActivity {
     }
 
     private void deleteOldImage() {
-        StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(Common.CURRENT_USER.getImageUrl());
+        //Check avatar user if image default, don't delete it!
+        if(!Common.CURRENT_USER.getImageUrl().equals(Common.DEFAULT_IMAGE_URL)){
+            StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(Common.CURRENT_USER.getImageUrl());
 
-        storageReference.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
+            storageReference.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
 
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(AccountAndProfileActivity.this, "Can't delete old image!", Toast.LENGTH_SHORT).show();
-            }
-        });
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(AccountAndProfileActivity.this, "Can't delete old image!", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     private String getFileExtension(Uri fileUri){

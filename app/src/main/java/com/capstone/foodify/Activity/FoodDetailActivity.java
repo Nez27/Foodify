@@ -541,12 +541,20 @@ public class FoodDetailActivity extends AppCompatActivity {
         description_content_txt.setText(food.getDescription());
         ratingBar.setRating(food.getAverageRating());
 
-        //Set image for user
-        if(Common.CURRENT_USER.getImageUrl().isEmpty()){
-            profile_avatar.setImageResource(R.drawable.profile_avatar);
+        //Set avatar user when have comment
+        if(Common.CURRENT_USER != null){
+            if(Common.CURRENT_USER.getImageUrl().isEmpty()){
+                profile_avatar.setImageResource(R.drawable.profile_avatar);
+            } else {
+                Picasso.get().load(Common.CURRENT_USER.getImageUrl()).into(profile_avatar);
+            }
         } else {
-            Picasso.get().load(Common.CURRENT_USER.getImageUrl()).into(profile_avatar);
+            //Hide layout when not login
+            user_comment_layout.setVisibility(View.GONE);
         }
+
+
+
 
         if(food.getReviewCount() == null || Integer.parseInt(food.getReviewCount()) == 0){
             countRating_txt.setText("Chưa có bình luận nào!");

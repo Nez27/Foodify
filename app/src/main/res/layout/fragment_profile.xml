@@ -234,11 +234,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:orientation="horizontal"
+            android:visibility="visible"
             >
 
             <ImageView
                 android:id="@+id/ic_feedback"
-                android:src="@drawable/feedback"
+                android:src="@drawable/baseline_app_registration_24"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 tools:ignore="ContentDescription"
@@ -252,10 +253,11 @@
                 android:layout_marginStart="12dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/koho"
-                android:text="Đóng góp ý kiến"
+                android:text="Đăng ký người dùng thử nghiệm"
                 android:textColor="@color/black"
                 android:textSize="18sp"
-                tools:ignore="HardcodedText" />
+                tools:ignore="HardcodedText"
+                />
 
             <ImageView
                 android:layout_width="20dp"

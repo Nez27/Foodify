@@ -290,9 +290,11 @@ public class SignUpActivity extends AppCompatActivity {
             public void onResponse(Call<CustomResponse> call, Response<CustomResponse> response) {
                 CustomResponse dataTemp = response.body();
 
-                loadCompleted();
+
                 assert dataTemp != null;
                 if(dataTemp.isTrue()){
+                    loadCompleted();
+
                     textInput_phone.setError("Số điện thoại đã được đăng ký!");
                     validPhone = false;
                 } else {
@@ -352,11 +354,11 @@ public class SignUpActivity extends AppCompatActivity {
         }
 
         //Check identified Code
-        if(identifiedCode.length() < 8 || identifiedCode.length() > 11){
+        if(identifiedCode.length() == 9 || identifiedCode.length() == 12){
+            textInput_id_card.setErrorEnabled(false);
+        } else {
             textInput_id_card.setError("CCCD / CMND không hợp lệ!");
             dataHasValidate = false;
-        } else {
-            textInput_id_card.setErrorEnabled(false);
         }
 
         //Check birthday

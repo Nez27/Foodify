@@ -46,6 +46,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.thecode.aestheticdialogs.AestheticDialog;
+import com.thecode.aestheticdialogs.DialogStyle;
+import com.thecode.aestheticdialogs.DialogType;
+import com.thecode.aestheticdialogs.OnDialogClickListener;
 
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -278,10 +282,21 @@ public class VerifyAccountActivity extends AppCompatActivity {
                                             if(response.code() == 200){
                                                 progressLayout.setVisibility(View.GONE);
                                                 //Create user success;
-                                                Toast.makeText(VerifyAccountActivity.this, "Tạo tài khoản thành công!", Toast.LENGTH_SHORT).show();
-                                                FirebaseAuth.getInstance().signOut();
-                                                startActivity(new Intent(VerifyAccountActivity.this, SignInActivity.class));
-                                                finish();
+
+                                                new AestheticDialog.Builder(VerifyAccountActivity.this, DialogStyle.FLAT, DialogType.SUCCESS)
+                                                        .setTitle("Thông báo!")
+                                                        .setMessage("Đã tạo tài khoản thành công!")
+                                                        .setCancelable(false)
+                                                        .setOnClickListener(new OnDialogClickListener() {
+                                                            @Override
+                                                            public void onClick(@NonNull AestheticDialog.Builder dialog) {
+                                                                dialog.dismiss();
+                                                                FirebaseAuth.getInstance().signOut();
+                                                                startActivity(new Intent(VerifyAccountActivity.this, SignInActivity.class));
+                                                                finish();
+                                                            }
+                                                        })
+                                                        .show();
                                             } else {
                                                 progressLayout.setVisibility(View.GONE);
                                                 Toast.makeText(VerifyAccountActivity.this, "Lỗi hệ thống! Code: " + response.code(), Toast.LENGTH_SHORT).show();

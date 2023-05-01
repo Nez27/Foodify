@@ -49,7 +49,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     private List<Basket> listOrderDetails = new ArrayList<>();
     private OrderDetailAdapter adapter;
     private RecyclerView recyclerView;
-    private Order order;
+    private Order order, tempOrder;
     private Button btn_cancel_order, btn_tracking_location_shipper;
     private View line_cancel_order, line_tracking_order;
 
@@ -86,44 +86,10 @@ public class OrderDetailActivity extends AppCompatActivity {
 
         //Get data from previous fragment
         if(getIntent() != null)
-            order = (Order) getIntent().getSerializableExtra("order");
+            tempOrder = (Order) getIntent().getSerializableExtra("order");
 
-        if(order.getStatus().equals(AWAITING)){
-            btn_cancel_order.setVisibility(View.VISIBLE);
-            line_tracking_order.setVisibility(View.GONE);
-        }
-
-
-        if(order.getStatus().equals(SHIPPING)){
-            btn_tracking_location_shipper.setVisibility(View.VISIBLE);
-            line_cancel_order.setVisibility(View.GONE);
-        }
-
-
-
-        //Init data
-        order_tracking_number.setText("Order Id: #" + order.getOrderTrackingNumber());
-        user_name.setText("Họ và tên: " + Common.CURRENT_USER.getFullName());
-        phone.setText("Số điện thoại: " + Common.CURRENT_USER.getPhoneNumber());
-        address.setText("Địa chỉ: " + order.getAddress());
-        orderTime.setText("Thời gian đặt: " + order.getOrderTime());
-        total.setText("Tổng: " + Common.changeCurrencyUnit(order.getTotal()));
-        status.setText("Trạng thái đơn hàng: " + translateStatus(order.getStatus()));
-
-
-        for(OrderDetail tempFood: order.getOrderDetails()){
-            Basket food = new Basket(tempFood.getFood().getId(), tempFood.getFood().getImages().get(0).getImageUrl(),
-                    tempFood.getFood().getName(), tempFood.getFood().getCost() ,tempFood.getFood().getShop().getName(), tempFood.getQuantity(),
-                    tempFood.getFood().getDiscountPercent(), tempFood.getFood().getShop().getId());
-            listOrderDetails.add(food);
-        }
-
-
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
-        recyclerView.setLayoutManager(linearLayoutManager);
-
-        adapter.setData(listOrderDetails);
-        recyclerView.setAdapter(adapter);
+        //Get information order
+        getOrder();
 
         back_image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,6 +114,64 @@ public class OrderDetailActivity extends AppCompatActivity {
                 intent.putExtra("latOrder", order.getLat());
                 intent.putExtra("lngOrder", order.getLng());
                 startActivity(intent);
+            }
+        });
+    }
+
+    private void initData() {
+        //Init data
+        order_tracking_number.setText("Order Id: #" + order.getOrderTrackingNumber());
+        user_name.setText("Họ và tên: " + Common.CURRENT_USER.getFullName());
+        phone.setText("Số điện thoại: " + Common.CURRENT_USER.getPhoneNumber());
+        address.setText("Địa chỉ: " + order.getAddress());
+        orderTime.setText("Thời gian đặt: " + order.getOrderTime());
+        total.setText("Tổng: " + Common.changeCurrencyUnit(order.getTotal()));
+        status.setText("Trạng thái đơn hàng: " + translateStatus(order.getStatus()));
+
+
+        for(OrderDetail tempFood: order.getOrderDetails()){
+            Basket food = new Basket(tempFood.getFood().getId(), tempFood.getFood().getImages().get(0).getImageUrl(),
+                    tempFood.getFood().getName(), tempFood.getFood().getCost() ,tempFood.getFood().getShop().getName(), tempFood.getQuantity(),
+                    tempFood.getFood().getDiscountPercent(), tempFood.getFood().getShop().getId());
+            listOrderDetails.add(food);
+        }
+
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        adapter.setData(listOrderDetails);
+        recyclerView.setAdapter(adapter);
+
+
+        if(order.getStatus().equals(AWAITING)){
+            btn_cancel_order.setVisibility(View.VISIBLE);
+            line_tracking_order.setVisibility(View.GONE);
+        }
+
+
+        if(order.getStatus().equals(SHIPPING)){
+            btn_tracking_location_shipper.setVisibility(View.VISIBLE);
+            line_cancel_order.setVisibility(View.GONE);
+        }
+    }
+
+    private void getOrder(){
+        FoodApiToken.apiService.getOrderById(Common.CURRENT_USER.getId(), tempOrder.getId()).enqueue(new Callback<Order>() {
+            @Override
+            public void onResponse(Call<Order> call, Response<Order> response) {
+                if(response.code() == 200){
+                    order = response.body();
+
+                    initData();
+                } else {
+                    Toast.makeText(OrderDetailActivity.this, "Đã có lỗi. Mã lỗi: " + response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Order> call, Throwable t) {
+                Log.e(TAG, t.toString());
             }
         });
     }

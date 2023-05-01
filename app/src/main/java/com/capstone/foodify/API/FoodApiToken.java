@@ -98,6 +98,9 @@ public interface FoodApiToken {
     @PUT("users/{userId}/orders/{orderId}/status")
     Call<CustomResponse> updateOrderStatus(@Path("userId") int userId, @Path("orderId") int orderId, @Query("status") String status);
 
+    @GET("users/{userId}/orders/{orderId}")
+    Call<Order> getOrderById(@Path("userId") int userId, @Path("orderId") int orderId);
+
     @PUT("users/{userId}/update/fcm")
     Call<CustomResponse> updateFCMToken(@Path("userId") int userId, @Body String token);
 }

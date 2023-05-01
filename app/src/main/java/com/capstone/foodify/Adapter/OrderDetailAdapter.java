@@ -30,6 +30,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
 
     public void setData(List<Basket> listFoodInBasket){
         this.listFoodInBasket = listFoodInBasket;
+        notifyDataSetChanged();
     }
 
 

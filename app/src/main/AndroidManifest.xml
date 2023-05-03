@@ -79,7 +79,8 @@
         <activity
             android:name=".Activity.FavoriteFoodActivity"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name=".Activity.ShopDetailActivity"
             android:exported="false"

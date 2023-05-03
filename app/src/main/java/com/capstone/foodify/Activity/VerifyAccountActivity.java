@@ -43,6 +43,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
@@ -267,59 +268,87 @@ public class VerifyAccountActivity extends AppCompatActivity {
                     code
             );
 
-            if(phoneAuthCredential.getSmsCode().equals(code)){
-                //Create user account
-                mAuth.createUserWithEmailAndPassword(user.getEmail(), password)
-                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            mAuth.signInWithCredential(phoneAuthCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if(task.isSuccessful()){
+                        //Verify
+
+                        FirebaseUser phoneUser = task.getResult().getUser();
+                        assert phoneUser != null;
+                        phoneUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if(task.isSuccessful()){
-                                    //Add information user to server
-                                    FoodApi.apiService.register(user).enqueue(new Callback<User>() {
-                                        @Override
-                                        public void onResponse(Call<User> call, Response<User> response) {
-
-                                            if(response.code() == 200){
-                                                progressLayout.setVisibility(View.GONE);
-                                                //Create user success;
-
-                                                new AestheticDialog.Builder(VerifyAccountActivity.this, DialogStyle.FLAT, DialogType.SUCCESS)
-                                                        .setTitle("Thông báo!")
-                                                        .setMessage("Đã tạo tài khoản thành công!")
-                                                        .setCancelable(false)
-                                                        .setOnClickListener(new OnDialogClickListener() {
-                                                            @Override
-                                                            public void onClick(@NonNull AestheticDialog.Builder dialog) {
-                                                                dialog.dismiss();
-                                                                FirebaseAuth.getInstance().signOut();
-                                                                startActivity(new Intent(VerifyAccountActivity.this, SignInActivity.class));
-                                                                finish();
-                                                            }
-                                                        })
-                                                        .show();
-                                            } else {
-                                                progressLayout.setVisibility(View.GONE);
-                                                Toast.makeText(VerifyAccountActivity.this, "Lỗi hệ thống! Code: " + response.code(), Toast.LENGTH_SHORT).show();
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onFailure(Call<User> call, Throwable t) {
-                                            progressLayout.setVisibility(View.GONE);
-                                            showErrorText(t.toString());
-                                            Log.e(TAG, t.toString());
-                                        }
-                                    });
-                                } else {
-                                    progressLayout.setVisibility(View.GONE);
-                                    Common.showErrorServerNotification(VerifyAccountActivity.this, "Đã có lỗi kết nối! Vui lòng thử lại sau!");
-                                }
+                            public void onComplete(@NonNull Task<Void> task) {
+                                createUserAccount();
                             }
                         });
-            }
 
-
+                    } else {
+                        //Not verify
+                        Common.notificationDialog(VerifyAccountActivity.this, DialogStyle.TOASTER, DialogType.ERROR, "Thông báo!", "Mã OTP sai! Vui lòng kiểm tra lại");
+                        progressLayout.setVisibility(View.GONE);
+                    }
+                }
+            });
         }
+    }
+
+    private void createUserAccount() {
+        //Create user account
+        mAuth.createUserWithEmailAndPassword(user.getEmail(), password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+                            //Add information user to server
+                            FoodApi.apiService.register(user).enqueue(new Callback<User>() {
+                                @Override
+                                public void onResponse(Call<User> call, Response<User> response) {
+
+                                    if(response.code() == 200){
+                                        progressLayout.setVisibility(View.GONE);
+                                        //Create user success;
+
+                                        //Send email
+                                        FirebaseUser firebaseUser = task.getResult().getUser();
+                                        assert firebaseUser != null;
+                                        firebaseUser.sendEmailVerification();
+
+                                        new AestheticDialog.Builder(VerifyAccountActivity.this, DialogStyle.FLAT, DialogType.SUCCESS)
+                                                .setTitle("Đã tạo tài khoản thành công!")
+                                                .setMessage("Hiện tại bạn còn 1 bước xác thực email để có thể đăng nhập app! Vui lòng kiểm tra email và làm theo hướng dẫn " +
+                                                        "để có thể tiếp tục!")
+                                                .setCancelable(false)
+                                                .setOnClickListener(new OnDialogClickListener() {
+                                                    @Override
+                                                    public void onClick(@NonNull AestheticDialog.Builder dialog) {
+                                                        dialog.dismiss();
+
+                                                        FirebaseAuth.getInstance().signOut();
+                                                        startActivity(new Intent(VerifyAccountActivity.this, SignInActivity.class));
+                                                        finish();
+                                                    }
+                                                })
+                                                .show();
+                                    } else {
+                                        progressLayout.setVisibility(View.GONE);
+                                        Toast.makeText(VerifyAccountActivity.this, "Lỗi hệ thống! Code: " + response.code(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<User> call, Throwable t) {
+                                    progressLayout.setVisibility(View.GONE);
+                                    showErrorText(t.toString());
+                                    Log.e(TAG, t.toString());
+                                }
+                            });
+                        } else {
+                            progressLayout.setVisibility(View.GONE);
+                            Common.showErrorServerNotification(VerifyAccountActivity.this, "Đã có lỗi kết nối! Vui lòng thử lại sau!");
+                        }
+                    }
+                });
     }
 
     private void showErrorText(String msg){

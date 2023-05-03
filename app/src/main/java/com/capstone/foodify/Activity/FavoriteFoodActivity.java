@@ -120,6 +120,7 @@ public class FavoriteFoodActivity extends AppCompatActivity implements ItemTouch
         listFavoriteFoodView = findViewById(R.id.list_favorite_food_view);
 
         //Get list favorite food
+        CURRENT_PAGE = 0;
         getListFavoriteFood(CURRENT_PAGE);
 
         //Set layout recyclerview
@@ -212,8 +213,8 @@ public class FavoriteFoodActivity extends AppCompatActivity implements ItemTouch
             }
 
             //Show notification food has been delete
-            Snackbar snackbar = Snackbar.make(listFavoriteFoodView, foodNameDelete + " remove!", Snackbar.LENGTH_LONG);
-            snackbar.setAction("Undo", new View.OnClickListener() {
+            Snackbar snackbar = Snackbar.make(listFavoriteFoodView, "Đã xoá " + foodNameDelete + " khỏi danh sách yêu thích!", Snackbar.LENGTH_LONG);
+            snackbar.setAction("Hoàn tác", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     adapter.undoItem(foodDelete, indexDelete, FavoriteFoodActivity.this);

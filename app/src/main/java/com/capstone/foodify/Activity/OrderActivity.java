@@ -63,6 +63,8 @@ public class OrderActivity extends AppCompatActivity {
         viewPagerAdapter = new ViewPagerAdapter(this);
         viewPager2.setAdapter(viewPagerAdapter);
 
+        viewPager2.setUserInputEnabled(false);
+
         orderActivity = this;
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

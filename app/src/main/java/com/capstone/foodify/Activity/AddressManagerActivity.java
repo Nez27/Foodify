@@ -198,8 +198,6 @@ public class AddressManagerActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<CustomResponse> call, Response<CustomResponse> response) {
 
-                CustomResponse responseData = response.body();
-
                 if(response.code() == 200){
                     Toast.makeText(AddressManagerActivity.this, "Đã thêm địa chỉ thành công!", Toast.LENGTH_SHORT).show();
 

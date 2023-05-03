@@ -43,7 +43,7 @@
                 android:layout_height="match_parent"
                 android:fontFamily="@font/koho_bold"
                 android:text="Success"
-                android:textSize="18dp"
+                android:textSize="16dp"
                 android:textColor="@color/md_blue_grey_500"/>
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -52,7 +52,7 @@
                 android:layout_height="match_parent"
                 android:fontFamily="@font/koho"
                 android:text="Anyone with access can view your invited visitors"
-                android:maxLines="2"
+                android:maxLines="3"
                 android:ellipsize="end"/>
         </androidx.appcompat.widget.LinearLayoutCompat>
 

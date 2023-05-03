@@ -26,7 +26,7 @@
             android:layout_height="120dp"
             app:srcCompat="@drawable/ic_info_blue_24dp"
             android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="5dp"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/dialog_title_flat"
@@ -45,9 +45,11 @@
             android:layout_marginBottom="20dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:maxLines="3"
+            android:maxLines="4"
             android:ellipsize="end"
-            android:text="An error occured on remote service, please try again later"/>
+            android:text="An error occured on remote service, please try again later"
+            android:textSize="13sp"
+            />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_action_flat"

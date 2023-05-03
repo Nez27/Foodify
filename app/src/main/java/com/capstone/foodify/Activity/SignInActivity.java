@@ -54,15 +54,18 @@ public class SignInActivity extends AppCompatActivity {
     private String email, password = null;
     private TextView txt_countdown, txt_verify_email;
     private LinearLayout countdown_layout;
+    private boolean isCounting = false;
 
     private final CountDownTimer count = new CountDownTimer(60000, 1000) {
         @Override
         public void onTick(long millisUntilFinished) {
+            isCounting = true;
             txt_countdown.setText(millisUntilFinished / 1000 + " giây");
         }
 
         @Override
         public void onFinish() {
+            isCounting = false;
             countdown_layout.setVisibility(View.GONE);
 
             txt_verify_email.setVisibility(View.VISIBLE);
@@ -275,27 +278,44 @@ public class SignInActivity extends AppCompatActivity {
                             } else {
                                 //Email user not verify
 
-                                //Count down resend code
-                                countdown_layout.setVisibility(View.VISIBLE);
-                                count.start();
-                                //Send email verify
-                                user.sendEmailVerification();
+                                if(!isCounting){
 
-                                txt_verify_email.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        //When user click on the text
+                                    //UI
+                                    txt_verify_email.setVisibility(View.GONE);
+                                    countdown_layout.setVisibility(View.VISIBLE);
 
-                                        //Count down resend code
-                                        countdown_layout.setVisibility(View.VISIBLE);
-                                        count.start();
+                                    //Count down resend code
+                                    count.start();
+                                    //Send email verify
+                                    user.sendEmailVerification();
 
-                                        //Send email verify
-                                        user.sendEmailVerification();
+                                    txt_verify_email.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            //When user click on the text
 
-                                        txt_verify_email.setVisibility(View.GONE);
-                                    }
-                                });
+                                            //Count down resend code
+                                            countdown_layout.setVisibility(View.VISIBLE);
+                                            count.start();
+
+                                            //Send email verify
+                                            user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if(task.isSuccessful()){
+                                                        //Send email success
+                                                        Toast.makeText(SignInActivity.this, "Đã gửi email thành công!", Toast.LENGTH_SHORT).show();
+                                                    } else {
+                                                        //Send email failed
+                                                        Toast.makeText(SignInActivity.this, "Đã có lỗi xảy ra!", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                            });
+
+                                            txt_verify_email.setVisibility(View.GONE);
+                                        }
+                                    });
+                                }
 
                                 //Log out user
                                 mAuth.signOut();
@@ -306,7 +326,7 @@ public class SignInActivity extends AppCompatActivity {
                             }
                         } else {
 
-                            showNotification(DialogStyle.RAINBOW, DialogType.WARNING, "Thông tin đăng nhập không đúng! Vui lòng kiểm tra và thử lại!");
+                            showNotification(DialogStyle.TOASTER, DialogType.WARNING, "Thông tin đăng nhập không đúng! Vui lòng kiểm tra và thử lại!");
 
                             //Dismiss progress bar
                             progressLayout.setVisibility(View.GONE);

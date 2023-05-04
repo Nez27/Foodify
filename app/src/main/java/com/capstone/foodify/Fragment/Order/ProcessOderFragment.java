@@ -58,6 +58,7 @@ public class ProcessOderFragment extends Fragment {
 
         orderAdapter = new OrderAdapter(getContext());
 
+        CURRENT_PAGE = 0;
         getOrderUser(CURRENT_PAGE);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);

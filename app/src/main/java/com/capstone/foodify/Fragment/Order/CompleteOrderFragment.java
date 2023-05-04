@@ -57,6 +57,7 @@ public class CompleteOrderFragment extends Fragment {
         //Init Component
         initComponent(view);
 
+        CURRENT_PAGE = 0;
         getOrderUser(CURRENT_PAGE);
 
         orderAdapter = new OrderAdapter(getContext());

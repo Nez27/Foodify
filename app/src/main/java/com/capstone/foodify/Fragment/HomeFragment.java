@@ -140,7 +140,7 @@ public class HomeFragment extends Fragment {
     private List<Menu> getListMenu() {
         List<Menu> listMenu = new ArrayList<>();
 
-        listMenu.add(new Menu("Món ăn khuyến nghị", listFood));
+        listMenu.add(new Menu("Ăn gì hôm nay?", listFood));
         listMenu.add(new Menu("Món ăn được thêm gần đây", recentFood));
 
         return listMenu;

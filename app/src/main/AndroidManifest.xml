@@ -96,7 +96,9 @@
         <activity
             android:name=".Activity.AddressManagerActivity"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:noHistory="true"
+            />
         <activity
             android:name=".Activity.ChangePasswordActivity"
             android:exported="false"

@@ -33,7 +33,7 @@ import retrofit2.Response;
 
 public class Common {
     //https://foodify-backend-production.up.railway.app/
-    public static final String BASE_URL = "https://foodify-backend-production.up.railway.app/api/";
+    public static final String BASE_URL = "https://foodify.up.railway.app/api/";
     public static String FCM_TOKEN = null;
     public static Location CURRENT_LOCATION = null;
     public static FirebaseUser FIREBASE_USER = null;

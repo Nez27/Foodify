@@ -3,7 +3,7 @@
      width="120" title="Foodify">
 </p>
 
-<h3 align="center">Foodify- Capstone Project</h3>
+<h3 align="center">Foodify - Capstone Project</h3>
 
 ## About project
 Foodify is a capstone project at FPT University. This is an online food ordering application such as shoppee food, foodify, grab food..., created by java.

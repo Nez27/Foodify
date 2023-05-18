@@ -218,7 +218,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
 
                 finalAddress = null;
 
-                confirm_address_button.setEnabled(true);
+                confirm_address_button.setVisibility(View.VISIBLE);
                 change_address_button.setVisibility(View.GONE);
 
                 enabledAllInputAddressOption();
@@ -266,7 +266,7 @@ public class OrderCheckOutActivity extends AppCompatActivity {
                     Toast.makeText(OrderCheckOutActivity.this, "Bạn chưa xác nhận địa chỉ!", Toast.LENGTH_SHORT).show();
                 } else {
                     progress_layout.setVisibility(View.VISIBLE);
-                    confirm_address_button.setEnabled(false);
+                    confirm_address_button.setVisibility(View.GONE);
                     change_address_button.setVisibility(View.VISIBLE);
 
                     disableAllInputAddressOption();

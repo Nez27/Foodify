@@ -38,7 +38,7 @@ Information              |   Favorites               |  Zalopay Paymemt         
 
 
 ## Demo
-- Download app from [here](https://nezumi27-my.sharepoint.com/:u:/g/personal/admin_nezumi27_onmicrosoft_com/EXWZkpVBGXJCso-oB_rVjEUBqAQFfDVmwPdBg-wIhbik7g?e=2AkDZ4).
+- Download app from [here](https://nezumi-onedrive.vercel.app/api/raw/?path=/Foodify/foodify.apk).
 
 ## Credits
 - Created by Nezumi.

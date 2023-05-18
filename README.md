@@ -1,7 +1,8 @@
 <p align="center">
-<img src="https://github.com/Nez27/Foodify/assets/123229563/4cc90261-5bab-4dd6-aea8-39c4748c7841" 
+<img src="https://github.com/Nez27/Foodify/assets/123229563/c65d2f4b-c522-4a54-a1a7-5667bb4feeb1" 
      width="120" title="Foodify">
 </p>
+
 <h3 align="center">Foodify- Capstone Project</h3>
 
 ## About project
@@ -25,16 +26,16 @@ Foodify is a capstone project at FPT University. This is an online food ordering
 
 Home               |Sign in               |Verify phone               |Search
 :-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
-<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/09c66dad-4895-4c23-8fad-953304a44e2b" alt="img-verification" height="450"/>|<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/af9b9dac-f16f-42b5-8935-cd5c8861acba" alt="img-verification" height="450"/>|<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/9d15ffed-bcce-4905-a26f-8c868e6e6bbc" alt="img-verification" height="450"/>|<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/c3d83978-f0b2-4509-81e9-ffc1578c4990c" alt="img-verification" height="450"/>|
+<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/25a23735-ba9d-4c5d-8e6d-35fa1e6ebe62" alt="img-verification" height="450"/>|<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/3f6441f7-db33-4bbd-af06-2c7f5f3ce43e" alt="img-verification" height="450"/>|<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/398451af-2c59-461c-80fc-0715a89b3422" alt="img-verification" height="450"/>|<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/94efc6bf-03f6-40c3-9fae-9b1e202c84bb" alt="img-verification" height="450"/>|
 
 Cart               |  Profile               | Address Manager             |  Order
 :-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
-<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/4c2fb984-f7cd-40cb-bbc8-30026dc1ed8c" alt="img-verification" height="450"/>|<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/b46bc160-83a5-4fad-aaa4-30f01d6f87b6" alt="img-verification" height="450"/>|<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/160b3948-86e3-478b-936d-06706722fb0d" alt="img-verification" height="450"/>|<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/fb63976e-d68c-4bd6-8eb5-1e98d7c4dd3b" alt="img-verification" height="450"/>|
+<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/569735a1-37ea-4262-966f-aac276cbc5dc" alt="img-verification" height="450"/>|<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/3e334f03-ce44-4769-8f5c-14213bed1e58" alt="img-verification" height="450"/>|<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/fa137c31-b23b-47b0-8d68-c6cf87ea36cd" alt="img-verification" height="450"/>|<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/e256893f-0ad7-429e-b705-48bf95b740eb" alt="img-verification" height="450"/>|
 
 
 Information              |   Favorites               |  Zalopay Paymemt               | Order Placed      
 :-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
-<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/a9551909-ef12-4ea9-9e1f-eb441e73357d" alt="img-verification" height="450"/>|<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/f75c2d0e-d0d9-44aa-91c8-519cde216cc1" alt="img-verification" height="450"/>|<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/3ca57dc1-a24c-4b60-8cb5-467e35517a2d" alt="img-verification" height="450"/>|<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/22232b7c-fd7e-48cd-a0f1-66c1b6c2c58d" alt="img-verification" height="450"/>|
+<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/fcc17d9d-3630-44e1-b537-f23d557abdad" alt="img-verification" height="450"/>|<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/d1d2d13e-5d2e-4235-9a28-8d95da164754" alt="img-verification" height="450"/>|<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/4956b28a-9f64-4560-a188-0900e7e57421" alt="img-verification" height="450"/>|<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/0b8f8080-15bc-4d81-bcb9-9ea791b65809" alt="img-verification" height="450"/>|
 
 
 ## Demo

@@ -38,7 +38,7 @@ public class Common {
     public static Location CURRENT_LOCATION = null;
     public static FirebaseUser FIREBASE_USER = null;
     public static final String DEFAULT_IMAGE_URL =  "https://firebasestorage.googleapis.com/v0/b/foodify-55954.appspot.com/o/Admin%2Fdefault%2Fdefault-ava-01.png?alt=media";
-    public static final String MAP_API = "AIzaSyAY14Ic32UP26Hg6GILznOfbBihiY5BUxw";
+    public static final String MAP_API = "YOUR_API_GOOGLE_MAP";
     public static final String FORMAT_DATE="yyyy-MM-dd";
     public static final String VALID_EMAIL_ADDRESS_REGEX = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
     public static final String PHONE_CODE = "+84";

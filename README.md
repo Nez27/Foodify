@@ -22,6 +22,7 @@ Foodify is a capstone project at FPT University. This is an online food ordering
 - Payments (Zalopay payment method)
 
 
+
 ## Screenshots
 
 Home               |Sign in               |Verify phone               
@@ -30,11 +31,11 @@ Home               |Sign in               |Verify phone
 
 Search               |Order               |Order Placed
 :-------------------------:|:-------------------------:|:-------------------------:
-<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/94efc6bf-03f6-40c3-9fae-9b1e202c84bb" alt="img-verification" height="450"/>|<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/e256893f-0ad7-429e-b705-48bf95b740eb" alt="img-verification" height="450"/>|<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/0b8f8080-15bc-4d81-bcb9-9ea791b65809" alt="img-verification" height="450"/>|
+<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/94efc6bf-03f6-40c3-9fae-9b1e202c84bb" alt="img-verification" height="450"/>|<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/725ec865-ae4f-40e4-baa1-cea29a4e7e4d" alt="img-verification" height="450"/>|<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/0b8f8080-15bc-4d81-bcb9-9ea791b65809" alt="img-verification" height="450"/>|
 
 Cart               |  Profile               | Address Manager             
 :-------------------------:|:-------------------------:|:-------------------------:
-<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/569735a1-37ea-4262-966f-aac276cbc5dc" alt="img-verification" height="450"/>|<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/3e334f03-ce44-4769-8f5c-14213bed1e58" alt="img-verification" height="450"/>|<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/fa137c31-b23b-47b0-8d68-c6cf87ea36cd" alt="img-verification" height="450"/>|
+<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/569735a1-37ea-4262-966f-aac276cbc5dc" alt="img-verification" height="450"/>|<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/567b7526-cf0a-4ed8-9358-56392433ceae" alt="img-verification" height="450"/>|<img class="img-fluid" src="https://github.com/Nez27/Foodify/assets/123229563/fa137c31-b23b-47b0-8d68-c6cf87ea36cd" alt="img-verification" height="450"/>|
 
 
 Information              |   Favorites               |  Zalopay Paymemt                   
